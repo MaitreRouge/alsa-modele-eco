@@ -1,6 +1,7 @@
 @extends("layouts.fiche",
 [
     "pageTitle" => "Fiche Entreprise",
+    "subActive" => 1
 ])
 @section("fiche")
 
