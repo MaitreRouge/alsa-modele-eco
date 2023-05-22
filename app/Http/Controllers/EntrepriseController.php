@@ -14,6 +14,12 @@ class EntrepriseController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    public function showDashboard(Request $request)
+    {
+        $clients = Client::all();
+        return view("dashboard", ["clients" => $clients]);
+    }
+
     public function showCreate(Request $request)
     {
         return view("create-modele");

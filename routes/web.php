@@ -18,9 +18,10 @@ use Illuminate\Support\Facades\Route;
 App::setLocale("fr");
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect("/dashboard");
 });
 
+Route::get("/dashboard", [EntrepriseController::class, "showDashboard"]);
 
 Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);
