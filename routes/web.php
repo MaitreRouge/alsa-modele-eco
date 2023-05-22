@@ -25,7 +25,15 @@ Route::get("/dashboard", [EntrepriseController::class, "showDashboard"]);
 
 Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);
-Route::get('/edit/{id}', [EntrepriseController::class, "showMainPage"]);
+
+Route::prefix('/edit/{id}')->group(function () {
+    Route::get('', function ($id) {;
+        return redirect("/edit/$id/fiche");
+    });
+
+    Route::get("/fiche", [EntrepriseController::class, "showMainPage"]);
+    Route::post("/fiche", [EntrepriseController::class, "processCreate"]);
+});
 
 Route::get('/login', [UserController::class, "showLogin"]);
 

@@ -59,12 +59,22 @@ class EntrepriseController extends BaseController
             ],
             "nvClient" => [
                 "nullable",
+            ],
+            "name" => [
+                "required"
             ]
         ]);
 
-        $client = new Client;
+        if (!empty($request["id"])) {
+            $client = Client::find($request["id"]);
+            if (!$client) return redirect("/dashboard");
+        } else {
+            $client = new Client;
+        }
+
         $client->raisonSociale = $request["raison-sociale"];
         $client->RPAP = $request["rpap"];
+        $client->nom = $request["name"];
         $client->dateSignature = $request["date-signature"];
         $client->datePremiereConnexion = $request["date-premiere-connxion"];
         $client->commercial = $request["commercial"];
@@ -73,13 +83,16 @@ class EntrepriseController extends BaseController
         $client->engagement = $request["engagement"];
         $client->upgrade = !empty($request["upgrade"]);
         $client->nvSite = !empty($request["nvSite"]);
-        $client->nvClient = !empty($request["commercial"]);
+//        $client->nvClient = !empty($request["nvClient"]);
+        $client->nvClient = !empty($request["nvClient"]);
         $client->save();
-        return redirect("/edit/".$client->id);
+        return redirect("/edit/" . $client->id . "/fiche");
     }
 
     public function showMainPage(Request $request)
     {
-        return view("edit-modele");
+        $client = Client::find($request["id"]);
+        if (!$client) return redirect("/dashboard");
+        return view("fiches.main", ["client" => $client]);
     }
 }
