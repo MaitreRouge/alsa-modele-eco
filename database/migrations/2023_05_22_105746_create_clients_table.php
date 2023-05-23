@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string("raisonSociale", 100);
             $table->string("nom", 100);
             $table->string("RPAP", 100);
-            $table->date("dateSignature");
-            $table->date("datePremiereConnexion");
+            $table->date("dateSignature")->nullable();
+            $table->date("datePremiereConnexion")->nullable();
             $table->string("commercial");
             $table->integer("agence");
             $table->integer("nbSites");
