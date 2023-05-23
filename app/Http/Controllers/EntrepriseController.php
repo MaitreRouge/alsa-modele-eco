@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use App\Models\Client;
+use App\Models\Devis;
 use App\Models\Prestation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -184,6 +185,29 @@ class EntrepriseController extends BaseController
     }
     public function processAddPrestations(Request $request)
     {
+//        dump($request->toArray());
+        $request->validate([
+            "prixfas" => [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "prixbrut" => [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "prixmensuel" => [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "qte" => [
+                "required",
+                "numeric",
+                "min:0"
+            ]
+        ]);
 
         $client = Client::findOrFail($request["id"]);
 
@@ -197,6 +221,30 @@ class EntrepriseController extends BaseController
         }
         $prestation = $prestation[0];
 
-        dd($prestation);
+//        dump($request->toArray());
+//        dd($prestation);
+
+        $prices = ["brut" => NULL, "fas" => NULL, "mensuel" => NULL];
+        if ($prestation->prixBrut != $request["prixbrut"]) {
+            $prices["brut"] = $request["prixbrut"];
+        }
+        if ($prestation->prixMensuel != $request["prixmensuel"]) {
+            $prices["mensuel"] = $request["prixmensuel"];
+        }
+        if ($prestation->prixFraisInstalation != $request["prixfas"]) {
+            $prices["fas"] = $request["prixfas"];
+        }
+
+        $devis = new Devis();
+        $devis->version = $prestation->version;
+        $devis->catalogueID = $prestation->id;
+        $devis->quantite = $request["qte"];
+        $devis->prixBrut = $prices["brut"];
+        $devis->prixMensuel = $prices["mensuel"];
+        $devis->prixFraisInstalation = $prices["fas"];
+        $devis->clientID = $client->id;
+        $devis->save();
+
+        return redirect("/edit/".$client->id."/".$request["category"]);
     }
 }
