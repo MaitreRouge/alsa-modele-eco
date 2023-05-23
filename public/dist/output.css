@@ -789,6 +789,14 @@ select {
   margin-top: 2rem;
 }
 
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
 .block {
   display: block;
 }
@@ -1060,6 +1068,11 @@ select {
   border-bottom-left-radius: 0.5rem;
 }
 
+.rounded-r-lg {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
 .border-0 {
   border-width: 0px;
 }
@@ -1070,6 +1083,10 @@ select {
 
 .border-b {
   border-bottom-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-dashed {
@@ -1092,6 +1109,11 @@ select {
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.border-gray-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
 }
 
 .bg-gray-100 {
@@ -1141,6 +1163,11 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
 .p-4 {
@@ -1226,6 +1253,16 @@ select {
   padding-bottom: 1.5rem;
 }
 
+.px-3\.5 {
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+}
+
+.py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -1252,6 +1289,10 @@ select {
 
 .pr-4 {
   padding-right: 1rem;
+}
+
+.pr-10 {
+  padding-right: 2.5rem;
 }
 
 .text-left {
@@ -1381,6 +1422,14 @@ select {
 .text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+.opacity-0 {
+  opacity: 0;
 }
 
 .shadow {
@@ -1549,6 +1598,10 @@ select {
     grid-column: span 4 / span 4;
   }
 
+  .sm\:col-span-6 {
+    grid-column: span 6 / span 6;
+  }
+
   .sm\:-mx-6 {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
@@ -1573,6 +1626,10 @@ select {
 
   .sm\:flex {
     display: flex;
+  }
+
+  .sm\:hidden {
+    display: none;
   }
 
   .sm\:w-full {
@@ -1619,6 +1676,14 @@ select {
 
   .sm\:pr-0 {
     padding-right: 0px;
+  }
+
+  .sm\:pl-3 {
+    padding-left: 0.75rem;
+  }
+
+  .sm\:pr-3 {
+    padding-right: 0.75rem;
   }
 
   .sm\:text-sm {

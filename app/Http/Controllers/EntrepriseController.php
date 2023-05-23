@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorie;
 use App\Models\Client;
+use App\Models\Prestation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
@@ -115,5 +118,38 @@ class EntrepriseController extends BaseController
         $prestations = [];
         $client = Client::find($request["id"]);
         return view("fiches.prestations", ["name" => "Services", "prestations" => $prestations, "client" => $client, "subActive" => 4]);
+    }
+
+    public function listPrestations(Request $request)
+    {
+        $request->validate([
+            "id" => "exists|categories"
+        ]);
+
+        $client = Client::find($request["id"]);
+        $category = match ($request["category"]) {
+            "data" => 2,
+            "telephonie" => 3,
+            "services" => 4
+        };
+        $categories = Categorie::where("parentID", $category-1)->get();
+
+        $parents = [];
+        $prestations = [];
+        if (!empty($request["tri"])) {
+            $parents = Categorie::where("parentID", $request["tri"])->get();
+            foreach ($parents as $parent) {
+                $prestations[$parent->id] = Prestation::where("idCategorie", $parent->id)->get();
+            }
+        }
+
+        return view("fiches.prestationsadd", [
+            "name" => ucfirst($request["category"]), //Nom de la page
+            "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
+            "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
+            "client" => $client, //Client (necessaire pour les redirections)
+            "subActive" => $category, //Index du bouton du sous-menu qui doit être actif ()
+            "categories" => $categories //Liste de toutes les caregories (pour la liste déroulante)
+        ]);
     }
 }

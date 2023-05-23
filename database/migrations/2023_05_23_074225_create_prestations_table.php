@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer("version");
             $table->string("label", 250);
-            $table->float("prixBrut")->default(0.00);
-            $table->float("prixMensuel")->default(0.00);
-            $table->float("prixFraisInstalation")->default(0.00);
+            $table->float("prixBrut")->default(0.00)->nullable();
+            $table->float("prixMensuel")->default(0.00)->nullable();
+            $table->float("prixFraisInstalation")->default(0.00)->nullable();
             $table->boolean("needPrixVente")->default(false);
+            $table->integer("idCategorie");
             $table->timestamps();
         });
     }
