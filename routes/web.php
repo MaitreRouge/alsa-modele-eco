@@ -38,9 +38,19 @@ Route::prefix('/edit/{id}/')->group(function () {
     Route::get("telephonie", [EntrepriseController::class, "showTelephoniePage"]);
     Route::get("services", [EntrepriseController::class, "showServicesPage"]);
 
-    Route::get("{category}/add", [EntrepriseController::class, "listPrestations"])->whereIn('category', ['data', 'services', 'telephonie']);;
-    Route::post("{category}/add", [EntrepriseController::class, "listPrestations"])->whereIn('category', ['data', 'services', 'telephonie']);;
-});
+    Route::get("{category}/add", [EntrepriseController::class, "listPrestations"])
+        ->whereIn('category', ['data', 'services', 'telephonie']);
+    Route::post("{category}/add", [EntrepriseController::class, "listPrestations"])
+        ->whereIn('category', ['data', 'services', 'telephonie']);
+
+    Route::get("{category}/add/{prestation}", [EntrepriseController::class, "showAddPrestations"])
+        ->whereIn('category', ['data', 'services', 'telephonie'])
+        ->whereNumber("prestation");
+    Route::post("{category}/add/{prestation}", [EntrepriseController::class, "processAddPrestations"])
+        ->whereIn('category', ['data', 'services', 'telephonie'])
+        ->whereNumber("prestation");
+
+})->whereNumber("id");
 
 Route::get('/login', [UserController::class, "showLogin"]);
 

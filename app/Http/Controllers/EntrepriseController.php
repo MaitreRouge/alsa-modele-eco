@@ -132,7 +132,7 @@ class EntrepriseController extends BaseController
             "telephonie" => 3,
             "services" => 4
         };
-        $categories = Categorie::where("parentID", $category-1)->get();
+        $categories = Categorie::where("parentID", $category - 1)->get();
 
         $parents = [];
         $prestations = [];
@@ -151,5 +151,52 @@ class EntrepriseController extends BaseController
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif ()
             "categories" => $categories //Liste de toutes les caregories (pour la liste déroulante)
         ]);
+    }
+
+    public function showAddPrestations(Request $request)
+    {
+
+        $client = Client::findOrFail($request["id"]);
+
+        $category = match ($request["category"]) {
+            "data" => 2,
+            "telephonie" => 3,
+            "services" => 4
+        };
+
+        $prestation = Prestation::where("id", $request["prestation"])
+            ->orderBy("version", "DESC")
+            ->limit(1)
+            ->get();
+        if (count($prestation) != 1) {
+            return back(); //Multiple or no prestation found (if we trigger this, it should be none because the request limits to one anyway)
+        }
+
+        return view("fiches.add-prestation", [
+            "name" => ucfirst($request["category"]), //Nom de la page
+            "prestation" => $prestation[0],
+//            "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
+            "client" => $client, //Client (necessaire pour les redirections)
+            "subActive" => $category, //Index du bouton du sous-menu qui doit être actif
+//            "categories" => $categories //Liste de toutes les caregories (pour la liste déroulante)
+        ]);
+
+    }
+    public function processAddPrestations(Request $request)
+    {
+
+        $client = Client::findOrFail($request["id"]);
+
+
+        $prestation = (Prestation::where("id", $request["prestation"])
+            ->orderBy("version", "DESC")
+            ->limit(1)
+            ->get());
+        if (count($prestation) != 1) {
+            return back(); //Multiple or no prestation found (if we trigger this, it should be none because the request limits to one anyway)
+        }
+        $prestation = $prestation[0];
+
+        dd($prestation);
     }
 }
