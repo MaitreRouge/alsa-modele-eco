@@ -95,4 +95,25 @@ class EntrepriseController extends BaseController
         if (!$client) return redirect("/dashboard");
         return view("fiches.main", ["client" => $client]);
     }
+
+    public function showDataPage(Request $request)
+    {
+        $prestations = [];
+        $client = Client::find($request["id"]);
+        return view("fiches.prestations", ["name" => "Data", "prestations" => $prestations, "client" => $client, "subActive" => 2]);
+    }
+
+    public function showTelephoniePage(Request $request)
+    {
+        $prestations = [];
+        $client = Client::find($request["id"]);
+        return view("fiches.prestations", ["name" => "Telephonie", "prestations" => $prestations, "client" => $client, "subActive" => 3]);
+    }
+
+    public function showServicesPage(Request $request)
+    {
+        $prestations = [];
+        $client = Client::find($request["id"]);
+        return view("fiches.prestations", ["name" => "Services", "prestations" => $prestations, "client" => $client, "subActive" => 4]);
+    }
 }
