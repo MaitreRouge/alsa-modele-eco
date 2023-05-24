@@ -138,6 +138,7 @@ class EntrepriseController extends BaseController
         $parents = [];
         $prestations = [];
         if (!empty($request["tri"])) {
+            $main = Categorie::findOrFail($request["tri"]);
             $parents = Categorie::where("parentID", $request["tri"])->get();
             foreach ($parents as $parent) {
                 $prestations[$parent->id] = Prestation::where("idCategorie", $parent->id)->get();
@@ -150,7 +151,8 @@ class EntrepriseController extends BaseController
             "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
             "client" => $client, //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif ()
-            "categories" => $categories //Liste de toutes les caregories (pour la liste déroulante)
+            "categories" => $categories, //Liste de toutes les caregories (pour la liste déroulante),
+            "main" => $main //Oui mais non
         ]);
     }
 
