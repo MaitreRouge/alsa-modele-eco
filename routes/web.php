@@ -26,7 +26,7 @@ Route::get("/dashboard", [EntrepriseController::class, "showDashboard"]);
 Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);
 
-Route::prefix('/edit/{id}/')->group(function () {
+Route::middleware("slash")->prefix('/edit/{id}/')->group(function () {
     Route::get('', function ($id) {;
         return redirect("/edit/$id/fiche");
     });
