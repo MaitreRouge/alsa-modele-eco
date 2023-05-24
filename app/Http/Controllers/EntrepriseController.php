@@ -160,11 +160,7 @@ class EntrepriseController extends BaseController
 
         $client = Client::findOrFail($request["id"]);
 
-        $category = match ($request["category"]) {
-            "data" => 2,
-            "telephonie" => 3,
-            "services" => 4
-        };
+        $category = $this->matchCategory($request["category"]);
 
         $prestation = Prestation::where("id", $request["prestation"])
             ->orderBy("version", "DESC")
@@ -250,6 +246,92 @@ class EntrepriseController extends BaseController
         return redirect("/edit/".$client->id."/".$request["category"]);
     }
 
+    public function showEditPrestations(Request $request)
+    {
+
+        $client = Client::findOrFail($request["id"]);
+
+        $category = $this->matchCategory($request["category"]);
+
+        $devis = Devis::findOrFail($request["prestation"]);
+        if (empty($devis)) {
+            return back(); //No prestation found
+        }
+
+        $prestation = Prestation::where("id", $devis->catalogueID)
+            ->where("version", $devis->version)
+            ->get();
+        if (!isset($prestation[0]) or empty($prestation[0])) {
+            throw new \Exception("La prestation associée au devis n'existe plus. Merci de contacter un administrateur");
+        }
+
+        return view("fiches.edit-prestation", [
+            "name" => ucfirst($request["category"]), //Nom de la page
+            "devis" => $devis,
+            "prestation" => $prestation[0],
+            "client" => $client, //Client (necessaire pour les redirections)
+            "subActive" => $category, //Index du bouton du sous-menu qui doit être acti
+        ]);
+
+    }
+
+    public function processEditPrestations(Request $request)
+    {
+        $request->validate([
+            "prixfas" => [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "prixbrut" => [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "prixmensuel" => [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "qte" => [
+                "required",
+                "numeric",
+                "min:1"
+            ]
+        ]);
+
+        $client = Client::findOrFail($request["id"]);
+        $devis = Devis::findOrFail($request["prestation"]);
+
+        $prestation = Prestation::where("id", $devis->catalogueID)
+            ->where("version", $devis->version)
+            ->get();
+        if (!isset($prestation[0]) or empty($prestation[0])) {
+            throw new \Exception("La prestation associée au devis n'existe plus. Merci de contacter un administrateur");
+        }
+        $prestation = $prestation[0];
+
+        $prices = ["brut" => NULL, "fas" => NULL, "mensuel" => NULL];
+        if ($prestation->prixBrut != $request["prixbrut"]) {
+            $prices["brut"] = $request["prixbrut"];
+        }
+        if ($prestation->prixMensuel != $request["prixmensuel"]) {
+            $prices["mensuel"] = $request["prixmensuel"];
+        }
+        if ($prestation->prixFraisInstalation != $request["prixfas"]) {
+            $prices["fas"] = $request["prixfas"];
+        }
+
+        $devis->quantite = $request["qte"];
+        $devis->prixBrut = $prices["brut"];
+        $devis->prixMensuel = $prices["mensuel"];
+        $devis->prixFraisInstalation = $prices["fas"];
+        $devis->save();
+
+        return redirect("/edit/".$client->id."/".$request["category"]);
+    }
+
+    /********** FONCTIONS PRIVÉS **********/
     private function matchCategory(string $c)
     {
         return match (strtolower($c)) {

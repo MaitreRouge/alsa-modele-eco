@@ -48,6 +48,13 @@ Route::middleware("slash")->prefix('/edit/{id}/')->group(function () {
         ->whereIn('category', ['data', 'services', 'telephonie'])
         ->whereNumber("prestation");
 
+    Route::get("{category}/edit/{prestation}", [EntrepriseController::class, "showEditPrestations"])
+        ->whereIn('category', ['data', 'services', 'telephonie'])
+        ->whereNumber("prestation");
+    Route::post("{category}/edit/{prestation}", [EntrepriseController::class, "processEditPrestations"])
+        ->whereIn('category', ['data', 'services', 'telephonie'])
+        ->whereNumber("prestation");
+
 })->whereNumber("id");
 
 Route::get('/login', [UserController::class, "showLogin"]);
