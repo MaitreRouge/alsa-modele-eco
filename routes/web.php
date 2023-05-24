@@ -34,9 +34,7 @@ Route::prefix('/edit/{id}/')->group(function () {
     Route::get("fiche", [EntrepriseController::class, "showMainPage"]);
     Route::post("fiche", [EntrepriseController::class, "processCreate"]);
 
-    Route::get("data", [EntrepriseController::class, "showDataPage"]);
-    Route::get("telephonie", [EntrepriseController::class, "showTelephoniePage"]);
-    Route::get("services", [EntrepriseController::class, "showServicesPage"]);
+    Route::get("{category}", [EntrepriseController::class, "showCategoryPage"]);
 
     Route::get("{category}/add", [EntrepriseController::class, "listPrestations"])
         ->whereIn('category', ['data', 'services', 'telephonie']);

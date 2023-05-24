@@ -49,7 +49,7 @@ class EntrepriseController extends BaseController
             "nb-sites" => [
                 "required",
                 "numeric",
-                "min:0"
+                "min:1"
             ],
             "engagement" => [
                 "required",
@@ -100,25 +100,27 @@ class EntrepriseController extends BaseController
         return view("fiches.main", ["client" => $client]);
     }
 
-    public function showDataPage(Request $request)
+    public function showCategoryPage(Request $request)
     {
-        $prestations = [];
-        $client = Client::find($request["id"]);
-        return view("fiches.resume-prestations", ["name" => "Data", "prestations" => $prestations, "client" => $client, "subActive" => 2]);
-    }
-
-    public function showTelephoniePage(Request $request)
-    {
-        $prestations = [];
-        $client = Client::find($request["id"]);
-        return view("fiches.resume-prestations", ["name" => "Telephonie", "prestations" => $prestations, "client" => $client, "subActive" => 3]);
-    }
-
-    public function showServicesPage(Request $request)
-    {
-        $prestations = [];
-        $client = Client::find($request["id"]);
-        return view("fiches.resume-prestations", ["name" => "Services", "prestations" => $prestations, "client" => $client, "subActive" => 4]);
+        $category = $request["category"];
+        $category_number = $this->matchCategory($request["category"])-1;
+        $client = Client::findOrFail($request["id"]);
+        $prestations = DB::select("
+        SELECT d.*
+        FROM devis AS d, prestations as p, categories as c
+        WHERE d.catalogueID = p.id
+            AND d.version = p.version
+            AND p.idCategorie = c.id
+            AND c.parentID IN (SELECT c.id FROM categories as c WHERE c.parentID = :cID)
+            AND d.clientID = :clientID
+        ", ["clientID" => $client->id, "cID" => $category_number]);
+//        $prestations = [];
+        return view("fiches.resume-prestations", [
+            "name" => ucfirst($category),
+            "prestations" => $prestations,
+            "client" => $client,
+            "subActive" => $category_number+1
+        ]);
     }
 
     public function listPrestations(Request $request)
@@ -128,11 +130,7 @@ class EntrepriseController extends BaseController
         ]);
 
         $client = Client::find($request["id"]);
-        $category = match ($request["category"]) {
-            "data" => 2,
-            "telephonie" => 3,
-            "services" => 4
-        };
+        $category = $this->matchCategory($request["category"]);
         $categories = Categorie::where("parentID", $category - 1)->get();
 
         $parents = [];
@@ -186,6 +184,7 @@ class EntrepriseController extends BaseController
         ]);
 
     }
+
     public function processAddPrestations(Request $request)
     {
 //        dump($request->toArray());
@@ -193,7 +192,7 @@ class EntrepriseController extends BaseController
             "prixfas" => [
                 "nullable",
                 "numeric",
-                "min:0"
+                "min:1"
             ],
             "prixbrut" => [
                 "nullable",
@@ -249,5 +248,14 @@ class EntrepriseController extends BaseController
         $devis->save();
 
         return redirect("/edit/".$client->id."/".$request["category"]);
+    }
+
+    private function matchCategory(string $c)
+    {
+        return match (strtolower($c)) {
+            "data" => 2,
+            "telephonie" => 3,
+            "services" => 4
+        };
     }
 }
