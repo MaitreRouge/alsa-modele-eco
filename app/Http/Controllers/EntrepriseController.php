@@ -104,21 +104,21 @@ class EntrepriseController extends BaseController
     {
         $prestations = [];
         $client = Client::find($request["id"]);
-        return view("fiches.prestations", ["name" => "Data", "prestations" => $prestations, "client" => $client, "subActive" => 2]);
+        return view("fiches.resume-prestations", ["name" => "Data", "prestations" => $prestations, "client" => $client, "subActive" => 2]);
     }
 
     public function showTelephoniePage(Request $request)
     {
         $prestations = [];
         $client = Client::find($request["id"]);
-        return view("fiches.prestations", ["name" => "Telephonie", "prestations" => $prestations, "client" => $client, "subActive" => 3]);
+        return view("fiches.resume-prestations", ["name" => "Telephonie", "prestations" => $prestations, "client" => $client, "subActive" => 3]);
     }
 
     public function showServicesPage(Request $request)
     {
         $prestations = [];
         $client = Client::find($request["id"]);
-        return view("fiches.prestations", ["name" => "Services", "prestations" => $prestations, "client" => $client, "subActive" => 4]);
+        return view("fiches.resume-prestations", ["name" => "Services", "prestations" => $prestations, "client" => $client, "subActive" => 4]);
     }
 
     public function listPrestations(Request $request)
@@ -137,6 +137,7 @@ class EntrepriseController extends BaseController
 
         $parents = [];
         $prestations = [];
+        $main = null;
         if (!empty($request["tri"])) {
             $main = Categorie::findOrFail($request["tri"]);
             $parents = Categorie::where("parentID", $request["tri"])->get();
@@ -145,7 +146,7 @@ class EntrepriseController extends BaseController
             }
         }
 
-        return view("fiches.prestationsadd", [
+        return view("fiches.liste-prestations", [
             "name" => ucfirst($request["category"]), //Nom de la page
             "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
             "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
