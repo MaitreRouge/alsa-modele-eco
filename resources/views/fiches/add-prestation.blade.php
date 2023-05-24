@@ -20,14 +20,36 @@
 
                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 
+                    @if(!empty($prestation->note))
+                        <div class="sm:col-span-6">
+                            <div class="rounded-md bg-blue-50 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-blue-700">Note sur la prestation :</h3>
+                                        <div class="mt-2 text-sm text-blue-600">
+                                            <p>{{ $prestation->note }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     {{--                    @dd($prestation)--}}
-                    <div class="sm:col-span-1">
+                    <div class="sm:col-span-4">
                         <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                         <div class="mt-2">
                             <input type="text" id="label" value="{{ $prestation->label }}" disabled
                                    class="bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
+                    <div class="sm:col-span-2"></div>
+                    <div class="sm:col-span-1"></div>
                     <div class="sm:col-span-1">
                         <label for="prixfas" class="block text-sm font-medium leading-6 text-gray-900">Prix FAS</label>
                         <div class="mt-2">
@@ -115,19 +137,19 @@
 
 
     <script>
-        jQuery(document).ready(function() {
+        jQuery(document).ready(function () {
             var $ = jQuery;
 
-            $("#qte").on("input", function (){
+            $("#qte").on("input", function () {
                 calPrices();
             });
-            $("#prixfas").on("input", function (){
+            $("#prixfas").on("input", function () {
                 calPrices();
             });
-            $("#prixbrut").on("input", function (){
+            $("#prixbrut").on("input", function () {
                 calPrices();
             });
-            $("#prixmensuel").on("input", function (){
+            $("#prixmensuel").on("input", function () {
                 calPrices();
             });
 

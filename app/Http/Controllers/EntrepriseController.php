@@ -192,7 +192,7 @@ class EntrepriseController extends BaseController
             "prixfas" => [
                 "nullable",
                 "numeric",
-                "min:1"
+                "min:0"
             ],
             "prixbrut" => [
                 "nullable",
@@ -207,7 +207,7 @@ class EntrepriseController extends BaseController
             "qte" => [
                 "required",
                 "numeric",
-                "min:0"
+                "min:1"
             ]
         ]);
 
