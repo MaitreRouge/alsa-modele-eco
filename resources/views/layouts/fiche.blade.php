@@ -1,7 +1,7 @@
 @extends("layouts.layout",
 [
     "pageTitle" => $pageTitle??"Sans titre",
-    "activate" => 0
+    "activate" => 1
 ])
 
 <?php

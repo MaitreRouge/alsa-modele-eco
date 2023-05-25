@@ -61,7 +61,6 @@ class EntrepriseController extends BaseController
         $client->engagement = $request["engagement"];
         $client->upgrade = !empty($request["upgrade"]);
         $client->nvSite = !empty($request["nvSite"]);
-//        $client->nvClient = !empty($request["nvClient"]);
         $client->nvClient = !empty($request["nvClient"]);
         $client->save();
         return redirect("/edit/" . $client->id . "/fiche");
@@ -249,6 +248,15 @@ class EntrepriseController extends BaseController
         $devis->save();
 
         return redirect("/edit/".$request["id"]."/".$request["category"]);
+    }
+
+    public function deletePrestations(Request $request)
+    {
+        $devis = Devis::findOrFail($request["prestation"]);
+//        dd($devis);
+        $devis->delete();
+
+        return redirect("/edit/". $request["id"] . "/" . $request["category"]);
     }
 
     /********** FONCTIONS PRIVÉS **********/
