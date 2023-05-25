@@ -32,41 +32,16 @@ class EntrepriseController extends BaseController
     public function processCreate(Request $request)
     {
         $request->validate([
-            "raison-sociale" => [
-                "required"
-            ],
-            "rpap" => [
-                "required"
-            ],
-            "commercial" => [
-                "required"
-            ],
-            "agence" => [
-                "required",
-                "numeric",
-                Rule::in([2010, 2020, 2030, 2040, 2050, 2090])
-            ],
-            "nb-sites" => [
-                "required",
-                "numeric",
-                "min:1"
-            ],
-            "engagement" => [
-                "required",
-                Rule::in([12, 18, 24, 30, 36, 48, 60])
-            ],
-            "upgrade" => [
-                "nullable",
-            ],
-            "nvSite" => [
-                "nullable",
-            ],
-            "nvClient" => [
-                "nullable",
-            ],
-            "name" => [
-                "required"
-            ]
+            "raison-sociale" => [ "required" ],
+            "rpap" => [ "required" ],
+            "commercial" => [ "required" ],
+            "agence" => [ "required", "numeric", Rule::in([2010, 2020, 2030, 2040, 2050, 2090]) ],
+            "nb-sites" => [ "required", "numeric", "min:1" ],
+            "engagement" => [ "required", Rule::in([12, 18, 24, 30, 36, 48, 60]) ],
+            "upgrade" => [ "nullable" ],
+            "nvSite" => [ "nullable" ],
+            "nvClient" => [ "nullable" ],
+            "name" => [ "required" ]
         ]);
 
         if (!empty($request["id"])) {
@@ -173,10 +148,8 @@ class EntrepriseController extends BaseController
         return view("fiches.add-prestation", [
             "name" => ucfirst($request["category"]), //Nom de la page
             "prestation" => $prestation[0],
-//            "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
             "client" => $client, //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif
-//            "categories" => $categories //Liste de toutes les caregories (pour la liste déroulante)
         ]);
 
     }
@@ -185,30 +158,13 @@ class EntrepriseController extends BaseController
     {
 //        dump($request->toArray());
         $request->validate([
-            "prixfas" => [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "prixbrut" => [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "prixmensuel" => [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "qte" => [
-                "required",
-                "numeric",
-                "min:1"
-            ]
+            "prixfas" => [ "nullable", "numeric", "min:0" ],
+            "prixbrut" => [ "nullable", "numeric", "min:0" ],
+            "prixmensuel" => [ "nullable", "numeric", "min:0" ],
+            "qte" => [ "required", "numeric", "min:1" ]
         ]);
 
         $client = Client::findOrFail($request["id"]);
-
 
         $prestation = (Prestation::where("id", $request["prestation"])
             ->orderBy("version", "DESC")
@@ -219,19 +175,11 @@ class EntrepriseController extends BaseController
         }
         $prestation = $prestation[0];
 
-//        dump($request->toArray());
-//        dd($prestation);
-
         $prices = ["brut" => NULL, "fas" => NULL, "mensuel" => NULL];
-        if ($prestation->prixBrut != $request["prixbrut"]) {
-            $prices["brut"] = $request["prixbrut"];
-        }
-        if ($prestation->prixMensuel != $request["prixmensuel"]) {
-            $prices["mensuel"] = $request["prixmensuel"];
-        }
-        if ($prestation->prixFraisInstalation != $request["prixfas"]) {
-            $prices["fas"] = $request["prixfas"];
-        }
+
+        if ($prestation->prixBrut != $request["prixbrut"]) $prices["brut"] = $request["prixbrut"];
+        if ($prestation->prixMensuel != $request["prixmensuel"]) $prices["mensuel"] = $request["prixmensuel"];
+        if ($prestation->prixFraisInstalation != $request["prixfas"]) $prices["fas"] = $request["prixfas"];
 
         $devis = new Devis();
         $devis->version = $prestation->version;
@@ -278,26 +226,10 @@ class EntrepriseController extends BaseController
     public function processEditPrestations(Request $request)
     {
         $request->validate([
-            "prixfas" => [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "prixbrut" => [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "prixmensuel" => [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "qte" => [
-                "required",
-                "numeric",
-                "min:1"
-            ]
+            "prixfas" => [ "nullable", "numeric", "min:0" ],
+            "prixbrut" => [ "nullable", "numeric", "min:0" ],
+            "prixmensuel" => [ "nullable", "numeric", "min:0" ],
+            "qte" => [ "required", "numeric", "min:1" ]
         ]);
 
         $client = Client::findOrFail($request["id"]);
