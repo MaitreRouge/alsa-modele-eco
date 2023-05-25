@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\SlashEndOfURL;
 use App\Http\Middleware\ValidClientId;
+use App\Http\Middleware\ValidPrestation;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'slash' => SlashEndOfURL::class,
-        'validClientId' => ValidClientId::class
+        'validClientId' => ValidClientId::class,
+        'validPrestation' => ValidPrestation::class
     ];
 }

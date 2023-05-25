@@ -28,7 +28,9 @@ Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);
 
 Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(function () {
-    Route::get('', function ($id) {;
+    //localhost/edit/1
+    Route::get('', function ($id) {
+        ;
         return redirect("/edit/$id/fiche");
     });
 
@@ -36,6 +38,7 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
     Route::post("fiche", [EntrepriseController::class, "processCreate"]);
 
     Route::prefix("{category}")->group(function () {
+        //localhost/edit/1/data
         Route::get("", [EntrepriseController::class, "showCategoryPage"]);
 
         Route::get("/add", [EntrepriseController::class, "listPrestations"]);
@@ -46,14 +49,17 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
         Route::post("/add/{prestation}", [EntrepriseController::class, "processAddPrestations"])
             ->whereNumber("prestation");
 
-        Route::get("/edit/{prestation}", [EntrepriseController::class, "showEditPrestations"])
-            ->whereNumber("prestation");
-        Route::post("/edit/{prestation}", [EntrepriseController::class, "processEditPrestations"])
-            ->whereNumber("prestation");
+        Route::middleware("validPrestation")->group(function () {
+            Route::get("/edit/{prestation}", [EntrepriseController::class, "showEditPrestations"])
+                ->whereNumber("prestation");
+            Route::post("/edit/{prestation}", [EntrepriseController::class, "processEditPrestations"])
+                ->whereNumber("prestation");
 
-        Route::get("/delete/{prestation}", [EntrepriseController::class, "deletePrestations"])
-            ->whereNumber("prestation");
-    });
+            Route::get("/delete/{prestation}", [EntrepriseController::class, "deletePrestations"])
+                ->whereNumber("prestation");
+        });
+
+    })->whereIn("category", ["data", "telephonie", "services"]);
 });
 
 Route::prefix("/prestations/")->group(function () {
