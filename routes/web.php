@@ -49,6 +49,9 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
             ->whereNumber("prestation");
         Route::post("/edit/{prestation}", [EntrepriseController::class, "processEditPrestations"])
             ->whereNumber("prestation");
+
+        Route::get("/delete/{prestation}", [EntrepriseController::class, "deletePrestations"])
+            ->whereNumber("prestation");
     });
 });
 
