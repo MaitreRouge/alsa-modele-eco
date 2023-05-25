@@ -18,7 +18,6 @@
                 class="mt-2 block text-sm font-semibold text-gray-900">Ajouter une prestation {{ strtolower($name) }}</span>
         </a>
     @else
-        {{--        @dump($prestations)--}}
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">

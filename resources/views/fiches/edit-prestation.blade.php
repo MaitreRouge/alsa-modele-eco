@@ -6,11 +6,8 @@
 @section("fiche")
 
     <form method="POST" autocomplete="off">
-
         @csrf
-{{--        @dd($devis)--}}
         <div class="space-y-12">
-
             <div class="grid gap-x-8 gap-y-10  border-b border-gray-900/10 pb-12 ">
                 <div>
                     <h2 class="text-base font-semibold leading-7 text-gray-900">Informations générales de la
@@ -18,7 +15,6 @@
                     <p class="mt-1 text-sm leading-6 text-gray-600">Sur cet écran, il est possible de modifier
                         l'intégralité des prestations avant de les entrer dans le devis.</p>
                 </div>
-
                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 
                     @if(!empty($prestation->note))
@@ -41,7 +37,6 @@
                         </div>
                     @endif
 
-                    {{--                    @dd($prestation)--}}
                     <div class="sm:col-span-4">
                         <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                         <div class="mt-2">

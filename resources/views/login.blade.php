@@ -2,14 +2,6 @@
 <head>
     <link rel="stylesheet" type="text/css" href="dist/output.css">
 </head>
-<!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
 <body class="h-full">
 
 
@@ -22,7 +14,6 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" method="POST">
             @csrf
-
             <div>
                 <label for="identifiant" class="block text-sm font-medium leading-6 text-gray-900">Identifiant</label>
                 <div class="mt-2">

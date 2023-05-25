@@ -40,7 +40,6 @@
                         </div>
                     @endif
 
-                    {{--                    @dd($prestation)--}}
                     <div class="sm:col-span-4">
                         <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                         <div class="mt-2">

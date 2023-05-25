@@ -4,14 +4,9 @@
     "subActive" => 1
 ])
 @section("fiche")
-
-{{--    @dd($client)--}}
-
     <form method="POST" autocomplete="off">
-
         @csrf
         <div class="space-y-12">
-
             <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
                 <div>
                     <h2 class="text-base font-semibold leading-7 text-gray-900">Informations administatives et techniques</h2>
@@ -85,7 +80,7 @@
                         </div>
                     </div>
                     <div class="sm:col-span-3">
-                        <label for="country"
+                        <label for="engagement"
                                class="block text-sm font-medium leading-6 text-gray-900">Engagement</label>
                         <div class="mt-2">
                             <select id="engagement" name="engagement"
@@ -111,10 +106,6 @@
                                class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
                                role="switch" aria-checked="false" aria-labelledby="availability-label" {{ ($client->upgrade)?"checked":"" }}
                                aria-describedby="availability-description">
-                        <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                        {{--                            <span aria-hidden="true"--}}
-                        {{--                                  class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>--}}
-                        </input>
                     </div>
 
                     <div class="sm:col-span-4">
@@ -130,17 +121,12 @@
                                class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
                                role="switch" aria-checked="false" aria-labelledby="availability-label" {{ ($client->nvSite)?"checked":"" }}
                                aria-describedby="availability-description">
-                        <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                        {{--                            <span aria-hidden="true"--}}
-                        {{--                                  class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>--}}
-                        </button>
                     </div>
 
                     <div class="sm:col-span-4">
                         <div class="items-center justify-between">
                                     <span class="flex flex-grow flex-col">
                                         <span class="text-sm font-medium leading-6 text-gray-900" id="availability-label">Nouveau client ?</span>
-    {{--                                    <span class="text-sm text-gray-500" id="availability-description"></span>--}}
                                     </span>
                         </div>
                     </div>
@@ -149,10 +135,6 @@
                                class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
                                role="switch" aria-checked="false" aria-labelledby="availability-label" {{ ($client->nvClient)?"checked":"" }}
                                aria-describedby="availability-description">
-                        <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                        {{--                            <span aria-hidden="true"--}}
-                        {{--                                  class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>--}}
-                        </button>
                     </div>
 
                 </div>
