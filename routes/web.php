@@ -38,6 +38,7 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
         Route::get("", [EntrepriseController::class, "showCategoryPage"]);
 
         Route::get("/add", [EntrepriseController::class, "listPrestations"]);
+        Route::post("/add", [EntrepriseController::class, "listPrestations"]);
 
         Route::get("/add/{prestation}", [EntrepriseController::class, "showAddPrestations"])
             ->whereNumber("prestation");

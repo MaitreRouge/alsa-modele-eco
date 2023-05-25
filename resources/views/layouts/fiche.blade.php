@@ -17,23 +17,23 @@ $lineDefault = "bg-transparent absolute inset-x-0 bottom-0 h-0.5";
     <div class="hidden sm:block">
         <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
             <!-- Current: "text-gray-900", Default: "text-gray-500 hover:text-gray-700" -->
-            <a href="/edit/{{ $client->id }}/fiche" class="{{ ($subActive == 1)?$activated:$default }}">
+            <a href="/edit/{{ $cid??$client->id }}/fiche" class="{{ ($subActive == 1)?$activated:$default }}">
                 <span>Fiche client</span>
                 <span aria-hidden="true" class="{{ ($subActive == 1)?$lineActivated:$lineDefault }}"></span>
             </a>
-            <a href="/edit/{{ $client->id }}/data" class="{{ ($subActive == 2)?$activated:$default }}">
+            <a href="/edit/{{ $cid??$client->id }}/data" class="{{ ($subActive == 2)?$activated:$default }}">
                 <span>Data</span>
                 <span aria-hidden="true" class="{{ ($subActive == 2)?$lineActivated:$lineDefault }}"></span>
             </a>
-            <a href="/edit/{{ $client->id }}/telephonie" class="{{ ($subActive == 3)?$activated:$default }}">
+            <a href="/edit/{{ $cid??$client->id }}/telephonie" class="{{ ($subActive == 3)?$activated:$default }}">
                 <span>Telephonie</span>
                 <span aria-hidden="true" class="{{ ($subActive == 3)?$lineActivated:$lineDefault }}"></span>
             </a>
-            <a href="/edit/{{ $client->id }}/services"  class="{{ ($subActive == 4)?$activated:$default }}">
+            <a href="/edit/{{ $cid??$client->id }}/services"  class="{{ ($subActive == 4)?$activated:$default }}">
                 <span>Services</span>
                 <span aria-hidden="true" class="{{ ($subActive == 4)?$lineActivated:$lineDefault }}"></span>
             </a>
-            <a href="/edit/{{ $client->id }}/resume"  class="{{ ($subActive == 5)?$activated:$default }}">
+            <a href="/edit/{{ $cid??$client->id }}/resume"  class="{{ ($subActive == 5)?$activated:$default }}">
                 <span>Résumé</span>
                 <span aria-hidden="true" class="{{ ($subActive == 5)?$lineActivated:$lineDefault }}"></span>
             </a>

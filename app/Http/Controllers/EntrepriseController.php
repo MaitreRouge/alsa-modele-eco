@@ -46,7 +46,6 @@ class EntrepriseController extends BaseController
 
         if (!empty($request["id"])) {
             $client = Client::find($request["id"]);
-            if (!$client) return redirect("/dashboard");
         } else {
             $client = new Client;
         }
@@ -71,7 +70,6 @@ class EntrepriseController extends BaseController
     public function showMainPage(Request $request)
     {
         $client = Client::find($request["id"]);
-        if (!$client) return redirect("/dashboard");
         return view("fiches.main", ["client" => $client]);
     }
 
@@ -93,7 +91,7 @@ class EntrepriseController extends BaseController
         return view("fiches.resume-prestations", [
             "name" => ucfirst($category),
             "prestations" => $prestations,
-            "client" => $client,
+            "cid" => $client->id,
             "subActive" => $category_number+1
         ]);
     }
@@ -104,7 +102,6 @@ class EntrepriseController extends BaseController
             "id" => "exists|categories"
         ]);
 
-        $client = Client::find($request["id"]);
         $category = $this->matchCategory($request["category"]);
         $categories = Categorie::where("parentID", $category - 1)->get();
 
@@ -123,7 +120,7 @@ class EntrepriseController extends BaseController
             "name" => ucfirst($request["category"]), //Nom de la page
             "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
             "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
-            "client" => $client, //Client (necessaire pour les redirections)
+            "cid" => $request["id"], //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif ()
             "categories" => $categories, //Liste de toutes les caregories (pour la liste déroulante),
             "main" => $main //Oui mais non
@@ -132,9 +129,6 @@ class EntrepriseController extends BaseController
 
     public function showAddPrestations(Request $request)
     {
-
-        $client = Client::findOrFail($request["id"]);
-
         $category = $this->matchCategory($request["category"]);
 
         $prestation = Prestation::where("id", $request["prestation"])
@@ -148,7 +142,7 @@ class EntrepriseController extends BaseController
         return view("fiches.add-prestation", [
             "name" => ucfirst($request["category"]), //Nom de la page
             "prestation" => $prestation[0],
-            "client" => $client, //Client (necessaire pour les redirections)
+            "cid" => $request["id"], //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif
         ]);
 
@@ -163,8 +157,6 @@ class EntrepriseController extends BaseController
             "prixmensuel" => [ "nullable", "numeric", "min:0" ],
             "qte" => [ "required", "numeric", "min:1" ]
         ]);
-
-        $client = Client::findOrFail($request["id"]);
 
         $prestation = (Prestation::where("id", $request["prestation"])
             ->orderBy("version", "DESC")
@@ -188,17 +180,14 @@ class EntrepriseController extends BaseController
         $devis->prixBrut = $prices["brut"];
         $devis->prixMensuel = $prices["mensuel"];
         $devis->prixFraisInstalation = $prices["fas"];
-        $devis->clientID = $client->id;
+        $devis->clientID = $request["id"];
         $devis->save();
 
-        return redirect("/edit/".$client->id."/".$request["category"]);
+        return redirect("/edit/".$request["id"]."/".$request["category"]);
     }
 
     public function showEditPrestations(Request $request)
     {
-
-        $client = Client::findOrFail($request["id"]);
-
         $category = $this->matchCategory($request["category"]);
 
         $devis = Devis::findOrFail($request["prestation"]);
@@ -217,7 +206,7 @@ class EntrepriseController extends BaseController
             "name" => ucfirst($request["category"]), //Nom de la page
             "devis" => $devis,
             "prestation" => $prestation[0],
-            "client" => $client, //Client (necessaire pour les redirections)
+            "cid" => $request["id"], //identifiant client dans l'url (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être acti
         ]);
 
@@ -232,7 +221,6 @@ class EntrepriseController extends BaseController
             "qte" => [ "required", "numeric", "min:1" ]
         ]);
 
-        $client = Client::findOrFail($request["id"]);
         $devis = Devis::findOrFail($request["prestation"]);
 
         $prestation = Prestation::where("id", $devis->catalogueID)
@@ -260,7 +248,7 @@ class EntrepriseController extends BaseController
         $devis->prixFraisInstalation = $prices["fas"];
         $devis->save();
 
-        return redirect("/edit/".$client->id."/".$request["category"]);
+        return redirect("/edit/".$request["id"]."/".$request["category"]);
     }
 
     /********** FONCTIONS PRIVÉS **********/
