@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\PrestationsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,17 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
         Route::get("/delete/{prestation}", [EntrepriseController::class, "deletePrestations"])
             ->whereNumber("prestation");
     });
+});
+
+Route::prefix("/prestations/")->group(function () {
+
+    Route::get("", function () {
+        return redirect("prestations/data");
+    });
+
+    Route::get("{category}", [PrestationsController::class, "showList"]);
+    Route::post("{category}", [PrestationsController::class, "showList"]);
+
 });
 
 Route::get('/login', [UserController::class, "showLogin"]);
