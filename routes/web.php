@@ -26,7 +26,7 @@ Route::get("/dashboard", [EntrepriseController::class, "showDashboard"]);
 Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);
 
-Route::middleware("slash")->prefix('/edit/{id}/')->group(function () {
+Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(function () {
     Route::get('', function ($id) {;
         return redirect("/edit/$id/fiche");
     });
@@ -34,28 +34,22 @@ Route::middleware("slash")->prefix('/edit/{id}/')->group(function () {
     Route::get("fiche", [EntrepriseController::class, "showMainPage"]);
     Route::post("fiche", [EntrepriseController::class, "processCreate"]);
 
-    Route::get("{category}", [EntrepriseController::class, "showCategoryPage"]);
+    Route::prefix("{category}")->group(function () {
+        Route::get("", [EntrepriseController::class, "showCategoryPage"]);
 
-    Route::get("{category}/add", [EntrepriseController::class, "listPrestations"])
-        ->whereIn('category', ['data', 'services', 'telephonie']);
-    Route::post("{category}/add", [EntrepriseController::class, "listPrestations"])
-        ->whereIn('category', ['data', 'services', 'telephonie']);
+        Route::get("/add", [EntrepriseController::class, "listPrestations"]);
 
-    Route::get("{category}/add/{prestation}", [EntrepriseController::class, "showAddPrestations"])
-        ->whereIn('category', ['data', 'services', 'telephonie'])
-        ->whereNumber("prestation");
-    Route::post("{category}/add/{prestation}", [EntrepriseController::class, "processAddPrestations"])
-        ->whereIn('category', ['data', 'services', 'telephonie'])
-        ->whereNumber("prestation");
+        Route::get("/add/{prestation}", [EntrepriseController::class, "showAddPrestations"])
+            ->whereNumber("prestation");
+        Route::post("/add/{prestation}", [EntrepriseController::class, "processAddPrestations"])
+            ->whereNumber("prestation");
 
-    Route::get("{category}/edit/{prestation}", [EntrepriseController::class, "showEditPrestations"])
-        ->whereIn('category', ['data', 'services', 'telephonie'])
-        ->whereNumber("prestation");
-    Route::post("{category}/edit/{prestation}", [EntrepriseController::class, "processEditPrestations"])
-        ->whereIn('category', ['data', 'services', 'telephonie'])
-        ->whereNumber("prestation");
-
-})->whereNumber("id");
+        Route::get("/edit/{prestation}", [EntrepriseController::class, "showEditPrestations"])
+            ->whereNumber("prestation");
+        Route::post("/edit/{prestation}", [EntrepriseController::class, "processEditPrestations"])
+            ->whereNumber("prestation");
+    });
+});
 
 Route::get('/login', [UserController::class, "showLogin"]);
 
