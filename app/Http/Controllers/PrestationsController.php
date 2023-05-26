@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
@@ -34,7 +35,19 @@ class PrestationsController extends BaseController
             $main = Categorie::findOrFail($request["tri"]);
             $parents = Categorie::where("parentID", $request["tri"])->get();
             foreach ($parents as $parent) {
-                $prestations[$parent->id] = Prestation::where("idCategorie", $parent->id)->get();
+                $prestationsWithDetails = DB::table('prestations')
+                    ->joinSub(function ($query) use ($parent) {
+                        $query->from('prestations')
+                            ->select('id', DB::raw('MAX(version) as version_max'))
+                            ->where("idCategorie", $parent->id)
+                            ->groupBy('id');
+                    }, 't', function ($join) {
+                        $join->on('prestations.id', '=', 't.id')
+                            ->on('prestations.version', '=', 't.version_max');
+                    })
+                    ->get();
+//                dd($prestationsWithDetails);
+                $prestations[$parent->id] = $prestationsWithDetails;
             }
         }
 
@@ -47,6 +60,56 @@ class PrestationsController extends BaseController
             "categories" => $categories, //Liste de toutes les caregories (pour la liste déroulante),
             "main" => $main //Oui mais non
         ]);
+    }
+
+    public function showEdit(Request $request)
+    {
+        $prestation = Prestation::where("id", $request["prestation"])
+            ->orderby("version", "DESC")
+            ->limit(1)
+            ->get();
+        $prestation = $prestation[0];
+        $categories = Categorie::where("parentID", $prestation->categorie()->parentID)->get();
+//        dd($categories);
+
+        return view("prestations.edit", [
+            "prestation" => $prestation,
+            "subActive" => $prestation->mainCategory()->id,
+            "categories" => $categories
+        ]);
+    }
+
+    public function processEdit(Request $request)
+    {
+//        dump($request->toArray());
+        $request->validate([
+            "label" => ["required", "max:100"],
+            "category" => ["required", "exists:categories,id"],
+            "prixbrut" => ["nullable"],
+            "prixFAS" => ["nullable"],
+            "prixmensuel" => ["nullable"],
+            "note" => ["nullable"]
+        ]);
+
+        $prestation = Prestation::where("id", $request["prestation"])
+            ->orderby("version", "DESC")
+            ->limit(1)
+            ->get();
+        $prestation = $prestation[0];
+        $newPrestation = $prestation->replicate();
+        $newPrestation->version += 1;
+        $newPrestation->id = $prestation->id;
+        $newPrestation->label = $request["label"];
+        $newPrestation->prixBrut = $request["prixbrut"];
+        $newPrestation->prixMensuel = $request["prixmensuel"];
+        $newPrestation->prixFraisInstalation = $request["prixFAS"];
+        $newPrestation->note = $request["note"];
+        $newPrestation->needPrixVente = $request["prixVente"] ?? false;
+        $newPrestation->idCategorie = $request["category"];
+        $newPrestation->updated_at = Carbon::now();
+        $newPrestation->save();
+
+        return redirect("/prestations/");
     }
 
     /********** FONCTIONS PRIVÉS **********/

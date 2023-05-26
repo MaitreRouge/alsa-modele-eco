@@ -71,6 +71,9 @@ Route::prefix("/prestations/")->group(function () {
     Route::get("{category}", [PrestationsController::class, "showList"]);
     Route::post("{category}", [PrestationsController::class, "showList"]);
 
+    Route::get("edit/{prestation}", [PrestationsController::class, "showEdit"]);
+    Route::post("edit/{prestation}", [PrestationsController::class, "processEdit"]);
+
 });
 
 Route::get('/login', [UserController::class, "showLogin"]);

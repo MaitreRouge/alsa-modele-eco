@@ -1,3 +1,4 @@
+@php use App\Models\Prestation; @endphp
 @extends("layouts.fiche",
 [
     "pageTitle" => "Fiche Entreprisee - ".ucfirst($name),
@@ -101,9 +102,9 @@
                                                 </svg>
                                             @endif
                                         </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->price("prixFraisInstalation")??"-" }}</td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->price("prixBrut")??"-" }}</td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->price("prixMensuel")??"-" }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ Prestation::staticFormatPrice($prestation->prixFraisInstalation)??"-" }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ Prestation::staticFormatPrice($prestation->prixBrut)??"-" }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ Prestation::staticFormatPrice($prestation->prixMensuel)??"-" }}</td>
                                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                                             <a href="add/{{ $prestation->id }}" class="text-indigo-600 hover:text-indigo-900">Ajouter</a>
                                         </td>

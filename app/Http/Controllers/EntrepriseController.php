@@ -111,7 +111,19 @@ class EntrepriseController extends BaseController
             $main = Categorie::findOrFail($request["tri"]);
             $parents = Categorie::where("parentID", $request["tri"])->get();
             foreach ($parents as $parent) {
-                $prestations[$parent->id] = Prestation::where("idCategorie", $parent->id)->get();
+                $prestationsWithDetails = DB::table('prestations')
+                    ->joinSub(function ($query) use ($parent) {
+                        $query->from('prestations')
+                            ->select('id', DB::raw('MAX(version) as version_max'))
+                            ->where("idCategorie", $parent->id)
+                            ->groupBy('id');
+                    }, 't', function ($join) {
+                        $join->on('prestations.id', '=', 't.id')
+                            ->on('prestations.version', '=', 't.version_max');
+                    })
+                    ->get();
+//                dd($prestationsWithDetails);
+                $prestations[$parent->id] = $prestationsWithDetails;
             }
         }
 

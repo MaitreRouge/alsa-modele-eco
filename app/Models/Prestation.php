@@ -9,10 +9,15 @@ class Prestation extends Model
 {
     use HasFactory;
 
-    public function price(string $key): ?string
+    /**
+     * @param string $nombre
+     * @return string|null
+     */
+    private static function price(?float $nombre): ?string
     {
-        $nombre = $this->$key;
-        if ($nombre === null) { return null; }
+        if ($nombre === null) {
+            return null;
+        }
 
         // Vérifier si le nombre a une partie décimale
         if (str_contains($nombre, '.')) {
@@ -40,5 +45,30 @@ class Prestation extends Model
         }
 
         return $nombre . " €";
+    }
+
+    public function formatPrice(string $key): ?string
+    {
+        $nombre = $this->$key;
+        return self::price($nombre);
+    }
+
+    public static function staticFormatPrice(?float $key){
+        $nombre = $key;
+        return self::price($nombre);
+    }
+
+    public function mainCategory(): Categorie
+    {
+        $c = Categorie::find($this->idCategorie);
+        while ($c->parentID != null){
+            $c = Categorie::find($c->parentID);
+        }
+        return $c;
+    }
+
+    public function categorie(): Categorie
+    {
+        return Categorie::find($this->idCategorie);
     }
 }
