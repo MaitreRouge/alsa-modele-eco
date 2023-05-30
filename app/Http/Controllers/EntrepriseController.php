@@ -271,6 +271,14 @@ class EntrepriseController extends BaseController
         return redirect("/edit/". $request["id"] . "/" . $request["category"]);
     }
 
+    public function deleteAll(Request $request)
+    {
+        $client = Client::findOrFail($request["id"]);
+        DB::delete("DELETE FROM devis WHERE clientID = ". $request["id"]);
+        $client->delete();
+        return redirect("/dashboard");
+    }
+
     /********** FONCTIONS PRIVÉS **********/
     private function matchCategory(string $c)
     {

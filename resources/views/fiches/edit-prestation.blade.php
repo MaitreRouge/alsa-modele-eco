@@ -185,19 +185,6 @@
         jQuery(document).ready(function () {
             var $ = jQuery;
 
-            $("#qte").on("input", function () {
-                calPrices();
-            });
-            $("#prixfas").on("input", function () {
-                calPrices();
-            });
-            $("#prixbrut").on("input", function () {
-                calPrices();
-            });
-            $("#prixmensuel").on("input", function () {
-                calPrices();
-            });
-
             $("#delete").click(function () {
                 $("#error-message").show()
             });
@@ -206,18 +193,6 @@
                 $("#error-message").hide();
             });
 
-            calPrices();
-
-            function calPrices() {
-                var qteValue = $("#qte").val();
-                var totalfas = qteValue * $("#prixfas").val();
-                var totalbrut = qteValue * $("#prixbrut").val();
-                var totalmensuel = qteValue * $("#prixmensuel").val();
-                $("#totalfas").val(totalfas);
-                $("#totalbrut").val(totalbrut);
-                $("#totalmensuel").val(totalmensuel);
-                $("#total").val(totalfas + totalbrut + totalmensuel);
-            }
         });
     </script>
 
