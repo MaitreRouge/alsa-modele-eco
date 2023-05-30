@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('historiques', function (Blueprint $table) {
             $table->id();
             $table->integer("catalogueID");
+            $table->integer("newVersion");
             $table->integer("changelogID")->nullable();
             $table->timestamps();
         });

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categorie;
+use App\Models\Changelog;
 use App\Models\Client;
 use App\Models\Devis;
+use App\Models\Historique;
 use App\Models\Prestation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -108,6 +110,11 @@ class PrestationsController extends BaseController
         $newPrestation->idCategorie = $request["category"];
         $newPrestation->updated_at = Carbon::now();
         $newPrestation->save();
+
+        $log = new Historique();
+        $log->catalogueID = $prestation->id;
+        $log->newVersion = $newPrestation->version;
+        $log->save();
 
         return redirect("/prestations/");
     }
