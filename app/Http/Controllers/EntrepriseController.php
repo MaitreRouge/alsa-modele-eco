@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categorie;
 use App\Models\Client;
 use App\Models\Devis;
+use App\Models\Option;
 use App\Models\Prestation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -121,8 +122,9 @@ class EntrepriseController extends BaseController
                         $join->on('prestations.id', '=', 't.id')
                             ->on('prestations.version', '=', 't.version_max');
                     })
+                    ->leftJoin('options', 'prestations.id', '=', 'options.option_id')
+                    ->whereNull('options.prestation_id')
                     ->get();
-//                dd($prestationsWithDetails);
                 $prestations[$parent->id] = $prestationsWithDetails;
             }
         }
@@ -150,11 +152,14 @@ class EntrepriseController extends BaseController
             return back(); //Multiple or no prestation found (if we trigger this, it should be none because the request limits to one anyway)
         }
 
+        $options = Option::where("prestation_id", $prestation[0]->id)->get();
+
         return view("fiches.add-prestation", [
             "name" => ucfirst($request["category"]), //Nom de la page
             "prestation" => $prestation[0],
             "cid" => $request["id"], //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif
+            "options" => $options
         ]);
 
     }
