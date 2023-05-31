@@ -135,26 +135,73 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-                        <fieldset class="sm:col-span-4 border-b border-t border-gray-200">
-                            <legend class="sr-only">Notifications</legend>
-                            <div class="sm:col-span-6">
+
+                        <fieldset class="sm:col-span-4">
+                            <div class="space-y-4">
+
                                 @foreach($options as $option)
-                                    <div class="relative flex items-start pb-4 pt-3.5">
-                                        <div class="min-w-0 flex-1 text-sm leading-6">
-                                            <label for="comments"
-                                                   class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</label>
-                                            <p id="opt-{{ $option->option_id }}"
-                                               class="text-gray-500">{{ $option->getPrestation()->note }}</p>
-                                        </div>
-                                        <div class="ml-3 flex h-6 items-center">
-                                            <input id="opt-{{ $option->option_id }}" name="opt-{{ $option->option_id }}"
-                                                   type="checkbox"
-                                                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                                        </div>
-                                    </div>
+                                    <label id="opt-{{ $option->option_id }}-label" class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between">
+                                        <input type="checkbox" name="opt-{{ $option->option_id }}" id="opt-{{ $option->option_id }}" value="true" class="sr-only" aria-labelledby="opt-{{ $option->option_id }}-0-label" aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1">
+                                            <span class="flex items-center">
+                                                <span class="flex flex-col text-sm">
+                                                    <span id="opt-{{ $option->option_id }}-size-0-label" class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</span>
+                                                    <span id="opt-{{ $option->option_id }}-size-0-description-0" class="text-gray-500">
+                                                        <span class="block sm:inline">{{ $option->getPrestation()->note }}</span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                            <span id="opt-{{ $option->option_id }}-size-0-description-1" class="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right">
+                                                <span class="font-medium text-gray-900">$40</span>
+                                                <span class="ml-1 text-gray-500 sm:ml-0">par licence<br>par mois</span>
+                                            </span>
+                                        <span id="opt-{{ $option->option_id }}-border" class="pointer-events-none absolute -inset-px rounded-lg border-2" aria-hidden="true"></span>
+                                    </label>
+
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#opt-{{ $option->option_id }}').change(function() {
+                                                if($(this).is(":checked")) {
+                                                    $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
+                                                        .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
+                                                    $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
+                                                        .addClass("border border-indigo-600")
+                                                    return;
+                                                }
+                                                $('#opt-{{ $option->option_id }}-label')
+                                                    .removeClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
+                                                    .addClass("border-gray-300")
+                                                $('#opt-{{ $option->option_id }}-border')
+                                                    .removeClass("border border-indigo-600")
+                                                    .addClass("border-2 border-transparent")
+                                            });
+                                        });
+                                    </script>
                                 @endforeach
+
                             </div>
                         </fieldset>
+
+
+                        {{--                        <fieldset class="sm:col-span-4 border-b border-t border-gray-200">--}}
+{{--                            <legend class="sr-only">Notifications</legend>--}}
+{{--                            <div class="sm:col-span-6">--}}
+{{--                                @foreach($options as $option)--}}
+{{--                                    <div class="relative flex items-start pb-4 pt-3.5">--}}
+{{--                                        <div class="min-w-0 flex-1 text-sm leading-6">--}}
+{{--                                            <label for="comments"--}}
+{{--                                                   class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</label>--}}
+{{--                                            <p id="opt-{{ $option->option_id }}"--}}
+{{--                                               class="text-gray-500">{{ $option->getPrestation()->note }}</p>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="ml-3 flex h-6 items-center">--}}
+{{--                                            <input id="opt-{{ $option->option_id }}" name="opt-{{ $option->option_id }}"--}}
+{{--                                                   type="checkbox"--}}
+{{--                                                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endforeach--}}
+{{--                            </div>--}}
+{{--                        </fieldset>--}}
                     </div>
                 </div>
 

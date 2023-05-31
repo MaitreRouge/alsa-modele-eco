@@ -166,7 +166,8 @@ class EntrepriseController extends BaseController
 
     public function processAddPrestations(Request $request)
     {
-//        dump($request->toArray());
+        dump($request->toArray());
+        dd();
         $request->validate([
             "prixfas" => [ "nullable", "numeric", "min:0" ],
             "prixbrut" => [ "nullable", "numeric", "min:0" ],
