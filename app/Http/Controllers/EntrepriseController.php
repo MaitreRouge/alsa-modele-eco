@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categorie;
 use App\Models\Client;
 use App\Models\Devis;
+use App\Models\Notification;
 use App\Models\Option;
 use App\Models\Prestation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -197,6 +198,11 @@ class EntrepriseController extends BaseController
         $devis->prixFraisInstalation = $prices["fas"];
         $devis->clientID = $request["id"];
         $devis->save();
+
+        $notification = new Notification();
+//        dd($notification);
+        $notification->title = "Prestation bien ajoutée !";
+        $notification->save();
 
         return redirect("/edit/".$request["id"]."/".$request["category"]);
     }

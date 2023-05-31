@@ -40,6 +40,15 @@
             </header>
         </div>
 
+        @dump(session("notifications"))
+{{--        @if (!empty(session("notifications")))--}}
+            @foreach(session("notifications", []) as $notifs)
+                @php
+                    $notifs->show();
+                @endphp
+            @endforeach
+{{--        @endif--}}
+
         <main class="-mt-32">
             <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
 
