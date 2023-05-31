@@ -180,28 +180,6 @@
 
                             </div>
                         </fieldset>
-
-
-                        {{--                        <fieldset class="sm:col-span-4 border-b border-t border-gray-200">--}}
-{{--                            <legend class="sr-only">Notifications</legend>--}}
-{{--                            <div class="sm:col-span-6">--}}
-{{--                                @foreach($options as $option)--}}
-{{--                                    <div class="relative flex items-start pb-4 pt-3.5">--}}
-{{--                                        <div class="min-w-0 flex-1 text-sm leading-6">--}}
-{{--                                            <label for="comments"--}}
-{{--                                                   class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</label>--}}
-{{--                                            <p id="opt-{{ $option->option_id }}"--}}
-{{--                                               class="text-gray-500">{{ $option->getPrestation()->note }}</p>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="ml-3 flex h-6 items-center">--}}
-{{--                                            <input id="opt-{{ $option->option_id }}" name="opt-{{ $option->option_id }}"--}}
-{{--                                                   type="checkbox"--}}
-{{--                                                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                @endforeach--}}
-{{--                            </div>--}}
-{{--                        </fieldset>--}}
                     </div>
                 </div>
 
