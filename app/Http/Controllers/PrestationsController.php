@@ -23,9 +23,9 @@ class PrestationsController extends BaseController
 
     public function showList(Request $request)
     {
-        $request->validate([
-            "id" => "exists|categories"
-        ]);
+//        $request->validate([
+//            "id" => "exists:categories"
+//        ]);
 
         $category = $this->matchCategory($request["category"]);
         $categories = Categorie::where("parentID", $category - 1)->get();
@@ -119,8 +119,50 @@ class PrestationsController extends BaseController
         return redirect("/prestations/");
     }
 
-    /********** FONCTIONS PRIVÉS **********/
+    public function showNew(Request $request)
+    {
+        $parent = ($this->matchCategory($request["category"])) - 1;
+
+        return view("prestations.new", [
+            "categories" => Categorie::where("parentId", $request["sub"])->get(),
+            "subActive" => $parent
+        ]);
+    }
+
+    public function processNew(Request $request)
+    {
+        $request->validate([
+            "label" => "required|max:100",
+            "parent" => "required|exists:categories,id",
+            "prixbrut" => "nullable|min:0|decimal:0,2",
+            "prixFAS" => "nullable|min:0|decimal:0,2",
+            "prixmensuel" => "nullable|min:0|decimal:0,2",
+            "prixVente" => "nullable"
+        ]);
+
+//        dd();
+        $prestation = new Prestation();
+        $prestation->id = (Prestation::orderby("id", "DESC")->limit(1)->get("id"))[0]->id + 1;
+        $prestation->label = $request["label"];
+        $prestation->version = 1;
+        $prestation->prixBrut = $request["prixbrut"];
+        $prestation->prixFraisInstalation = $request["prixFAS"];
+        $prestation->prixMensuel = $request["prixmensuel"];
+        $prestation->idCategorie = $request["parent"];
+        $prestation->note = $request["note"];
+        $prestation->needPrixVente = $request["prixVente"]??0;
+        $prestation->save();
+
+        $hist = new Historique();
+        $hist->catalogueID = $prestation->id;
+        $hist->newVersion = 1;
+        $hist->save();
+//        dd($request->toArray());
+        return redirect("prestations/". $request["category"] ."?tri=" . $request["sub"]);
+    }
+
     private function matchCategory(string $c)
+    /********** FONCTIONS PRIVÉS **********/
     {
         return match (strtolower($c)) {
             "data" => 2,

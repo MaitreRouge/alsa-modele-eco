@@ -73,6 +73,9 @@ Route::prefix("/prestations/")->group(function () {
     Route::get("{category}", [PrestationsController::class, "showList"]);
     Route::post("{category}", [PrestationsController::class, "showList"]);
 
+    Route::get("{category}/{sub}/new", [PrestationsController::class, "showNew"]);
+    Route::post("{category}/{sub}/new", [PrestationsController::class, "processNew"]);
+
     Route::get("edit/{prestation}", [PrestationsController::class, "showEdit"]);
     Route::post("edit/{prestation}", [PrestationsController::class, "processEdit"]);
 
