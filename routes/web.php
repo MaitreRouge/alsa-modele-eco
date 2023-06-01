@@ -63,6 +63,7 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
 });
 
 Route::get("/delete/{id}", [EntrepriseController::class, "deleteAll"])->middleware(["validClientId"]);
+Route::get("/delete/{id}/devis", [EntrepriseController::class, "deleteAllDevis"])->middleware(["validClientId"]);
 
 Route::prefix("/prestations/")->group(function () {
 
