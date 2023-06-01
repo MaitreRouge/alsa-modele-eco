@@ -10,10 +10,10 @@ use Ramsey\Uuid\UuidInterface;
 class Notification extends Model
 {
     public string $title;
-    public string $icon;
-    public string $color;
-    public string $description;
-    public string $id;
+    public ?string $icon = null;
+    public ?string $color = null;
+    public ?string $description = null;
+    public ?string $id;
 
     protected $connection = null;
     protected $primaryKey = null;
@@ -21,10 +21,9 @@ class Notification extends Model
 
     public function save(array $options = []): self
     {
-        if (!empty($this->id)) $this->id = Str::uuid();
+        if (empty($this->id)) $this->id = Str::uuid();
 
         $notifications = session("notifications");
-        dd($this);
         $notifications[$this->id] = $this;
         session(["notifications" => $notifications]);
         return $this;
@@ -33,9 +32,8 @@ class Notification extends Model
     public function show(): string
     {
         $notifications = session("notifications");
-        dd($this);
-//        unset($notifications[$this->id]);
-        session("notifications", $notifications);
+        unset($notifications[$this->id]);
+        session(["notifications" => $notifications]);
 
         return '
         <!-- Global notification live region, render this permanently at the end of the document -->
@@ -70,8 +68,14 @@ class Notification extends Model
 <script>
     $(document).ready(function () {
         $("#notif-'. $this->id .'-button").click(function() {
-            $("#notif-'. $this->id .'").hide()
+            hide();
         });
+
+        function hide() {
+            $("#notif-'. $this->id .'").hide("fast")
+        }
+
+        setTimeout(hide, 5000);
     });
 </script>
 
