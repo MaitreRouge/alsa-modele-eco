@@ -34,16 +34,16 @@ class EntrepriseController extends BaseController
     public function processCreate(Request $request)
     {
         $request->validate([
-            "raison-sociale" => [ "required" ],
-            "rpap" => [ "required" ],
-            "commercial" => [ "required" ],
-            "agence" => [ "required", "numeric", Rule::in([2010, 2020, 2030, 2040, 2050, 2090]) ],
-            "nb-sites" => [ "required", "numeric", "min:1" ],
-            "engagement" => [ "required", Rule::in([12, 18, 24, 30, 36, 48, 60]) ],
-            "upgrade" => [ "nullable" ],
-            "nvSite" => [ "nullable" ],
-            "nvClient" => [ "nullable" ],
-            "name" => [ "required" ]
+            "raison-sociale" => ["required"],
+            "rpap" => ["required"],
+            "commercial" => ["required"],
+            "agence" => ["required", "numeric", Rule::in([2010, 2020, 2030, 2040, 2050, 2090])],
+            "nb-sites" => ["required", "numeric", "min:1"],
+            "engagement" => ["required", Rule::in([12, 18, 24, 30, 36, 48, 60])],
+            "upgrade" => ["nullable"],
+            "nvSite" => ["nullable"],
+            "nvClient" => ["nullable"],
+            "name" => ["required"]
         ]);
 
         if (!empty($request["id"])) {
@@ -77,7 +77,7 @@ class EntrepriseController extends BaseController
     public function showCategoryPage(Request $request)
     {
         $category = $request["category"];
-        $category_number = $this->matchCategory($request["category"])-1;
+        $category_number = $this->matchCategory($request["category"]) - 1;
         $client = Client::findOrFail($request["id"]);
         $prestations = DB::select("
         SELECT d.*
@@ -93,7 +93,7 @@ class EntrepriseController extends BaseController
             "name" => ucfirst($category),
             "prestations" => $prestations,
             "cid" => $client->id,
-            "subActive" => $category_number+1
+            "subActive" => $category_number + 1
         ]);
     }
 
@@ -168,18 +168,21 @@ class EntrepriseController extends BaseController
     public function processAddPrestations(Request $request)
     {
         $request->validate([
-            "prixfas" => [ "nullable", "numeric", "min:0" ],
-            "prixbrut" => [ "nullable", "numeric", "min:0" ],
-            "prixmensuel" => [ "nullable", "numeric", "min:0" ],
-            "qte" => [ "required", "numeric", "min:1" ]
+            "prixfas" => ["nullable", "numeric", "min:0"],
+            "prixbrut" => ["nullable", "numeric", "min:0"],
+            "prixmensuel" => ["nullable", "numeric", "min:0"],
+            "qte" => ["required", "numeric", "min:1"]
         ]);
 
+        /******************************/
+        /*   Ajout de la prestation   */
+        /******************************/
         $prestation = (Prestation::where("id", $request["prestation"])
             ->orderBy("version", "DESC")
             ->limit(1)
             ->get());
         if (count($prestation) != 1) {
-            return back(); //Multiple or no prestation found (if we trigger this, it should be none because the request limits to one anyway)
+            return back(); //Aucune prestation trouvée, on revient en arrière
         }
         $prestation = $prestation[0];
 
@@ -199,12 +202,47 @@ class EntrepriseController extends BaseController
         $devis->clientID = $request["id"];
         $devis->save();
 
+        /*******************************/
+        /*      Ajout des options      */
+        /*******************************/
+
+        foreach ($request->toArray() as $key => $value) {
+            if (str_contains($key, "opt-")) {
+                // Chaque option qui à été ajoutée est représentée de la manière ["opt-ID" => true]
+                // Donc on prend la clée, la coupe à "-" et prends la partie de droite.
+                // Ca nous donne cet $opt_id
+                $opt_id = explode("-", $key)[1];
+
+                $option = (Prestation::where("id", $opt_id)
+                    ->orderBy("version", "DESC")
+                    ->limit(1)
+                    ->get());
+                if (count($option) != 1) {
+                    return back(); //Aucune prestation trouvée, on revient en arrière
+                }
+
+                $option = $option[0];
+                $devisOpt = new Devis();
+                $devisOpt->version = $option->version;
+                $devisOpt->catalogueID = $option->id;
+                $devisOpt->quantite = 1;
+                $devisOpt->prixBrut = $option->prixBrut;
+                $devisOpt->prixMensuel = $option->prixMensuel;
+                $devisOpt->prixFraisInstalation = $option->prixFraisInstalation;
+                $devisOpt->optLinked = $devis->id;
+                $devisOpt->clientID = $request["id"];
+                $devisOpt->save();
+            }
+        }
+
+
+
+
         $notification = new Notification();
-//        dd($notification);
         $notification->title = "Prestation bien ajoutée !";
         $notification->save();
 
-        return redirect("/edit/".$request["id"]."/".$request["category"]);
+        return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
     }
 
     public function showEditPrestations(Request $request)
@@ -236,10 +274,10 @@ class EntrepriseController extends BaseController
     public function processEditPrestations(Request $request)
     {
         $request->validate([
-            "prixfas" => [ "nullable", "numeric", "min:0" ],
-            "prixbrut" => [ "nullable", "numeric", "min:0" ],
-            "prixmensuel" => [ "nullable", "numeric", "min:0" ],
-            "qte" => [ "required", "numeric", "min:1" ]
+            "prixfas" => ["nullable", "numeric", "min:0"],
+            "prixbrut" => ["nullable", "numeric", "min:0"],
+            "prixmensuel" => ["nullable", "numeric", "min:0"],
+            "qte" => ["required", "numeric", "min:1"]
         ]);
 
         $devis = Devis::findOrFail($request["prestation"]);
@@ -269,7 +307,7 @@ class EntrepriseController extends BaseController
         $devis->prixFraisInstalation = $prices["fas"];
         $devis->save();
 
-        return redirect("/edit/".$request["id"]."/".$request["category"]);
+        return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
     }
 
     public function deletePrestations(Request $request)
@@ -278,13 +316,13 @@ class EntrepriseController extends BaseController
 //        dd($devis);
         $devis->delete();
 
-        return redirect("/edit/". $request["id"] . "/" . $request["category"]);
+        return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
     }
 
     public function deleteAll(Request $request)
     {
         $client = Client::findOrFail($request["id"]);
-        DB::delete("DELETE FROM devis WHERE clientID = ". $request["id"]);
+        DB::delete("DELETE FROM devis WHERE clientID = " . $request["id"]);
         $client->delete();
         return redirect("/dashboard");
     }

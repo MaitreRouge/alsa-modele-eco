@@ -64,13 +64,20 @@
                                     ?>
                                 <tr>
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                        @if(!empty($line->optLinked))
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="display: inline" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                            </svg>
+                                        @endif
                                         {{ $p->label }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ($line->prixFraisInstalation??$p->prixFraisInstalation) * $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ (($line->prixMensuel??$p->prixMensuel) * $line->quantite) }}</td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                        @if(empty($line->optLinked))
                                         <a href="{{strtolower($name) }}/edit/{{ $line->id }}" class="text-indigo-600 hover:text-indigo-900">Edit<span
                                                 class="sr-only"></span></a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
