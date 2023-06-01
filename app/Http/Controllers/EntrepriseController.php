@@ -314,6 +314,7 @@ class EntrepriseController extends BaseController
     {
         $devis = Devis::findOrFail($request["prestation"]);
 //        dd($devis);
+        DB::delete("DELETE FROM devis WHERE optLinked = " . $devis->id);
         $devis->delete();
 
         return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
