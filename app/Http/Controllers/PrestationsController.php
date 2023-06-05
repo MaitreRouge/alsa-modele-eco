@@ -106,7 +106,7 @@ class PrestationsController extends BaseController
         $newPrestation->prixMensuel = $request["prixmensuel"];
         $newPrestation->prixFraisInstalation = $request["prixFAS"];
         $newPrestation->note = $request["note"];
-        $newPrestation->needPrixVente = $request["prixVente"] ?? false;
+        $newPrestation->needPrixVente = ($request["prixVente"] ?? 0) == "on";
         $newPrestation->idCategorie = $request["category"];
         $newPrestation->updated_at = Carbon::now();
         $newPrestation->save();

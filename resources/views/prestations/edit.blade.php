@@ -92,7 +92,7 @@
                     <div class="sm:col-span-2 my-auto">
                         <input type="checkbox" name="prixVente"
                                class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
-                               role="switch" {{ ($prestation->needPrixVente)?"selected":"" }} />
+                               role="switch" {{ ($prestation->needPrixVente)?"checked":"" }} />
                     </div>
 
                 </div>
