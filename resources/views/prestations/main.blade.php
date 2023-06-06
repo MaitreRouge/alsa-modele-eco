@@ -92,7 +92,7 @@
                             @foreach($parents as $parent)
                                 <tr class="border-t border-gray-200">
                                     <th colspan="5" scope="colgroup"
-                                        class="bg-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                        class="bg-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3 relative">
                                         {{ $parent->label }}
                                         @if(!empty($parent->note))
                                             <svg class="h-5 w-5 text-yellow-400" style="display: inline"
@@ -102,7 +102,9 @@
                                                       clip-rule="evenodd"/>
                                             </svg>
                                         @endif
+                                        <a href="bulk-edit/{{$parent->id}}" class="absolute right-0 pr-4 text-indigo-600 hover:text-indigo-900">Modification de masse</a>
                                     </th>
+
                                 </tr>
                                 @foreach($prestations[$parent->id] as $prestation)
                                     <tr class="border-t border-gray-200">

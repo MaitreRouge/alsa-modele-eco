@@ -23,9 +23,6 @@ class PrestationsController extends BaseController
 
     public function showList(Request $request)
     {
-//        $request->validate([
-//            "id" => "exists:categories"
-//        ]);
 
         $category = $this->matchCategory($request["category"]);
         $categories = Categorie::where("parentID", $category - 1)->get();
@@ -48,7 +45,6 @@ class PrestationsController extends BaseController
                             ->on('prestations.version', '=', 't.version_max');
                     })
                     ->get();
-//                dd($prestationsWithDetails);
                 $prestations[$parent->id] = $prestationsWithDetails;
             }
         }
@@ -150,7 +146,7 @@ class PrestationsController extends BaseController
         $prestation->prixMensuel = $request["prixmensuel"];
         $prestation->idCategorie = $request["parent"];
         $prestation->note = $request["note"];
-        $prestation->needPrixVente = $request["prixVente"]??0;
+        $prestation->needPrixVente = $request["prixVente"] ?? 0;
         $prestation->save();
 
         $hist = new Historique();
@@ -158,11 +154,94 @@ class PrestationsController extends BaseController
         $hist->newVersion = 1;
         $hist->save();
 //        dd($request->toArray());
-        return redirect("prestations/". $request["category"] ."?tri=" . $request["sub"]);
+        return redirect("prestations/" . $request["category"] . "?tri=" . $request["sub"]);
+    }
+
+    public function showBulkEdit(Request $request)
+    {
+
+        $parent = Categorie::findOrFail($request["parent"]);
+        $categories = Categorie::where("parentID", $parent->parentID)->get();
+
+
+        $prestations = [];
+
+        $prestationsWithDetails = DB::table('prestations')
+            ->joinSub(function ($query) use ($parent) {
+                $query->from('prestations')
+                    ->select('id', DB::raw('MAX(version) as version_max'))
+                    ->where("idCategorie", $parent->id)
+                    ->groupBy('id');
+            }, 't', function ($join) {
+                $join->on('prestations.id', '=', 't.id')
+                    ->on('prestations.version', '=', 't.version_max');
+            })
+            ->get();
+        $prestations[$parent->id] = $prestationsWithDetails;
+
+        return view("prestations.bulkedit", [
+            "name" => ucfirst("bulk edit"), //Nom de la page
+            "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
+            "parents" => [$parent], //Liste des parents des prestatons (affichés dans le tableau)
+            "subActive" => ($parent->rootCategory()->id) + 1, //Index du bouton du sous-menu qui doit être actif ()
+            "categories" => $categories, //Liste de toutes les caregories (pour la liste déroulante),
+            "main" => $parent //Oui mais non
+        ]);
+
+    }
+
+    public function processBulkEdit(Request $request)
+    {
+        $parent = Categorie::findOrFail($request["parent"]);
+        $ids = $parent->getPrestationsIdsInsideCategory(); //On récupère tous les ids des prestations que l'utilisateur peut modifier
+        $champs = ["needPrixVente", "prixBrut", "prixMensuel", "prixFraisInstalation", "label", "note"];
+
+        foreach ($request->toArray() as $key => $value) {
+            if ($key !== "_token") { //On récupère tous les champs sauf le token csrf
+                $pieces = explode("-", $key); //On les sépare car leurs nom est "presta-ID-NOM"
+                if (!in_array($pieces[1], $ids)) { //On regarde si l'utilisateur peut modifier l'id en question
+                    return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une valeur qui ne fait pas partie de la catégorie selectionnée ;)"]);
+                }
+                if (!in_array($pieces[2], $champs)) {
+                    if (!in_array($pieces[1], $ids)) { //On regarde si l'utilisateur peut modifier l'id en question
+                        return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une propriété qui est protégée ;)"]);
+                    }
+                }
+
+                if ($pieces[2] === "needPrixVente") $value = 1;
+                $data[$pieces[1]][$pieces[2]] = $value;
+
+            }
+        }
+
+        foreach ($data as $id => $properties) {
+            $dirty = 0; // La fonction isDirty de laravel est buggée et renvoie tjrs true (06/06/2023)
+            $prestation = Prestation::where("id", $id)
+                ->orderby("version", "DESC")
+                ->limit(1)
+                ->get();
+            $old = $prestation[0];
+            $prestation = $old->replicate();
+            $prestation->id = $old->id;
+            foreach ($properties as $key => $value) {
+                if ($prestation->$key != $value) {
+                    $dirty = 1;
+//                    dd($key, $value, $prestation->$key);
+                    $prestation->$key = $value;
+                }
+            }
+            if ($dirty) {
+                $prestation->version += 1;
+                $prestation->updated_at = Carbon::now();
+                $prestation->save();
+            }
+        }
+
+        return redirect("/prestations/". strtolower($parent->rootCategory()->label) ."?tri=" . $parent->parentCategory()->id);
     }
 
     private function matchCategory(string $c)
-    /********** FONCTIONS PRIVÉS **********/
+        /********** FONCTIONS PRIVÉS **********/
     {
         return match (strtolower($c)) {
             "data" => 2,

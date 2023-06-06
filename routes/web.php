@@ -80,6 +80,9 @@ Route::prefix("/prestations/")->group(function () {
     Route::get("edit/{prestation}", [PrestationsController::class, "showEdit"]);
     Route::post("edit/{prestation}", [PrestationsController::class, "processEdit"]);
 
+    Route::get("bulk-edit/{parent}", [PrestationsController::class, "showBulkEdit"]);
+    Route::post("bulk-edit/{parent}", [PrestationsController::class, "processBulkEdit"]);
+
 });
 
 Route::get('/login', [UserController::class, "showLogin"]);
