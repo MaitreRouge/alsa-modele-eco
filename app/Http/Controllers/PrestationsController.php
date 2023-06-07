@@ -226,7 +226,6 @@ class PrestationsController extends BaseController
             foreach ($properties as $key => $value) {
                 if ($prestation->$key != $value) {
                     $dirty = 1;
-//                    dd($key, $value, $prestation->$key);
                     $prestation->$key = $value;
                 }
             }
@@ -241,7 +240,7 @@ class PrestationsController extends BaseController
     }
 
     private function matchCategory(string $c)
-        /********** FONCTIONS PRIVÉS **********/
+    /********** FONCTIONS PRIVÉS **********/
     {
         return match (strtolower($c)) {
             "data" => 2,
@@ -250,3 +249,4 @@ class PrestationsController extends BaseController
         };
     }
 }
+
