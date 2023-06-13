@@ -13,7 +13,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
 class EntrepriseController extends BaseController
@@ -46,11 +45,8 @@ class EntrepriseController extends BaseController
             "name" => ["required"]
         ]);
 
-        if (!empty($request["id"])) {
-            $client = Client::find($request["id"]);
-        } else {
-            $client = new Client;
-        }
+        $client = new Client;
+        if (!empty($request["id"])) $client = Client::find($request["id"]);
 
         $client->raisonSociale = $request["raison-sociale"];
         $client->RPAP = $request["rpap"];
@@ -70,10 +66,14 @@ class EntrepriseController extends BaseController
         $devis = Devis::where("clientID", $client->id)->get();
         if (!empty($devis) and count($devis) > 0) {
             foreach ($devis as $d) {
-                $d->conflict = !$d->getPrestation()->validEngagement($client->engagement);
+                $d->conflict = !($d->getPrestation()->validEngagement($client->engagement));
                 $d->save();
             }
         }
+
+        $notification = new Notification();
+        $notification->title = "Client bien créé !";
+        $notification->save();
 
         return redirect("/edit/" . $client->id . "/fiche");
     }
@@ -87,8 +87,7 @@ class EntrepriseController extends BaseController
     public function showCategoryPage(Request $request)
     {
         $category = $request["category"];
-        $category_number = $this->matchCategory($request["category"]) - 1;
-        $client = Client::findOrFail($request["id"]);
+        $category_number = $this->matchCategory($category) - 1;
         $prestations = DB::select("
         SELECT d.*
         FROM devis AS d, prestations as p, categories as c
@@ -97,12 +96,12 @@ class EntrepriseController extends BaseController
             AND p.idCategorie = c.id
             AND c.parentID IN (SELECT c.id FROM categories as c WHERE c.parentID = :cID)
             AND d.clientID = :clientID
-        ", ["clientID" => $client->id, "cID" => $category_number]);
+        ", ["clientID" => $request["id"], "cID" => $category_number]);
 //        $prestations = [];
         return view("fiches.resume-prestations", [
             "name" => ucfirst($category),
             "prestations" => $prestations,
-            "cid" => $client->id,
+            "cid" => $request["id"],
             "subActive" => $category_number + 1
         ]);
     }
@@ -165,7 +164,6 @@ class EntrepriseController extends BaseController
         $prestation = $prestation[0];
 
         $options = Option::where("prestation_id", $prestation->id)->get();
-
         $client = Client::find($request["id"]);
 
         if (!$prestation->validEngagement($client->engagement)) {
@@ -224,6 +222,10 @@ class EntrepriseController extends BaseController
         $devis->clientID = $request["id"];
         $devis->save();
 
+        $notification = new Notification();
+        $notification->title = "Prestation #".$prestation->id." enregistrée !";
+        $notification->save();
+
         /*******************************/
         /*      Ajout des options      */
         /*******************************/
@@ -254,15 +256,12 @@ class EntrepriseController extends BaseController
                 $devisOpt->optLinked = $devis->id;
                 $devisOpt->clientID = $request["id"];
                 $devisOpt->save();
+
+                $notification = new Notification();
+                $notification->title = "Option #".$option->id." enregistrée !";
+                $notification->save();
             }
         }
-
-
-
-
-        $notification = new Notification();
-        $notification->title = "Prestation bien ajoutée !";
-        $notification->save();
 
         return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
     }
@@ -313,15 +312,9 @@ class EntrepriseController extends BaseController
         $prestation = $prestation[0];
 
         $prices = ["brut" => NULL, "fas" => NULL, "mensuel" => NULL];
-        if ($prestation->prixBrut != $request["prixbrut"]) {
-            $prices["brut"] = $request["prixbrut"];
-        }
-        if ($prestation->prixMensuel != $request["prixmensuel"]) {
-            $prices["mensuel"] = $request["prixmensuel"];
-        }
-        if ($prestation->prixFraisInstalation != $request["prixfas"]) {
-            $prices["fas"] = $request["prixfas"];
-        }
+        if ($prestation->prixBrut != $request["prixbrut"]) $prices["brut"] = $request["prixbrut"];
+        if ($prestation->prixMensuel != $request["prixmensuel"]) $prices["mensuel"] = $request["prixmensuel"];
+        if ($prestation->prixFraisInstalation != $request["prixfas"]) $prices["fas"] = $request["prixfas"];
 
         $devis->quantite = $request["qte"];
         $devis->prixBrut = $prices["brut"];
@@ -329,15 +322,22 @@ class EntrepriseController extends BaseController
         $devis->prixFraisInstalation = $prices["fas"];
         $devis->save();
 
+        $notification = new Notification();
+        $notification->title = "Entrée #".$devis->id." modifiée !";
+        $notification->save();
+
         return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
     }
 
     public function deletePrestations(Request $request)
     {
         $devis = Devis::findOrFail($request["prestation"]);
-//        dd($devis);
         DB::delete("DELETE FROM devis WHERE optLinked = " . $devis->id);
         $devis->delete();
+
+        $notification = new Notification();
+        $notification->title = "Prestation #".$devis->id." supprimé !";
+        $notification->save();
 
         return redirect("/edit/" . $request["id"] . "/" . $request["category"]);
     }
@@ -347,6 +347,11 @@ class EntrepriseController extends BaseController
         $client = Client::findOrFail($request["id"]);
         DB::delete("DELETE FROM devis WHERE clientID = " . $request["id"]);
         $client->delete();
+
+        $notification = new Notification();
+        $notification->title = "Fiche client supprimée !";
+        $notification->save();
+
         return redirect("/dashboard");
     }
 
@@ -354,6 +359,11 @@ class EntrepriseController extends BaseController
     {
         $client = Client::findOrFail($request["id"]);
         DB::delete("DELETE FROM devis WHERE clientID = " . $request["id"]);
+
+        $notification = new Notification();
+        $notification->title = "Tous les devis du client ont bien été supprimés";
+        $notification->save();
+
         return redirect("/dashboard");
     }
 

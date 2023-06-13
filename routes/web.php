@@ -30,7 +30,6 @@ Route::post('/new', [EntrepriseController::class, "processCreate"]);
 Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(function () {
     //localhost/edit/1
     Route::get('', function ($id) {
-        ;
         return redirect("/edit/$id/fiche");
     });
 

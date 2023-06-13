@@ -86,5 +86,6 @@ class Prestation extends Model
             if ($this->minEngagement === $this->maxEngagement) return $this->minEngagement . " mois";
             return "entre " . $this->minEngagement . " et " . $this->maxEngagement . " mois";
         }
+        return "noFormat";
     }
 }

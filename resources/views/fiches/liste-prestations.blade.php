@@ -1,7 +1,7 @@
 @php use App\Models\Prestation; @endphp
 @extends("layouts.fiche",
 [
-    "pageTitle" => "Fiche Entreprisee - ".ucfirst($name),
+    "pageTitle" => "Fiche Entreprise - ".ucfirst($name),
     "subActive" => $subActive
 ])
 @section("fiche")
