@@ -152,13 +152,25 @@ class EntrepriseController extends BaseController
         if (count($prestation) != 1) {
             return back(); //Multiple or no prestation found (if we trigger this, it should be none because the request limits to one anyway)
         }
+        $prestation = $prestation[0];
 
-        $options = Option::where("prestation_id", $prestation[0]->id)->get();
+        $options = Option::where("prestation_id", $prestation->id)->get();
+
+        $client = Client::find($request["id"]);
+
+        if (!$prestation->validEngagement($client->engagement)) {
+            $notification = new Notification();
+            $notification->title = "Engagement invalide pour cette prestation !";
+            $notification->color = "red";
+            $notification->icon = "exclamation-circle";
+            $notification->save();
+            return back();
+        }
 
         return view("fiches.add-prestation", [
             "name" => ucfirst($request["category"]), //Nom de la page
-            "prestation" => $prestation[0],
-            "cid" => $request["id"], //Client (necessaire pour les redirections)
+            "prestation" => $prestation,
+            "client" => $client, //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif
             "options" => $options
         ]);
