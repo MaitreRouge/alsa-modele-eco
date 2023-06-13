@@ -71,4 +71,20 @@ class Prestation extends Model
     {
         return Categorie::find($this->idCategorie);
     }
+
+    public function validEngagement($clientEng): bool
+    {
+//        dump($this->minEngagement);
+        if (($this->minEngagement??$clientEng-1) > $clientEng) return false;
+        if (($this->maxEngagement??$clientEng+1) < $clientEng) return false;
+        return true;
+    }
+
+    public function formatEngagement(): string
+    {
+        if (!empty($this->minEngagement) and !empty($this->maxEngagement)) {
+            if ($this->minEngagement === $this->maxEngagement) return $this->minEngagement . " mois";
+            return "entre " . $this->minEngagement . " et " . $this->maxEngagement . " mois";
+        }
+    }
 }

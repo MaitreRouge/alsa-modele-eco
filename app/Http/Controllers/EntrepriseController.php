@@ -134,7 +134,7 @@ class EntrepriseController extends BaseController
             "name" => ucfirst($request["category"]), //Nom de la page
             "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
             "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
-            "cid" => $request["id"], //Client (necessaire pour les redirections)
+            "client" => Client::findOrFail($request["id"]), //Client (necessaire pour les redirections et pour l'engagement)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif ()
             "categories" => $categories, //Liste de toutes les caregories (pour la liste déroulante),
             "main" => $main //Oui mais non
