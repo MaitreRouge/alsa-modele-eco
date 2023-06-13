@@ -65,6 +65,16 @@ class EntrepriseController extends BaseController
         $client->nvSite = !empty($request["nvSite"]);
         $client->nvClient = !empty($request["nvClient"]);
         $client->save();
+
+        // Vérification des prestations liés au client et si l'engagement est toujours respecté
+        $devis = Devis::where("clientID", $client->id)->get();
+        if (!empty($devis) and count($devis) > 0) {
+            foreach ($devis as $d) {
+                $d->conflict = !$d->getPrestation()->validEngagement($client->engagement);
+                $d->save();
+            }
+        }
+
         return redirect("/edit/" . $client->id . "/fiche");
     }
 

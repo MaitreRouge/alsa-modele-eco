@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('devis', function (Blueprint $table) {
             $table->integer("optLinked")->nullable()->default(null)->after("prixMensuel");
+            $table->boolean("conflict")->default(0)->after("catalogueID");
         });
     }
 
