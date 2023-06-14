@@ -89,15 +89,15 @@ class EntrepriseController extends BaseController
         $category = $request["category"];
         $category_number = $this->matchCategory($category) - 1;
         $prestations = DB::select("
-        SELECT d.*
+        SELECT DISTINCT d.*
         FROM devis AS d, prestations as p, categories as c
-        WHERE d.catalogueID = p.id
+        WHERE (d.catalogueID = p.id
             AND d.version = p.version
             AND p.idCategorie = c.id
             AND c.parentID IN (SELECT c.id FROM categories as c WHERE c.parentID = :cID)
-            AND d.clientID = :clientID
-        ", ["clientID" => $request["id"], "cID" => $category_number]);
-//        $prestations = [];
+            AND d.clientID = :clientID)
+            OR d.parent = :parent
+        ", ["clientID" => $request["id"], "cID" => $category_number, "parent" => $category_number]);
         return view("fiches.resume-prestations", [
             "name" => ucfirst($category),
             "prestations" => $prestations,
@@ -187,11 +187,14 @@ class EntrepriseController extends BaseController
 
     public function processAddPrestations(Request $request)
     {
+        $category = $this->matchCategory($request["category"]) - 1;
+
         $request->validate([
-            "prixfas" => ["nullable", "numeric", "min:0"],
-            "prixbrut" => ["nullable", "numeric", "min:0"],
-            "prixmensuel" => ["nullable", "numeric", "min:0"],
-            "qte" => ["required", "numeric", "min:1"]
+            "prixfas" => ["nullable", "numeric"],
+            "prixbrut" => ["nullable", "numeric"],
+            "prixmensuel" => ["nullable", "numeric"],
+            "qte" => ["required", "numeric", "min:1"],
+            "customName" => Rule::requiredIf($request["prestation"] === 0)
         ]);
 
         /******************************/
@@ -220,6 +223,10 @@ class EntrepriseController extends BaseController
         $devis->prixMensuel = $prices["mensuel"];
         $devis->prixFraisInstalation = $prices["fas"];
         $devis->clientID = $request["id"];
+        if ($prestation->id === 0) {
+            $devis->parent = $category;
+            $devis->customName = ($request["customName"])??"Autre prestation - Nom à changer";
+        }
         $devis->save();
 
         $notification = new Notification();
@@ -295,10 +302,11 @@ class EntrepriseController extends BaseController
     public function processEditPrestations(Request $request)
     {
         $request->validate([
-            "prixfas" => ["nullable", "numeric", "min:0"],
-            "prixbrut" => ["nullable", "numeric", "min:0"],
-            "prixmensuel" => ["nullable", "numeric", "min:0"],
-            "qte" => ["required", "numeric", "min:1"]
+            "prixfas" => ["nullable", "numeric"],
+            "prixbrut" => ["nullable", "numeric"],
+            "prixmensuel" => ["nullable", "numeric"],
+            "qte" => ["required", "numeric", "min:1"],
+            "customName" => Rule::requiredIf($request["prestation"] === 0)
         ]);
 
         $devis = Devis::findOrFail($request["prestation"]);
@@ -320,6 +328,9 @@ class EntrepriseController extends BaseController
         $devis->prixBrut = $prices["brut"];
         $devis->prixMensuel = $prices["mensuel"];
         $devis->prixFraisInstalation = $prices["fas"];
+        if ($prestation->id === 0) {
+            $devis->customName = $request["customName"];
+        }
         $devis->save();
 
         $notification = new Notification();

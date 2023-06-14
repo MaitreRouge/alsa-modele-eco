@@ -84,8 +84,8 @@
                     <div class="sm:col-span-4">
                         <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                         <div class="mt-2">
-                            <input type="text" id="label" value="{{ $prestation->label }}" disabled
-                                   class="bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="text" id="label" value="{{ $devis->customName??$prestation->label }}" {{ ($prestation->id === 0)?"":"disabled"}} name="customName"
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
                     <div class="sm:col-span-2"></div>
@@ -94,7 +94,7 @@
                         <label for="prixfas" class="block text-sm font-medium leading-6 text-gray-900">Prix FAS</label>
                         <div class="mt-2">
                             <input type="text" name="prixfas" id="prixfas"
-                                   value="{{ $devis->prixFraisInstalation??$prestation->prixFraisInstalation	 }}"
+                                   value="{{ $devis->prixFraisInstalation??$prestation->prixFraisInstalation }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>

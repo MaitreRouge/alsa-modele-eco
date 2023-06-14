@@ -107,7 +107,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                                             </svg>
                                         @endif
-                                        {{ $p->label }}</td>
+                                        {{ $line->customName??$p->label }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ($line->prixFraisInstalation??$p->prixFraisInstalation) * $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ (($line->prixMensuel??$p->prixMensuel) * $line->quantite) }}</td>

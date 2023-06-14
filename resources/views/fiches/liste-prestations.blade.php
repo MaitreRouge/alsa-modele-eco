@@ -115,21 +115,23 @@
                                                 </svg>
                                             @endif
                                             @if(!$prestation->validEngagement($client->engagement))
-                                                <div title="Engagement : {{ $prestation->formatEngagement() }}" style="display: contents">
-                                                <svg class="h-5 w-5 text-red-500 group cursor-pointer" style="display: inline" fill="none" title="test"
-                                                     stroke-width="1.5" viewBox="0 0 24 24" stroke="currentColor"
-                                                     aria-hidden="true">
-                                                    {{--                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />--}}
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
-                                                </svg>
+                                                <div title="Engagement : {{ $prestation->formatEngagement() }}"
+                                                     style="display: contents">
+                                                    <svg class="h-5 w-5 text-red-500 group cursor-pointer"
+                                                         style="display: inline" fill="none" title="test"
+                                                         stroke-width="1.5" viewBox="0 0 24 24" stroke="currentColor"
+                                                         aria-hidden="true">
+                                                        {{--                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />--}}
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                              d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                                                    </svg>
                                                 </div>
                                             @endif
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixFraisInstalation")??"-" }}</td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixBrut")??"-" }}</td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixMensuel")??"-" }}</td>
-{{--                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-1 text-right text-sm font-medium sm:pr-3">--}}
+                                        {{--                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-1 text-right text-sm font-medium sm:pr-3">--}}
                                         <td class="whitespace-nowrap py-4 text-sm text-gray-500 text-right text-sm font-medium">
                                             @if($prestation->validEngagement($client->engagement))
                                                 <a href="add/{{ $prestation->id }}"
@@ -142,7 +144,21 @@
                                 @endforeach
                             @endforeach
 
-                            <!-- More people... -->
+                            <tr class="border-t border-gray-200">
+                                <th colspan="5" scope="colgroup"
+                                    class="bg-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                    Autres prestations
+                                </th>
+                            </tr>
+                            <tr class="border-t border-gray-200">
+                                <td colspan="5"
+                                    class="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                                    <a href="add/0"
+                                            class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        <span class="block text-sm font-semibold text-gray-900">Créer une prestation unique</span>
+                                    </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

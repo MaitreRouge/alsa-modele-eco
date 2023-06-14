@@ -15,6 +15,8 @@ return new class extends Migration
             $table->float("prixBrut")->nullable()->after("quantite");
             $table->float("prixMensuel")->nullable()->after("prixBrut");
             $table->float("prixFraisInstalation")->nullable()->after("prixMensuel");
+            $table->integer("parent")->nullable()->default(null)->after("catalogueID");
+            $table->integer("customName")->nullable()->default(null)->after("parent");
         });
     }
 
