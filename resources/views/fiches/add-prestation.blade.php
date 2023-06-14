@@ -46,7 +46,8 @@
                     <div class="sm:col-span-4">
                         <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                         <div class="mt-2">
-                            <input type="text" id="label" value="{{ $prestation->label }}" name="customName" {{ ($prestation->id === 0)?"":"disabled"}}
+                            <input type="text" id="label" value="{{ $prestation->label }}" name="customName"
+                                   {{ ($prestation->id === 0)?"":"disabled"}}
                                    class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -140,27 +141,50 @@
                             <div class="space-y-4">
 
                                 @foreach($options as $option)
-                                    <label id="opt-{{ $option->option_id }}-label" class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between">
-                                        <input type="checkbox" name="opt-{{ $option->option_id }}" id="opt-{{ $option->option_id }}" value="true" class="sr-only" aria-labelledby="opt-{{ $option->option_id }}-0-label" aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1">
-                                            <span class="flex items-center">
+                                    <label id="opt-{{ $option->option_id }}-label"
+                                           class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between">
+                                        <input type="checkbox" name="opt-{{ $option->option_id }}"
+                                               id="opt-{{ $option->option_id }}" value="true" class="sr-only"
+                                               aria-labelledby="opt-{{ $option->option_id }}-0-label"
+                                               aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1">
+                                        <span class="flex items-center">
                                                 <span class="flex flex-col text-sm">
-                                                    <span id="opt-{{ $option->option_id }}-size-0-label" class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</span>
-                                                    <span id="opt-{{ $option->option_id }}-size-0-description-0" class="text-gray-500">
-                                                        <span class="block sm:inline">{{ $option->getPrestation()->note }}</span>
+                                                    <span id="opt-{{ $option->option_id }}-size-0-label"
+                                                          class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</span>
+                                                    <span id="opt-{{ $option->option_id }}-size-0-description-0"
+                                                          class="text-gray-500">
+                                                        <span
+                                                            class="block sm:inline">{{ $option->getPrestation()->note }}</span>
                                                     </span>
                                                 </span>
                                             </span>
-                                            <span id="opt-{{ $option->option_id }}-size-0-description-1" class="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right">
-                                                <span class="font-medium text-gray-900">$40</span>
-                                                <span class="ml-1 text-gray-500 sm:ml-0">par licence<br>par mois</span>
+                                        <div class="space-y-2">
+                                            @if(!empty($option->getPrestation()->prixFraisInstalation))
+                                                <span id="opt-{{ $option->option_id }}-size-0-description-1"
+                                                      class="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right">
+                                                <span
+                                                    class="font-medium text-gray-900">{{ $option->getPrestation()->formatPrice("prixFraisInstalation") }}</span>
+                                                <span class="ml-1 text-gray-500 sm:ml-0">une fois</span>
                                             </span>
-                                        <span id="opt-{{ $option->option_id }}-border" class="pointer-events-none absolute -inset-px rounded-lg border-2" aria-hidden="true"></span>
+                                            @endif
+                                            @if(!empty($option->getPrestation()->prixMensuel))
+                                                <span id="opt-{{ $option->option_id }}-size-0-description-2"
+                                                      class="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right">
+                                                <span
+                                                    class="font-medium text-gray-900">{{ $option->getPrestation()->formatPrice("prixMensuel") }}</span>
+                                                <span class="ml-1 text-gray-500 sm:ml-0">par mois</span>
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <span id="opt-{{ $option->option_id }}-border"
+                                              class="pointer-events-none absolute -inset-px rounded-lg border-2"
+                                              aria-hidden="true"></span>
                                     </label>
 
                                     <script>
                                         $(document).ready(function () {
-                                            $('#opt-{{ $option->option_id }}').change(function() {
-                                                if($(this).is(":checked")) {
+                                            $('#opt-{{ $option->option_id }}').change(function () {
+                                                if ($(this).is(":checked")) {
                                                     $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
                                                         .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
                                                     $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
