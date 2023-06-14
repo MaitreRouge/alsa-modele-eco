@@ -34,8 +34,8 @@ class PrestationsController extends BaseController
             $main = Categorie::findOrFail($request["tri"]);
             $parents = Categorie::where("parentID", $request["tri"])->get();
             foreach ($parents as $parent) {
-                $prestationsWithDetails = DB::table('prestations')
-                    ->joinSub(function ($query) use ($parent) {
+                $prestationsWithDetails = Prestation::
+                    joinSub(function ($query) use ($parent) {
                         $query->from('prestations')
                             ->select('id', DB::raw('MAX(version) as version_max'))
                             ->where("idCategorie", $parent->id)

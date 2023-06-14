@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Prestation extends Model
 {
@@ -53,7 +54,8 @@ class Prestation extends Model
         return self::price($nombre);
     }
 
-    public static function staticFormatPrice(?float $key){
+    public static function staticFormatPrice(?float $key)
+    {
         $nombre = $key;
         return self::price($nombre);
     }
@@ -61,7 +63,7 @@ class Prestation extends Model
     public function mainCategory(): Categorie
     {
         $c = Categorie::find($this->idCategorie);
-        while ($c->parentID != null){
+        while ($c->parentID != null) {
             $c = Categorie::find($c->parentID);
         }
         return $c;
@@ -75,8 +77,8 @@ class Prestation extends Model
     public function validEngagement($clientEng): bool
     {
 //        dump($this->minEngagement);
-        if (($this->minEngagement??$clientEng-1) > $clientEng) return false;
-        if (($this->maxEngagement??$clientEng+1) < $clientEng) return false;
+        if (($this->minEngagement ?? $clientEng - 1) > $clientEng) return false;
+        if (($this->maxEngagement ?? $clientEng + 1) < $clientEng) return false;
         return true;
     }
 
@@ -87,5 +89,33 @@ class Prestation extends Model
             return "entre " . $this->minEngagement . " et " . $this->maxEngagement . " mois";
         }
         return "noFormat";
+    }
+
+    public function isAnOption(): bool
+    {
+        $option = DB::select("SELECT * FROM options WHERE option_id = :id", ["id" => $this->id]);
+        return ($option !== []);
+    }
+
+    public function showBadges(): string
+    {
+        $html = "";
+        if (!empty($this->note)) $html .= $this->createBadge("yellow", "Note");
+        if ($this->isAnOption()) $html .= $this->createBadge("blue", "Option");
+        if (!empty($this->promotionUntil)) $html .= $this->createBadge("green", "Promotion");
+        if (!empty($this->minEngagement) or !empty($this->maxEngagement)) $html .= $this->createBadge("purple", "Engagement");
+        return $html;
+    }
+
+    protected function createBadge(string $color, string $text): string
+    {
+        return '
+            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-'. $color .'-100 px-2 py-1 text-xs font-medium text-'. $color .'-700">
+                <svg class="h-1.5 w-1.5 fill-'. $color .'-500" viewBox="0 0 6 6" aria-hidden="true">
+                    <circle cx="3" cy="3" r="3" />
+                </svg>
+                '. $text .'
+            </span>
+        ';
     }
 }

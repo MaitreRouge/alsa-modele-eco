@@ -16,17 +16,17 @@ $lineDefault = "bg-transparent absolute inset-x-0 bottom-0 h-0.5";
 <div class="mb-6">
     <div class="hidden sm:block">
         <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
-            <a href="/prestations/data" class="{{ ($subActive == 1)?$activated:$default }}">
+            <a href="/prestations/data" class="{{ ($subActive-1 == 1)?$activated:$default }}">
                 <span>Data</span>
-                <span aria-hidden="true" class="{{ ($subActive == 2)?$lineActivated:$lineDefault }}"></span>
+                <span aria-hidden="true" class="{{ ($subActive-1 == 1)?$lineActivated:$lineDefault }}"></span>
             </a>
-            <a href="/prestations/telephonie" class="{{ ($subActive == 2)?$activated:$default }}">
+            <a href="/prestations/telephonie" class="{{ ($subActive-1 == 2)?$activated:$default }}">
                 <span>Telephonie</span>
-                <span aria-hidden="true" class="{{ ($subActive == 3)?$lineActivated:$lineDefault }}"></span>
+                <span aria-hidden="true" class="{{ ($subActive-1 == 2)?$lineActivated:$lineDefault }}"></span>
             </a>
-            <a href="/prestations/services"  class="{{ ($subActive == 3)?$activated:$default }}">
+            <a href="/prestations/services"  class="{{ ($subActive-1 == 3)?$activated:$default }}">
                 <span>Services</span>
-                <span aria-hidden="true" class="{{ ($subActive == 4)?$lineActivated:$lineDefault }}"></span>
+                <span aria-hidden="true" class="{{ ($subActive-1 == 3)?$lineActivated:$lineDefault }}"></span>
             </a>
         </nav>
     </div>
