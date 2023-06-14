@@ -21,26 +21,40 @@
 
                 <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 
-                    <div class="sm:col-span-3">
+                    <div class="sm:col-span-6">
                         <div class="flex justify-between">
                             <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                             <span id="labellength" class="text-sm leading-6 text-gray-500">0 / 100</span>
                         </div>
                         <div class="mt-2">
-                            <input type="text" name="label" id="label" value="{{ $prestation->label }}"
+                            <input type="text" name="label" id="label" value="{{ $prestation->label??null }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
 
 
                     <div class="sm:col-span-3">
-                        <label for="category"
-                               class="block text-sm font-medium leading-6 text-gray-900">Categorie</label>
+                        <label for="minEngagement"
+                               class="block text-sm font-medium leading-6 text-gray-900">Engagement minimum</label>
                         <div class="mt-2">
-                            <select id="category" name="category"
+                            <select id="minEngagement" name="minEngagement"
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                @foreach($categories as $c)
-                                    <option value="{{ $c->id }}" {{ ($c->id == $prestation->idCategorie)?"selected":"" }}>{{ $c->label }}</option>
+                                @foreach([null,12,18,24,30,36,48,60] as $c)
+                                    <option value="{{ (int)$c }}" {{ ($c == ($prestation->minEngagement??null))?"selected":"" }}>{{ $c }} {{ ($c === null)?"Aucun engagement minimal":"mois" }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="sm:col-span-3">
+                        <label for="maxEngagement"
+                               class="block text-sm font-medium leading-6 text-gray-900">Engagement maximum</label>
+                        <div class="mt-2">
+                            <select id="maxEngagement" name="maxEngagement"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                @foreach([null,12,18,24,30,36,48,60] as $c)
+                                    <option value="{{ (int)$c }}" {{ ($c == ($prestation->maxEngagement??null))?"selected":"" }}>{{ $c }} {{ ($c === null)?"Aucun engagement maximal":"mois" }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -50,7 +64,7 @@
                         <label for="prixbrut" class="block text-sm font-medium leading-6 text-gray-900">Prix
                             brut</label>
                         <div class="mt-2">
-                            <input type="text" name="prixbrut" id="prixbrut" value="{{ $prestation->prixBrut }}"
+                            <input type="text" name="prixbrut" id="prixbrut" value="{{ $prestation->prixBrut??null }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -58,7 +72,7 @@
                     <div class="sm:col-span-2">
                         <label for="prixFAS" class="block text-sm font-medium leading-6 text-gray-900">Prix FAS</label>
                         <div class="mt-2">
-                            <input type="text" name="prixFAS" id="prixFAS" value="{{ $prestation->prixFraisInstalation }}"
+                            <input type="text" name="prixFAS" id="prixFAS" value="{{ $prestation->prixFraisInstalation??null }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -67,7 +81,7 @@
                         <label for="prixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix
                             Mensuel</label>
                         <div class="mt-2">
-                            <input type="text" name="prixmensuel" id="prixmensuel" value="{{ $prestation->prixMensuel }}"
+                            <input type="text" name="prixmensuel" id="prixmensuel" value="{{ $prestation->prixMensuel??null }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -77,7 +91,7 @@
                             prestation</label>
                         <div class="mt-2">
                             <textarea rows="4" name="note" id="note"
-                                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ $prestation->note }}</textarea>
+                                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ $prestation->note??"" }}</textarea>
                         </div>
                     </div>
 
@@ -92,7 +106,7 @@
                     <div class="sm:col-span-2 my-auto">
                         <input type="checkbox" name="prixVente"
                                class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
-                               role="switch" {{ ($prestation->needPrixVente)?"checked":"" }} />
+                               role="switch" {{ ($prestation->needPrixVente??null)?"checked":"" }} />
                     </div>
 
                 </div>

@@ -72,8 +72,7 @@ class PrestationsController extends BaseController
 
         return view("prestations.edit", [
             "prestation" => $prestation,
-            "subActive" => $prestation->mainCategory()->id,
-            "categories" => $categories
+            "subActive" => $prestation->mainCategory()->id
         ]);
     }
 
@@ -82,11 +81,12 @@ class PrestationsController extends BaseController
 //        dump($request->toArray());
         $request->validate([
             "label" => ["required", "max:100"],
-            "category" => ["required", "exists:categories,id"],
             "prixbrut" => ["nullable"],
             "prixFAS" => ["nullable"],
             "prixmensuel" => ["nullable"],
-            "note" => ["nullable"]
+            "note" => ["nullable"],
+            "maxEngagement" => ["nullable", "numeric"],
+            "minEngagement" => ["nullable", "numeric"]
         ]);
 
         $prestation = Prestation::where("id", $request["prestation"])
@@ -104,7 +104,10 @@ class PrestationsController extends BaseController
         $newPrestation->note = $request["note"];
         $newPrestation->needPrixVente = ($request["prixVente"] ?? 0) == "on";
         $newPrestation->idCategorie = $request["category"];
+        $newPrestation->minEngagement = $request["minEngagement"];
+        $newPrestation->maxEngagement = $request["maxEngagement"];
         $newPrestation->updated_at = Carbon::now();
+        $newPrestation->idCategorie = $prestation->idCategorie;
         $newPrestation->save();
 
         $log = new Historique();
@@ -119,8 +122,7 @@ class PrestationsController extends BaseController
     {
         $parent = ($this->matchCategory($request["category"])) - 1;
 
-        return view("prestations.new", [
-            "categories" => Categorie::where("parentId", $request["sub"])->get(),
+        return view("prestations.edit", [
             "subActive" => $parent
         ]);
     }
@@ -147,6 +149,8 @@ class PrestationsController extends BaseController
         $prestation->idCategorie = $request["parent"];
         $prestation->note = $request["note"];
         $prestation->needPrixVente = $request["prixVente"] ?? 0;
+        $prestation->minEngagement = $request["minEngagement"];
+        $prestation->maxEngagement = $request["maxEngagement"];
         $prestation->save();
 
         $hist = new Historique();

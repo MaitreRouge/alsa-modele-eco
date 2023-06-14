@@ -86,9 +86,14 @@ class Prestation extends Model
     {
         if (!empty($this->minEngagement) and !empty($this->maxEngagement)) {
             if ($this->minEngagement === $this->maxEngagement) return $this->minEngagement . " mois";
-            return "entre " . $this->minEngagement . " et " . $this->maxEngagement . " mois";
+            return $this->minEngagement . " - " . $this->maxEngagement . " mois";
         }
-        return "noFormat";
+        if (empty($this->minEngagement)) {
+            return "max " . $this->maxEngagement . " mois";
+        } else {
+            return "min " . $this->minEngagement . " mois";
+        }
+        return "Prestation->formatEngagement() => Aucun format trouvé";
     }
 
     public function isAnOption(): bool
@@ -103,7 +108,7 @@ class Prestation extends Model
         if (!empty($this->note)) $html .= $this->createBadge("yellow", "Note");
         if ($this->isAnOption()) $html .= $this->createBadge("blue", "Option");
         if (!empty($this->promotionUntil)) $html .= $this->createBadge("green", "Promotion");
-        if (!empty($this->minEngagement) or !empty($this->maxEngagement)) $html .= $this->createBadge("purple", "Engagement");
+        if (!empty($this->minEngagement) or !empty($this->maxEngagement)) $html .= $this->createBadge("purple", "Engagement : " .$this->formatEngagement());
         return $html;
     }
 
