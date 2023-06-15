@@ -1,6 +1,6 @@
 @extends("layouts.fiche",
 [
-    "pageTitle" => "Fiche Entreprise - Ajout d'une prestation",
+    "pageTitle" => "Fiche Entreprise - Édition d'une prestation",
     "subActive" => $subActive
 ])
 @section("fiche")
@@ -126,7 +126,7 @@
 
                 </div>
             </div>
-            @if (count($options) > 0)
+            @if (count($prestation->getOptions()) > 0)
                 <div class="grid gap-x-8 gap-y-10  border-b border-gray-900/10 pb-12 ">
                     <div>
                         <h2 class="text-base font-semibold leading-7 text-gray-900">Informations générales de la
@@ -140,17 +140,17 @@
                         <fieldset class="sm:col-span-4">
                             <div class="space-y-4">
 
-                                @foreach($options as $option)
+                                @foreach($prestation->getOptions() as $option)
                                     <label id="opt-{{ $option->option_id }}-label"
                                            class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between">
                                         <input type="checkbox" name="opt-{{ $option->option_id }}"
                                                id="opt-{{ $option->option_id }}" value="true" class="sr-only"
                                                aria-labelledby="opt-{{ $option->option_id }}-0-label"
-                                               aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1">
+                                               aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1" {{ (!empty($devis) and $devis->isOptionSelected($option->option_id))?"checked":"" }} >
                                         <span class="flex items-center">
                                                 <span class="flex flex-col text-sm">
                                                     <span id="opt-{{ $option->option_id }}-size-0-label"
-                                                          class="font-medium text-gray-900">{{ $option->getPrestation()->label }}</span>
+                                                          class="font-medium text-gray-900">{{ $option->getPrestation()->label }} <?= $option->getPrestation()->showBadges() ?></span>
                                                     <span id="opt-{{ $option->option_id }}-size-0-description-0"
                                                           class="text-gray-500">
                                                         <span
@@ -184,7 +184,12 @@
                                     <script>
                                         $(document).ready(function () {
                                             $('#opt-{{ $option->option_id }}').change(function () {
-                                                if ($(this).is(":checked")) {
+                                                changeColor_{{ $option->option_id }}();
+                                            });
+
+                                            changeColor_{{ $option->option_id }}();
+                                            function changeColor_{{ $option->option_id }} () {
+                                                if ($('#opt-{{ $option->option_id }}').is(":checked")) {
                                                     $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
                                                         .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
                                                     $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
@@ -197,7 +202,7 @@
                                                 $('#opt-{{ $option->option_id }}-border')
                                                     .removeClass("border border-indigo-600")
                                                     .addClass("border-2 border-transparent")
-                                            });
+                                            }
                                         });
                                     </script>
                                 @endforeach
@@ -236,6 +241,8 @@
             $("#prixmensuel").on("input", function () {
                 calPrices();
             });
+
+            calPrices();
 
             function calPrices() {
                 var qteValue = $("#qte").val();

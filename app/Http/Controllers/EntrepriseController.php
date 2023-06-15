@@ -180,7 +180,6 @@ class EntrepriseController extends BaseController
             "prestation" => $prestation,
             "client" => $client, //Client (necessaire pour les redirections)
             "subActive" => $category, //Index du bouton du sous-menu qui doit être actif
-            "options" => $options
         ]);
 
     }
@@ -282,19 +281,16 @@ class EntrepriseController extends BaseController
             return back(); //No prestation found
         }
 
-        $prestation = Prestation::where("id", $devis->catalogueID)
-            ->where("version", $devis->version)
-            ->get();
-        if (!isset($prestation[0]) or empty($prestation[0])) {
-            throw new \Exception("La prestation associée au devis n'existe plus. Merci de contacter un administrateur");
-        }
+        $prestation = $devis->getPrestation();
+        $options = Option::where("prestation_id", $prestation->id)->get();
 
-        return view("fiches.edit-prestation", [
+
+        return view("fiches.add-prestation", [
             "name" => ucfirst($request["category"]), //Nom de la page
             "devis" => $devis,
-            "prestation" => $prestation[0],
+            "prestation" => $prestation,
             "cid" => $request["id"], //identifiant client dans l'url (necessaire pour les redirections)
-            "subActive" => $category, //Index du bouton du sous-menu qui doit être acti
+            "subActive" => $category, //Index du bouton du sous-menu qui doit être activé
         ]);
 
     }
@@ -310,6 +306,10 @@ class EntrepriseController extends BaseController
         ]);
 
         $devis = Devis::findOrFail($request["prestation"]);
+
+        /**************************************/
+        /*      Edition de la prestation      */
+        /**************************************/
 
         $prestation = Prestation::where("id", $devis->catalogueID)
             ->where("version", $devis->version)
@@ -332,6 +332,68 @@ class EntrepriseController extends BaseController
             $devis->customName = $request["customName"];
         }
         $devis->save();
+
+        /*********************************/
+        /*      Édition des options      */
+        /*********************************/
+
+        $opts_ids = [];
+        foreach ($request->toArray() as $key => $value) {
+            if (str_contains($key, "opt-")) {
+                // Chaque option qui à été ajoutée est représentée de la manière ["opt-ID" => true]
+                // Donc on prend la clée, la coupe à "-" et prends la partie de droite.
+                // Ca nous donne cet $opt_id
+                $id = explode("-", $key)[1];
+                $opts_ids[$id] = $id;
+            }
+        }
+
+        //Avec cette boucle, on supprime les options qui n'ont pas été selectionnés MAIS qui sont dans le devis et
+        //on retire de $opts_ids les identifiants des options qui ont été selctionnés et qui sont déjà dans le devis
+        foreach ($devis->getSelectedOptions() as $option) {
+            if (!in_array($option->catalogueID, $opts_ids)) {
+                $option->delete();
+
+                $notification = new Notification();
+                $notification->title = "Option #".$option->catalogueID." supprimée !";
+                $notification->save();
+            } else {
+                unset($opts_ids[$option->catalogueID]);
+            }
+        }
+
+        //Maintenant $opts_ids ne possède uniquement des ids d'options qui viennent d'être selectionnées MAIS
+        //qui ne sont pas (encore) dans la base de donnée
+        foreach ($opts_ids as $opt_id) {
+            $option = (Prestation::where("id", $opt_id)
+                ->orderBy("version", "DESC")
+                ->limit(1)
+                ->get());
+            if (count($option) != 1) {
+                //En vrai, on pourrait faire un retour en arrière, on pourrait afficher une notification mais
+                //étant donné qu'on est VRAIMENT PAS censé rentrer dans cette condition, je préfère mettre un throw
+                //car ca serait inquétant et que je pense que le problème devrait immédiatement être remonté :/
+                throw new \Exception("L'option selectionnée (#$id) n'existe pas ou est dupliquée...");
+            }
+
+            $option = $option[0];
+            $devisOpt = new Devis();
+            $devisOpt->version = $option->version;
+            $devisOpt->catalogueID = $option->id;
+            $devisOpt->quantite = 1;
+            $devisOpt->prixBrut = $option->prixBrut;
+            $devisOpt->prixMensuel = $option->prixMensuel;
+            $devisOpt->prixFraisInstalation = $option->prixFraisInstalation;
+            $devisOpt->optLinked = $devis->id;
+            $devisOpt->clientID = $request["id"];
+            $devisOpt->save();
+
+            $notification = new Notification();
+            $notification->title = "Option #" . $option->id . " enregistrée !";
+            $notification->save();
+
+        }
+//            }
 
         $notification = new Notification();
         $notification->title = "Entrée #".$devis->id." modifiée !";

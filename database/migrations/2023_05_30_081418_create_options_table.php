@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('options', function (Blueprint $table) {
-//            $table->id();
             $table->integer("option_id");
             $table->integer("prestation_id");
-            $table->integer("minimum_engagement")->default(0);
             $table->boolean("obligatoire")->default(false);
             $table->timestamps();
         });

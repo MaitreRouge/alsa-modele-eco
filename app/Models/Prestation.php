@@ -10,44 +10,6 @@ class Prestation extends Model
 {
     use HasFactory;
 
-    /**
-     * @param string $nombre
-     * @return string|null
-     */
-    private static function price(?float $nombre): ?string
-    {
-        if ($nombre === null) {
-            return null;
-        }
-
-        // Vérifier si le nombre a une partie décimale
-        if (str_contains($nombre, '.')) {
-            // Séparer la partie entière et la partie décimale
-            $parts = explode('.', $nombre);
-            $decimales = $parts[1];
-
-            // Si le nombre de décimales est supérieur à 2, tronquer à deux chiffres
-            if (strlen($decimales) > 2) {
-                $decimales = substr($decimales, 0, 2);
-            }
-
-            // Ajouter des zéros si nécessaire
-            if (strlen($decimales) === 0) {
-                $decimales = '00';
-            } elseif (strlen($decimales) === 1) {
-                $decimales .= '0';
-            }
-
-            // Reconstruire le nombre formaté
-            $nombre = $parts[0] . '.' . $decimales;
-        } else {
-            // Si le nombre est un entier, ajouter '.00'
-            $nombre .= '.00';
-        }
-
-        return $nombre . " €";
-    }
-
     public function formatPrice(string $key): ?string
     {
         $nombre = $this->$key;
@@ -96,6 +58,11 @@ class Prestation extends Model
         return "Prestation->formatEngagement() => Aucun format trouvé";
     }
 
+    public function getOptions()
+    {
+        return Option::where("prestation_id", $this->id)->get();
+    }
+
     public function isAnOption(): bool
     {
         $option = DB::select("SELECT * FROM options WHERE option_id = :id", ["id" => $this->id]);
@@ -108,19 +75,53 @@ class Prestation extends Model
         if (!empty($this->note)) $html .= $this->createBadge("yellow", "Note");
         if ($this->isAnOption()) $html .= $this->createBadge("blue", "Option");
         if (!empty($this->promotionUntil)) $html .= $this->createBadge("green", "Promotion");
-        if (!empty($this->minEngagement) or !empty($this->maxEngagement)) $html .= $this->createBadge("purple", "Engagement : " .$this->formatEngagement());
+        if (!empty($this->minEngagement) or !empty($this->maxEngagement)) $html .= $this->createBadge("purple", "Engagement : " . $this->formatEngagement());
         return $html;
     }
 
-    protected function createBadge(string $color, string $text): string
+    private function createBadge(string $color, string $text): string
     {
         return '
-            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-'. $color .'-100 px-2 py-1 text-xs font-medium text-'. $color .'-700">
-                <svg class="h-1.5 w-1.5 fill-'. $color .'-500" viewBox="0 0 6 6" aria-hidden="true">
+            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-' . $color . '-100 px-2 py-1 text-xs font-medium text-' . $color . '-700">
+                <svg class="h-1.5 w-1.5 fill-' . $color . '-500" viewBox="0 0 6 6" aria-hidden="true">
                     <circle cx="3" cy="3" r="3" />
                 </svg>
-                '. $text .'
+                ' . $text . '
             </span>
         ';
+    }
+
+    private static function price(?float $nombre): ?string
+    {
+        if ($nombre === null) {
+            return null;
+        }
+
+        // Vérifier si le nombre a une partie décimale
+        if (str_contains($nombre, '.')) {
+            // Séparer la partie entière et la partie décimale
+            $parts = explode('.', $nombre);
+            $decimales = $parts[1];
+
+            // Si le nombre de décimales est supérieur à 2, tronquer à deux chiffres
+            if (strlen($decimales) > 2) {
+                $decimales = substr($decimales, 0, 2);
+            }
+
+            // Ajouter des zéros si nécessaire
+            if (strlen($decimales) === 0) {
+                $decimales = '00';
+            } elseif (strlen($decimales) === 1) {
+                $decimales .= '0';
+            }
+
+            // Reconstruire le nombre formaté
+            $nombre = $parts[0] . '.' . $decimales;
+        } else {
+            // Si le nombre est un entier, ajouter '.00'
+            $nombre .= '.00';
+        }
+
+        return $nombre . " €";
     }
 }
