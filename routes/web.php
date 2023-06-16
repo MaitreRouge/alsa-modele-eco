@@ -59,7 +59,7 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
         });
 
     })->whereIn("category", ["data", "telephonie", "services"]);
-});
+}); //EntrepriseController (devis)
 
 Route::get("/delete/{id}", [EntrepriseController::class, "deleteAll"])->middleware(["validClientId"]);
 Route::get("/delete/{id}/devis", [EntrepriseController::class, "deleteAllDevis"])->middleware(["validClientId"]);
@@ -69,6 +69,9 @@ Route::prefix("/prestations/")->group(function () {
     Route::get("", function () {
         return redirect("prestations/data");
     });
+
+    Route::post("massdelete", [PrestationsController::class, "processMassDelete"]);
+    Route::get("delete/{id}", [PrestationsController::class, "processDelete"]);
 
     Route::get("{category}", [PrestationsController::class, "showList"]);
     Route::post("{category}", [PrestationsController::class, "showList"]);
@@ -84,7 +87,5 @@ Route::prefix("/prestations/")->group(function () {
 
 });
 
-Route::get('/login', [UserController::class, "showLogin"]);
-
-Route::post('/login', [UserController::class, "processLogin"]);
+//User system here
 

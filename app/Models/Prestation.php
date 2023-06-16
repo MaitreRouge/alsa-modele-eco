@@ -36,6 +36,11 @@ class Prestation extends Model
         return Categorie::find($this->idCategorie);
     }
 
+    public function getCategory(): Categorie
+    {
+        return $this->categorie();
+    }
+
     public function validEngagement($clientEng): bool
     {
 //        dump($this->minEngagement);

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('prestations', function (Blueprint $table) {
             $table->integer("minEngagement")->nullable()->default(null)->after("note");
             $table->integer("maxEngagement")->nullable()->default(null)->after("minEngagement");
+            $table->integer("disabled")->nullable()->default(null)->after("maxEngagement");
         });
     }
 

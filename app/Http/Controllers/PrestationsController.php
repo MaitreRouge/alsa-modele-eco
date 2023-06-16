@@ -35,15 +35,16 @@ class PrestationsController extends BaseController
             $parents = Categorie::where("parentID", $request["tri"])->get();
             foreach ($parents as $parent) {
                 $prestationsWithDetails = Prestation::
-                    joinSub(function ($query) use ($parent) {
-                        $query->from('prestations')
-                            ->select('id', DB::raw('MAX(version) as version_max'))
-                            ->where("idCategorie", $parent->id)
-                            ->groupBy('id');
-                    }, 't', function ($join) {
-                        $join->on('prestations.id', '=', 't.id')
-                            ->on('prestations.version', '=', 't.version_max');
-                    })
+                joinSub(function ($query) use ($parent) {
+                    $query->from('prestations')
+                        ->select('id', DB::raw('MAX(version) as version_max'))
+                        ->where("idCategorie", $parent->id)
+                        ->where("disabled", null)
+                        ->groupBy('id');
+                }, 't', function ($join) {
+                    $join->on('prestations.id', '=', 't.id')
+                        ->on('prestations.version', '=', 't.version_max');
+                })
                     ->get();
                 $prestations[$parent->id] = $prestationsWithDetails;
             }
@@ -240,11 +241,35 @@ class PrestationsController extends BaseController
             }
         }
 
-        return redirect("/prestations/". strtolower($parent->rootCategory()->label) ."?tri=" . $parent->parentCategory()->id);
+        return redirect("/prestations/" . strtolower($parent->rootCategory()->label) . "?tri=" . $parent->parentCategory()->id);
+    }
+
+    public function processDelete(Request $request)
+    {
+        $prestation = Prestation::findOrFail($request->id);
+        if (!empty($prestation)) {
+            DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $request->id]);
+        }
+        return redirect("/prestations/". strtolower($prestation->mainCategory()->label) . "?tri=" . $prestation->getCategory()->parentCategory()->id);
+    }
+
+    public function processMassDelete(Request $request)
+    {
+        foreach ($request->toArray() as $key => $value) {
+            if ($value === null) {
+                $id = explode("-", $key)[1];
+                $p = Prestation::find($id);
+                if (!empty($p)) {
+                    DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $id]);
+                }
+            }
+        }
+        if (!empty($p)) return redirect("/prestations/". strtolower($p->mainCategory()->label) . "?tri=" . $p->getCategory()->parentCategory()->id);
+        return back();
     }
 
     private function matchCategory(string $c)
-    /********** FONCTIONS PRIVÉS **********/
+        /********** FONCTIONS PRIVÉS **********/
     {
         return match (strtolower($c)) {
             "data" => 2,
