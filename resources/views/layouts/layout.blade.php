@@ -1,7 +1,8 @@
-<html class="h-full bg-gray-100">
+<html class="h-full bg-gray-100" lang="fr">
 <head>
     <link rel="stylesheet" type="text/css" href="/dist/output.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>{{ $pageTitle??"SansTitre" }}</title>
 </head>
 <body class="h-full">
 <div class="min-h-full">
@@ -24,23 +25,56 @@
                                        class="{{ ($activate == 2)?"bg-gray-900 text-white":"text-gray-300" }} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Prestations</a>
                                     <a href="/changelog"
                                        class="{{ ($activate == 3)?"bg-gray-900 text-white":"text-gray-300" }} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Changelog</a>
+                                    <a href="/users"
+                                       class="{{ ($activate == 4)?"bg-gray-900 text-white":"text-gray-300" }} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Utilisateurs</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-4 flex items-center md:ml-6">
+
+                                <!-- Profile dropdown -->
+                                <div class="relative ml-3">
+                                    <div>
+                                        <button type="button" id="profile-button-pc"
+                                                class="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                            <span class="sr-only">Open user menu</span>
+                                            <img class="h-8 w-8 rounded-full"
+                                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                 alt="">
+                                        </button>
+                                    </div>
+
+                                    <div style="display: none" id="profile-dropdown-pc"
+                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                         role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
+                                         tabindex="-1">
+                                        <p class="block px-4 py-2 text-sm text-gray-700 border-b">Bonjour USER 1</p>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                           role="menuitem"
+                                           tabindex="-1" id="user-menu-item-1">Paramètres</a>
+                                        <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                           role="menuitem"
+                                           tabindex="-1" id="user-menu-item-2">Se déconnecter</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </nav>
+        <header class="py-10">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-white">{{ $pageTitle??"SansTitre" }}</h1>
+            </div>
+        </header>
+    </div>
 
-            </nav>
-            <header class="py-10">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <h1 class="text-3xl font-bold tracking-tight text-white">{{ $pageTitle??"SansTitre" }}</h1>
-                </div>
-            </header>
-        </div>
 
-
-    <div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-50">
+    <div aria-live="assertive"
+         class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-50">
         <div class="flex w-full flex-col items-center space-y-4 sm:items-end z-50">
             @foreach(session("notifications", []) as $notifs)
                 @php
@@ -87,6 +121,30 @@
     </main>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // fonction pour afficher/cacher le menu déroulant
+        function toggleProfileDropdown() {
+            $('#profile-dropdown-pc').toggle();
+        }
+
+        // événement pour cliquer sur la photo de profil
+        $('#profile-button-pc').click(function (e) {
+            e.stopPropagation(); // empêcher le clic de se propager au document
+            toggleProfileDropdown();
+        });
+
+        // événement pour cliquer sur n'importe où sur le document pour cacher le menu
+        $(document).click(function (e) {
+            if (!$(e.target).closest('#profile-dropdown-pc').length && !$(e.target).is('#profile-button-pc')) {
+                $('#profile-dropdown-pc').hide();
+            }
+        });
+
+    });
+</script>
 
 
 </body>

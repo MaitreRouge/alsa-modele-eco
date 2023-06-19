@@ -27,6 +27,7 @@ Route::get("/dashboard", [EntrepriseController::class, "showDashboard"]);
 Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);
 
+//EntrepriseController (devis)
 Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(function () {
     //localhost/edit/1
     Route::get('', function ($id) {
@@ -59,11 +60,12 @@ Route::middleware(["slash", "validClientId"])->prefix('/edit/{id}/')->group(func
         });
 
     })->whereIn("category", ["data", "telephonie", "services"]);
-}); //EntrepriseController (devis)
+});
 
 Route::get("/delete/{id}", [EntrepriseController::class, "deleteAll"])->middleware(["validClientId"]);
 Route::get("/delete/{id}/devis", [EntrepriseController::class, "deleteAllDevis"])->middleware(["validClientId"]);
 
+//PrestationController
 Route::prefix("/prestations/")->group(function () {
 
     Route::get("", function () {
@@ -87,5 +89,14 @@ Route::prefix("/prestations/")->group(function () {
 
 });
 
-//User system here
+//UserController
+Route::get("/logout", [UserController::class, "processLogout"]);
+Route::get("/login", [UserController::class, "showLogin"]);
+Route::post("/login", [UserController::class, "processLogin"]);
+Route::get("/users/list", [UserController::class, "showList"]);
+Route::get("/users", function () {
+    return redirect("users/list");
+});
+Route::get("/users/create", [UserController::class, "showCreate"]);
+Route::post("/users/create", [UserController::class, "processCreate"]);
 

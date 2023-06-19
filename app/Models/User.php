@@ -42,4 +42,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    private string $password;
+
+    public function passwordVerify(string $password)
+    {
+        return password_verify($password, $this->password);
+    }
 }
