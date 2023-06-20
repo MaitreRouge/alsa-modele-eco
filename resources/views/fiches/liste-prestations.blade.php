@@ -69,11 +69,7 @@
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
                                     Prestation
                                 </th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Frais
-                                    Instal
-                                </th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix
-                                    Brut
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix FAS
                                 </th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix
                                     Mensuel
@@ -108,8 +104,7 @@
                                             {{ $prestation->label }}
                                             <?= $prestation->showBadges() ?>
                                         </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixFraisInstalation")??"-" }}</td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixBrut")??"-" }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixFAS")??"-" }}</td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixMensuel")??"-" }}</td>
                                         {{--                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-1 text-right text-sm font-medium sm:pr-3">--}}
                                         <td class="whitespace-nowrap py-4 text-sm text-gray-500 text-right text-sm font-medium">

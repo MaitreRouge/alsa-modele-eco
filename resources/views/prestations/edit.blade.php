@@ -71,51 +71,58 @@
                     </div>
 
 
+{{--                    <div class="sm:col-span-3">--}}
+{{--                        <label for="minEngagement"--}}
+{{--                               class="block text-sm font-medium leading-6 text-gray-900">Engagement minimum</label>--}}
+{{--                        <div class="mt-2">--}}
+{{--                            <select id="minEngagement" name="minEngagement"--}}
+{{--                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">--}}
+{{--                                @foreach([null,12,18,24,30,36,48,60] as $c)--}}
+{{--                                    <option value="{{ (int)$c }}" {{ ($c == ($prestation->minEngagement??null))?"selected":"" }}>{{ $c }} {{ ($c === null)?"Aucun engagement minimal":"mois" }}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+
+
+{{--                    <div class="sm:col-span-3">--}}
+{{--                        <label for="maxEngagement"--}}
+{{--                               class="block text-sm font-medium leading-6 text-gray-900">Engagement maximum</label>--}}
+{{--                        <div class="mt-2">--}}
+{{--                            <select id="maxEngagement" name="maxEngagement"--}}
+{{--                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">--}}
+{{--                                @foreach([null,12,18,24,30,36,48,60] as $c)--}}
+{{--                                    <option value="{{ (int)$c }}" {{ ($c == ($prestation->maxEngagement??null))?"selected":"" }}>{{ $c }} {{ ($c === null)?"Aucun engagement maximal":"mois" }}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+
                     <div class="sm:col-span-3">
-                        <label for="minEngagement"
-                               class="block text-sm font-medium leading-6 text-gray-900">Engagement minimum</label>
+                        <label for="minEngagement" class="block text-sm font-medium leading-6 text-gray-900">Engagement minimum</label>
                         <div class="mt-2">
-                            <select id="minEngagement" name="minEngagement"
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                @foreach([null,12,18,24,30,36,48,60] as $c)
-                                    <option value="{{ (int)$c }}" {{ ($c == ($prestation->minEngagement??null))?"selected":"" }}>{{ $c }} {{ ($c === null)?"Aucun engagement minimal":"mois" }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="sm:col-span-3">
-                        <label for="maxEngagement"
-                               class="block text-sm font-medium leading-6 text-gray-900">Engagement maximum</label>
-                        <div class="mt-2">
-                            <select id="maxEngagement" name="maxEngagement"
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                @foreach([null,12,18,24,30,36,48,60] as $c)
-                                    <option value="{{ (int)$c }}" {{ ($c == ($prestation->maxEngagement??null))?"selected":"" }}>{{ $c }} {{ ($c === null)?"Aucun engagement maximal":"mois" }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-2 sm:col-start-1">
-                        <label for="prixbrut" class="block text-sm font-medium leading-6 text-gray-900">Prix
-                            brut</label>
-                        <div class="mt-2">
-                            <input type="text" name="prixbrut" id="prixbrut" value="{{ $prestation->prixBrut??null }}"
+                            <input type="text" name="minEngagement" id="minEngagement" value="{{ $prestation->minEngagement??null }}" placeholder="Aucun engagement minimal"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2">
+                    <div class="sm:col-span-3">
+                        <label for="maxEngagement" class="block text-sm font-medium leading-6 text-gray-900">Prix FAS</label>
+                        <div class="mt-2">
+                            <input type="text" name="maxEngagement" id="maxEngagement" value="{{ $prestation->maxEngagement??null }}" placeholder="Aucun engagement maximal"
+                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
                         <label for="prixFAS" class="block text-sm font-medium leading-6 text-gray-900">Prix FAS</label>
                         <div class="mt-2">
-                            <input type="text" name="prixFAS" id="prixFAS" value="{{ $prestation->prixFraisInstalation??null }}"
+                            <input type="text" name="prixFAS" id="prixFAS" value="{{ $prestation->prixFAS??null }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2">
+                    <div class="sm:col-span-3">
                         <label for="prixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix
                             Mensuel</label>
                         <div class="mt-2">
@@ -131,20 +138,6 @@
                             <textarea rows="4" name="note" id="note"
                                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ $prestation->note??"" }}</textarea>
                         </div>
-                    </div>
-
-                    <div class="sm:col-span-4">
-                        <div class="items-center justify-between">
-                            <span class="flex flex-grow flex-col">
-                                <span class="text-sm font-medium leading-6 text-gray-900">Prix de vente</span>
-                                <span class="text-sm text-gray-500">Est ce que la prestation necessite un prix de vente ?</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="sm:col-span-2 my-auto">
-                        <input type="checkbox" name="prixVente"
-                               class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
-                               role="switch" {{ ($prestation->needPrixVente??null)?"checked":"" }} />
                     </div>
 
                 </div>

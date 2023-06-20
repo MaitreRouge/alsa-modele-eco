@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cookie;
 use Laravel\Sanctum\HasApiTokens;
 use TheSeer\Tokenizer\Token;
 
@@ -106,5 +107,15 @@ class User extends Authenticatable
                 '.$text.'
             </span>';
 
+    }
+
+    public function getPublicName(): string
+    {
+        return ucfirst($this->prenom) . " " . ucfirst(mb_substr($this->nom, 0, 1));
+    }
+
+    public static function connected(): User
+    {
+        return self::fromToken(Cookie::get("token"));
     }
 }

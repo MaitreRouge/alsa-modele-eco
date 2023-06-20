@@ -89,6 +89,8 @@ class DatabaseSeeder extends Seeder
                     "idCategorie" => $i+4+3
                 ]);
 
+                $p = Prestation::orderby("id", "desc")->first();
+
                 if ($j >= 1 and $j <=2) {
                     Option::factory()->create([
                         "option_id" => $p->id,

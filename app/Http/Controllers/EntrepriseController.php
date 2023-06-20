@@ -35,7 +35,7 @@ class EntrepriseController extends BaseController
         $request->validate([
             "raison-sociale" => ["required"],
             "rpap" => ["required"],
-            "commercial" => ["required"],
+            "commercial" => ["required", "numeric", "exists:users,id"],
             "agence" => ["required", "numeric", Rule::in([2010, 2020, 2030, 2040, 2050, 2090])],
             "nb-sites" => ["required", "numeric", "min:1"],
             "engagement" => ["required", "numeric", "min:1"],
@@ -191,8 +191,7 @@ class EntrepriseController extends BaseController
 
         $request->validate([
             "prixfas" => ["nullable", "numeric"],
-            "prixbrut" => ["nullable", "numeric"],
-            "prixmensuel" => ["nullable", "numeric"],
+            "pdvmensuel" => ["nullable", "numeric"],
             "qte" => ["required", "numeric", "min:1"],
             "customName" => Rule::requiredIf($request["prestation"] === 0)
         ]);
@@ -209,19 +208,17 @@ class EntrepriseController extends BaseController
         }
         $prestation = $prestation[0];
 
-        $prices = ["brut" => NULL, "fas" => NULL, "mensuel" => NULL];
+        $prices = ["fas" => $prestation->prixFAS, "mensuel" => $prestation->prixMensuel];
 
-        if ($prestation->prixBrut != $request["prixbrut"]) $prices["brut"] = $request["prixbrut"];
-        if ($prestation->prixMensuel != $request["prixmensuel"]) $prices["mensuel"] = $request["prixmensuel"];
-        if ($prestation->prixFraisInstalation != $request["prixfas"]) $prices["fas"] = $request["prixfas"];
+        if ($prestation->prixMensuel != $request["pdvmensuel"]) $prices["mensuel"] = $request["pdvmensuel"];
+        if ($prestation->prixFAS != $request["pdvfas"]) $prices["fas"] = $request["pdvfas"];
 
         $devis = new Devis();
         $devis->version = $prestation->version;
         $devis->catalogueID = $prestation->id;
         $devis->quantite = $request["qte"];
-        $devis->prixBrut = $prices["brut"];
-        $devis->prixMensuel = $prices["mensuel"];
-        $devis->prixFraisInstalation = $prices["fas"];
+        $devis->pdvMensuel = $prices["mensuel"];
+        $devis->pdvFAS = $prices["fas"];
         $devis->clientID = $request["id"];
         if ($prestation->id === 0) {
             $devis->parent = $category;
@@ -257,9 +254,8 @@ class EntrepriseController extends BaseController
                 $devisOpt->version = $option->version;
                 $devisOpt->catalogueID = $option->id;
                 $devisOpt->quantite = 1;
-                $devisOpt->prixBrut = $option->prixBrut;
-                $devisOpt->prixMensuel = $option->prixMensuel;
-                $devisOpt->prixFraisInstalation = $option->prixFraisInstalation;
+                $devisOpt->pdvMensuel = $option->prixMensuel;
+                $devisOpt->pdvFAS = $option->prixFAS;
                 $devisOpt->optLinked = $devis->id;
                 $devisOpt->clientID = $request["id"];
                 $devisOpt->save();
@@ -299,9 +295,8 @@ class EntrepriseController extends BaseController
     public function processEditPrestations(Request $request)
     {
         $request->validate([
-            "prixfas" => ["nullable", "numeric"],
-            "prixbrut" => ["nullable", "numeric"],
-            "prixmensuel" => ["nullable", "numeric"],
+            "pdvfas" => ["nullable", "numeric"],
+            "pdvmensuel" => ["nullable", "numeric"],
             "qte" => ["required", "numeric", "min:1"],
             "customName" => Rule::requiredIf($request["prestation"] === 0)
         ]);
@@ -320,15 +315,13 @@ class EntrepriseController extends BaseController
         }
         $prestation = $prestation[0];
 
-        $prices = ["brut" => NULL, "fas" => NULL, "mensuel" => NULL];
-        if ($prestation->prixBrut != $request["prixbrut"]) $prices["brut"] = $request["prixbrut"];
-        if ($prestation->prixMensuel != $request["prixmensuel"]) $prices["mensuel"] = $request["prixmensuel"];
-        if ($prestation->prixFraisInstalation != $request["prixfas"]) $prices["fas"] = $request["prixfas"];
+        $prices = ["fas" => NULL, "mensuel" => NULL];
+        if ($prestation->prixMensuel != $request["pdvmensuel"]) $prices["mensuel"] = $request["pdvmensuel"];
+        if ($prestation->prixFAS != $request["pdvfas"]) $prices["fas"] = $request["pdvfas"];
 
         $devis->quantite = $request["qte"];
-        $devis->prixBrut = $prices["brut"];
-        $devis->prixMensuel = $prices["mensuel"];
-        $devis->prixFraisInstalation = $prices["fas"];
+        $devis->pdvMensuel = $prices["mensuel"];
+        $devis->pdvFAS = $prices["fas"];
         if ($prestation->id === 0) {
             $devis->customName = $request["customName"];
         }
@@ -382,9 +375,8 @@ class EntrepriseController extends BaseController
             $devisOpt->version = $option->version;
             $devisOpt->catalogueID = $option->id;
             $devisOpt->quantite = 1;
-            $devisOpt->prixBrut = $option->prixBrut;
-            $devisOpt->prixMensuel = $option->prixMensuel;
-            $devisOpt->prixFraisInstalation = $option->prixFraisInstalation;
+            $devisOpt->pdvMensuel = $option->prixMensuel;
+            $devisOpt->pdvFAS = $option->prixFAS;
             $devisOpt->optLinked = $devis->id;
             $devisOpt->clientID = $request["id"];
             $devisOpt->save();

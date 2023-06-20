@@ -109,8 +109,8 @@
                                         @endif
                                         {{ $line->customName??$p->label }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $line->quantite }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ($line->prixFraisInstalation??$p->prixFraisInstalation) * $line->quantite }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ (($line->prixMensuel??$p->prixMensuel) * $line->quantite) }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ($line->pdvFAS??$p->prixFAS) * $line->quantite }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ (($line->pdvMensuel??$p->prixMensuel) * $line->quantite) }}</td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                         @if(empty($line->optLinked) and (!$line->conflict))
                                         <a href="{{strtolower($name) }}/edit/{{ $line->id }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit<span

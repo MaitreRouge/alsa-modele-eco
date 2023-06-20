@@ -82,7 +82,6 @@ class PrestationsController extends BaseController
 //        dump($request->toArray());
         $request->validate([
             "label" => ["required", "max:100"],
-            "prixbrut" => ["nullable"],
             "prixFAS" => ["nullable"],
             "prixmensuel" => ["nullable"],
             "note" => ["nullable"],
@@ -93,17 +92,14 @@ class PrestationsController extends BaseController
         $prestation = Prestation::where("id", $request["prestation"])
             ->orderby("version", "DESC")
             ->limit(1)
-            ->get();
-        $prestation = $prestation[0];
-        $newPrestation = $prestation->replicate();
-        $newPrestation->version += 1;
+            ->first();
+        $newPrestation = new Prestation();
+        $newPrestation->version += $prestation->version + 1;
         $newPrestation->id = $prestation->id;
         $newPrestation->label = $request["label"];
-        $newPrestation->prixBrut = $request["prixbrut"];
         $newPrestation->prixMensuel = $request["prixmensuel"];
-        $newPrestation->prixFraisInstalation = $request["prixFAS"];
+        $newPrestation->prixFAS = $request["prixFAS"];
         $newPrestation->note = $request["note"];
-        $newPrestation->needPrixVente = ($request["prixVente"] ?? 0) == "on";
         $newPrestation->idCategorie = $request["category"];
         $newPrestation->minEngagement = $request["minEngagement"];
         $newPrestation->maxEngagement = $request["maxEngagement"];
@@ -133,10 +129,8 @@ class PrestationsController extends BaseController
         $request->validate([
             "label" => "required|max:100",
             "parent" => "required|exists:categories,id",
-            "prixbrut" => "nullable|min:0|decimal:0,2",
             "prixFAS" => "nullable|min:0|decimal:0,2",
             "prixmensuel" => "nullable|min:0|decimal:0,2",
-            "prixVente" => "nullable"
         ]);
 
 //        dd();
@@ -144,12 +138,10 @@ class PrestationsController extends BaseController
         $prestation->id = (Prestation::orderby("id", "DESC")->limit(1)->get("id"))[0]->id + 1;
         $prestation->label = $request["label"];
         $prestation->version = 1;
-        $prestation->prixBrut = $request["prixbrut"];
-        $prestation->prixFraisInstalation = $request["prixFAS"];
+        $prestation->prixFAS = $request["prixFAS"];
         $prestation->prixMensuel = $request["prixmensuel"];
         $prestation->idCategorie = $request["parent"];
         $prestation->note = $request["note"];
-        $prestation->needPrixVente = $request["prixVente"] ?? 0;
         $prestation->minEngagement = $request["minEngagement"];
         $prestation->maxEngagement = $request["maxEngagement"];
         $prestation->save();
@@ -199,7 +191,7 @@ class PrestationsController extends BaseController
     {
         $parent = Categorie::findOrFail($request["parent"]);
         $ids = $parent->getPrestationsIdsInsideCategory(); //On récupère tous les ids des prestations que l'utilisateur peut modifier
-        $champs = ["needPrixVente", "prixBrut", "prixMensuel", "prixFraisInstalation", "label", "note"];
+        $champs = ["prixMensuel", "prixFAS", "label", "note", "minEngagement", "maxEngagement"];
 
         foreach ($request->toArray() as $key => $value) {
             if ($key !== "_token") { //On récupère tous les champs sauf le token csrf
@@ -213,7 +205,6 @@ class PrestationsController extends BaseController
                     }
                 }
 
-                if ($pieces[2] === "needPrixVente") $value = 1;
                 $data[$pieces[1]][$pieces[2]] = $value;
 
             }
@@ -221,21 +212,23 @@ class PrestationsController extends BaseController
 
         foreach ($data as $id => $properties) {
             $dirty = 0; // La fonction isDirty de laravel est buggée et renvoie tjrs true (06/06/2023)
-            $prestation = Prestation::where("id", $id)
+            $old = Prestation::where("id", $id)
                 ->orderby("version", "DESC")
                 ->limit(1)
-                ->get();
-            $old = $prestation[0];
-            $prestation = $old->replicate();
+                ->first();
+            $prestation = new Prestation();
+
             $prestation->id = $old->id;
+
             foreach ($properties as $key => $value) {
-                if ($prestation->$key != $value) {
+                if ($old->$key != $value) {
                     $dirty = 1;
-                    $prestation->$key = $value;
                 }
+                $prestation->$key = $value;
             }
             if ($dirty) {
-                $prestation->version += 1;
+                $prestation->version += $old->version + 1;
+                $prestation->idCategorie += $old->idCategorie;
                 $prestation->updated_at = Carbon::now();
                 $prestation->save();
             }
@@ -250,7 +243,7 @@ class PrestationsController extends BaseController
         if (!empty($prestation)) {
             DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $request->id]);
         }
-        return redirect("/prestations/". strtolower($prestation->mainCategory()->label) . "?tri=" . $prestation->getCategory()->parentCategory()->id);
+        return redirect("/prestations/" . strtolower($prestation->mainCategory()->label) . "?tri=" . $prestation->getCategory()->parentCategory()->id);
     }
 
     public function processMassDelete(Request $request)
@@ -264,7 +257,7 @@ class PrestationsController extends BaseController
                 }
             }
         }
-        if (!empty($p)) return redirect("/prestations/". strtolower($p->mainCategory()->label) . "?tri=" . $p->getCategory()->parentCategory()->id);
+        if (!empty($p)) return redirect("/prestations/" . strtolower($p->mainCategory()->label) . "?tri=" . $p->getCategory()->parentCategory()->id);
         return back();
     }
 

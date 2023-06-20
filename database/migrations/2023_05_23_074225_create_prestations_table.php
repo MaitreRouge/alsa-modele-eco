@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prestations', function (Blueprint $table) {
-            $table->id();
+            $table->increments("id")->index();;
             $table->integer("version");
             $table->string("label", 250);
 //            $table->float("prixBrut")->default(null)->nullable();

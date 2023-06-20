@@ -52,11 +52,10 @@
                                         Mensuel
                                     </th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                        Prix
-                                        Brut
+                                        Min Engagement
                                     </th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                        Prix vente
+                                        Max Engagement
                                     </th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                         Note
@@ -95,17 +94,17 @@
                                                 v{{ $prestation->version }}</td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="number"
-                                                           name="presta-{{ $prestation->id }}-prixFraisInstalation"
-                                                           id="presta-{{ $prestation->id }}-prixFraisInstalation"
+                                                    <input type="number" step="0.01"
+                                                           name="presta-{{ $prestation->id }}-prixFAS"
+                                                           id="presta-{{ $prestation->id }}-prixFAS"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                           value="{{ $prestation->prixFraisInstalation }}"
+                                                           value="{{ $prestation->prixFAS }}"
                                                     >
                                                 </div>
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="number" name="presta-{{ $prestation->id }}-prixMensuel"
+                                                    <input type="number" step="0.01" name="presta-{{ $prestation->id }}-prixMensuel"
                                                            id="presta-{{ $prestation->id }}-prixMensuel"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                            value="{{ $prestation->prixMensuel }}"
@@ -114,26 +113,24 @@
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="number" name="presta-{{ $prestation->id }}-prixBrut"
-                                                           id="presta-{{ $prestation->id }}-prixBrut"
+                                                    <input type="number" step="1" name="presta-{{ $prestation->id }}-minEngagement"
+                                                           id="presta-{{ $prestation->id }}-prixMensuel"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                           value="{{ $prestation->prixBrut }}"
+                                                           value="{{ $prestation->minEngagement }}"
                                                     >
                                                 </div>
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="checkbox"
-                                                           name="presta-{{ $prestation->id }}-needPrixVente"
-                                                           id="presta-{{ $prestation->id }}-needPrixVente"
-                                                           class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
-                                                        {{ ($prestation->needPrixVente)?"checked":"" }}
+                                                    <input type="number" step="1" name="presta-{{ $prestation->id }}-maxEngagement"
+                                                           id="presta-{{ $prestation->id }}-prixMensuel"
+                                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                           value="{{ $prestation->maxEngagement }}"
                                                     >
                                                 </div>
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <label for="email" class="sr-only">Email</label>
                                                     <textarea type="text" name="presta-{{ $prestation->id }}-note"
                                                               id="presta-{{ $prestation->id }}-note"
                                                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

@@ -20,8 +20,8 @@ class UserFactory extends Factory
         return [
             "email" => Str::random(5) . "@demo.test",
             "password" => password_hash(Str::random(64), PASSWORD_BCRYPT),
-            "prenom" => "user",
-            "nom" => "demo",
+            "prenom" => fake("fr")->firstName(),
+            "nom" => fake("fr")->lastName(),
             "role" => "user",
         ];
     }

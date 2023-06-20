@@ -5,6 +5,47 @@
 ])
 @section("fiche")
 
+    <div id="error-message" hidden class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div
+                    class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <div class="sm:flex sm:items-start">
+                        <div
+                            class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Supprimer la
+                                prestation ?</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Certes, il est facile et rapide de ré-ajouter cette prestation au devis à nouveau mais il se peut que les offres promotionnelles / commerciales que beneficie cette prestation ne soit plus en vigueur quand il sera réajouté.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                        <a href="../delete/{{ $devis->id??null }}" type="button"
+                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer définitivement</a>
+                        <button type="button" id="delete-back"
+                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                            Retour en arrière
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <form method="POST" autocomplete="off">
 
         @csrf
@@ -43,7 +84,7 @@
                         </div>
                     @endif
 
-                    <div class="sm:col-span-4">
+                    <div class="sm:col-span-6">
                         <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                         <div class="mt-2">
                             <input type="text" id="label" value="{{ $prestation->label }}" name="customName"
@@ -51,75 +92,82 @@
                                    class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
-                    <div class="sm:col-span-2"></div>
                     <div class="sm:col-span-1"></div>
                     <div class="sm:col-span-1">
                         <label for="prixfas" class="block text-sm font-medium leading-6 text-gray-900">Prix FAS</label>
                         <div class="mt-2">
-                            <input type="text" name="prixfas" id="prixfas"
-                                   value="{{ $prestation->prixFraisInstalation	 }}"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="number" step="0.01" name="prixfas" id="prixfas"
+                                   value="{{ $prestation->prixFAS??0 }}" disabled
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="prixbrut" class="block text-sm font-medium leading-6 text-gray-900">Prix
-                            brut</label>
+                        <label for="pdvfas" class="block text-sm font-medium leading-6 text-gray-900">Prix de vente FAS</label>
                         <div class="mt-2">
-                            <input type="text" name="prixbrut" id="prixbrut" value="{{ $prestation->prixBrut }}"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="number" step="0.01" name="pdvfas" id="pdvfas"
+                                   placeholder="{{ $prestation->prixFAS??0 }}" value="{{ $devis->pdvFAS??"" }}"
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="prixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix
-                            mensuel</label>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label for="prixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix mensuel</label>
                         <div class="mt-2">
-                            <input type="text" name="prixmensuel" id="prixmensuel"
-                                   value="{{ $prestation->prixMensuel }}"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="number" step="0.01" name="prixmensuel" id="prixmensuel"
+                                   value="{{ $prestation->prixMensuel??0 }}" disabled
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
-                    <div class="sm:col-span-2">
+                    <div class="sm:col-span-1">
+                        <label for="pdvmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix de vente mensuel</label>
+                        <div class="mt-2">
+                            <input type="number" step="0.01" name="pdvmensuel" id="pdvmensuel"
+                                   placeholder="{{ $prestation->prixMensuel??0 }}"  value="{{ $devis->pdvMensuel??"" }}"
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label for="qte" class="block text-sm font-medium leading-6 text-gray-900">Quantitée</label>
+                        <div class="mt-2">
+                            <input type="number" step="0.01" name="qte" id="qte"
+                                   value="1"
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label for="totalprixfas" class="block text-sm font-medium leading-6 text-gray-900">Total prix FAS</label>
+                        <div class="mt-2">
+                            <input type="number" step="0.01" name="totalprixfas" id="totalprixfas"
+                                   value="" disabled
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label for="totalpdvfas" class="block text-sm font-medium leading-6 text-gray-900">Total prix de vente FAS </label>
+                        <div class="mt-2">
+                            <input type="number" step="0.01" name="totalpdvfas" id="totalpdvfas"
+                                   value="" disabled
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-1">
 
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="qte" class="block text-sm font-medium leading-6 text-gray-900">Quantité</label>
+                        <label for="totalprixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total prix mensuel</label>
                         <div class="mt-2">
-                            <input type="text" name="qte" id="qte" value="1"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="text" name="totalprixmensuel" id="totalprixmensuel"
+                                   value="" disabled
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="totalfas" class="block text-sm font-medium leading-6 text-gray-900">Total
-                            FAS</label>
+                        <label for="totalpdvmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total prix de vente mensuel</label>
                         <div class="mt-2">
-                            <input type="text" id="totalfas" value="" disabled
-                                   class="bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-                    <div class="sm:col-span-1">
-                        <label for="totalbrut" class="block text-sm font-medium leading-6 text-gray-900">Total
-                            brut</label>
-                        <div class="mt-2">
-                            <input type="text" id="totalbrut" value="" disabled
-                                   class="bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-                    <div class="sm:col-span-1">
-                        <label for="totalmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total
-                            mensuel</label>
-                        <div class="mt-2">
-                            <input type="text" id="totalmensuel" value="" disabled
-                                   class="bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-                    <div class="sm:col-span-1">
-
-                    </div>
-                    <div class="sm:col-span-1">
-                        <label for="total" class="block text-sm font-medium leading-6 text-gray-900">Total</label>
-                        <div class="mt-2">
-                            <input type="text" id="total" value="" disabled
-                                   class="bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input type="text" name="totalpdvmensuel" id="totalpdvmensuel"
+                                   value="" disabled
+                                   class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
 
@@ -188,6 +236,7 @@
                                             });
 
                                             changeColor_{{ $option->option_id }}();
+
                                             function changeColor_{{ $option->option_id }} () {
                                                 if ($('#opt-{{ $option->option_id }}').is(":checked")) {
                                                     $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
@@ -217,43 +266,60 @@
 
         <div class="mt-6 flex items-center justify-end gap-x-6">
             <a href="../add" type="button" class="text-sm font-semibold leading-6 text-gray-900">Retour</a>
+            @if (!empty($devis))
+            <a type="button" id="delete"
+               class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                Supprimer
+            </a>
+            @endif
             <button type="submit"
                     class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Ajouter
+                @if (empty($devis))
+                    Ajouter
+                @else
+                    Éditer
+                @endif
             </button>
         </div>
     </form>
 
 
     <script>
-        jQuery(document).ready(function () {
-            var $ = jQuery;
-
+        $(document).ready(function () {
             $("#qte").on("input", function () {
                 calPrices();
             });
-            $("#prixfas").on("input", function () {
+            $("#pdvfas").on("input", function () {
                 calPrices();
             });
-            $("#prixbrut").on("input", function () {
-                calPrices();
-            });
-            $("#prixmensuel").on("input", function () {
+            $("#pdvmensuel").on("input", function () {
                 calPrices();
             });
 
             calPrices();
 
             function calPrices() {
-                var qteValue = $("#qte").val();
-                var totalfas = qteValue * $("#prixfas").val();
-                var totalbrut = qteValue * $("#prixbrut").val();
-                var totalmensuel = qteValue * $("#prixmensuel").val();
-                $("#totalfas").val(totalfas);
-                $("#totalbrut").val(totalbrut);
-                $("#totalmensuel").val(totalmensuel);
-                $("#total").val(totalfas + totalbrut + totalmensuel);
+                let qteValue = $("#qte").val();
+
+                let totalfas = qteValue * $("#prixfas").val();
+                $("#totalprixfas").val(totalfas);
+
+                let totalpdvfas = qteValue * ($("#pdvfas").val() ? $("#pdvfas").val() : $("#prixfas").val());
+                $("#totalpdvfas").val(totalpdvfas);
+
+                let totalmensuel = qteValue * $("#prixmensuel").val();
+                $("#totalprixmensuel").val(totalmensuel);
+
+                let totalpdvmensuel = qteValue * ($("#pdvmensuel").val() ? $("#pdvmensuel").val() : $("#prixmensuel").val());
+                $("#totalpdvmensuel").val(totalpdvmensuel);
             }
+
+            $("#delete").click(function () {
+                $("#error-message").show()
+            });
+            $("#delete-back").click(function () {
+                $("#error-message").hide();
+            });
         });
     </script>
 

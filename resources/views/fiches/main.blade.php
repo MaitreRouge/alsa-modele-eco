@@ -1,3 +1,7 @@
+@php
+    use App\Models\User;
+    $commerciaux = User::all();
+@endphp
 @extends("layouts.fiche",
 [
     "pageTitle" => "Fiche Entreprise",
@@ -27,13 +31,15 @@
                                 deivs ?</h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Je sais qu'il est facile de glisser sur le bouton supprimer ou de se tromper mais est-tu sûr de vouloir supprimer tout ce travail ?</p>
+                                    Je sais qu'il est facile de glisser sur le bouton supprimer ou de se tromper mais
+                                    est-tu sûr de vouloir supprimer tout ce travail ?</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <a href="/delete/{{ $client->id }}" type="button"
-                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer définitivement</a>
+                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer
+                            définitivement</a>
                         <button type="button" id="delete-back"
                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
                             Retour en arrière
@@ -99,11 +105,15 @@
                         </div>
                     </div>
                     <div class="sm:col-span-3">
-                        <label for="commercial"
-                               class="block text-sm font-medium leading-6 text-gray-900">Commercial</label>
+                        <label for="commercial" class="block text-sm font-medium leading-6 text-gray-900">Commercial</label>
                         <div class="mt-2">
-                            <input type="text" name="commercial" id="commercial" value="{{ $client->commercial }}"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <select id="commercial" name="commercial"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                @foreach($commerciaux as $c)
+                                    <option
+                                        value="{{ $c->id }}" {{ ($c->id == $client->commercial)?"selected":"" }}>{{ $c->getPublicName() }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="sm:col-span-3">
@@ -127,7 +137,8 @@
                         </div>
                     </div>
                     <div class="sm:col-span-3">
-                        <label for="engagement" class="block text-sm font-medium leading-6 text-gray-900">Engagement</label>
+                        <label for="engagement"
+                               class="block text-sm font-medium leading-6 text-gray-900">Engagement</label>
                         <div class="mt-2">
                             <input type="number" name="engagement" id="engagement" value="{{ $client->engagement }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">

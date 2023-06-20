@@ -10,6 +10,9 @@ class Prestation extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = ['id', 'version'];
+    public $incrementing = false;
+
     public function formatPrice(string $key): ?string
     {
         $nombre = $this->$key;
