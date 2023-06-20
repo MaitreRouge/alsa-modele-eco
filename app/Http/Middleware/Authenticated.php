@@ -30,9 +30,13 @@ class Authenticated
             return redirect("/login")->withErrors(["La session a expirée et il faut se reconnecter"]);
         }
 
+        $token->lastSeen = Carbon::now();
+        $token->save();
+
         if (!empty($role) and $token->user()->role !== $role) {
             return back()->withErrors(["Vous n'avez pas la permission pour effectuer cette action"]);
         }
+
 
         return $next($request);
     }

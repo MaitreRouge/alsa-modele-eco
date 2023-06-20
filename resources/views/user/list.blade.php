@@ -14,7 +14,7 @@
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                 <a href="create" type="button"
-                        class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                   class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Créer un utilisateur
                 </a>
             </div>
@@ -29,9 +29,9 @@
                                 class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Nom
                             </th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
-{{--                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">--}}
-{{--                                Mot de passe temporaire--}}
-{{--                            </th>--}}
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                Dernière connex
+                            </th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                 <span class="sr-only">Edit</span>
@@ -39,20 +39,28 @@
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                        @foreach($users as $user)
-                        <tr>
-                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                {{ ucfirst($user->nom) }} {{ strtolower($user->prenom) }}
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ strtolower($user->email) }}
-                            </td>
-{{--                            <!-- Pssst, c'est un faux mot de passe généré à la volée, rafrachis la page et tu veras qu'il changera  -->--}}
-{{--                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 blur-sm select-none">{{ Str::random(random_int(8,20)) }}</td>--}}
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $user->role }}</td>
-                            <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                <a href="edit/id" class="text-indigo-600 hover:text-indigo-900">Éditer</a>
-                            </td>
-                        </tr>
+                        @foreach($users as $_user)
+                            <tr>
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                    {{ ucfirst($_user->nom) }} {{ strtolower($_user->prenom) }}
+                                </td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ strtolower($_user->email) }}
+                                </td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    <?= $_user->lastSeenBadge() ?>
+                                </td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    <span class="inline-flex items-center gap-x-1.5 rounded-md bg-{{ $_user->isAdmin()?"red":"gray" }}-100 px-2 py-1 text-xs font-medium text-{{ $_user->isAdmin()?"red":"gray" }}-600">
+                                        <svg class="h-1.5 w-1.5 fill-{{ $_user->isAdmin()?"red":"gray" }}-400" viewBox="0 0 6 6" aria-hidden="true">
+                                            <circle cx="3" cy="3" r="3"/>
+                                        </svg>
+                                        {{ $_user->isAdmin()?"Administrateur":"Utilisateur" }}
+                                    </span>
+                                </td>
+                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                    <a href="edit/id" class="text-indigo-600 hover:text-indigo-900">Éditer</a>
+                                </td>
+                            </tr>
                         @endforeach
 
                         <!-- More people... -->

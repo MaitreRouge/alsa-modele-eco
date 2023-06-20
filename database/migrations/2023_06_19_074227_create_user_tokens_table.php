@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string("token", 120)->primary();
             $table->integer("uid");
             $table->timestamp("validUntil");
+            $table->timestamp("lastSeen");
             $table->timestamps();
         });
     }
