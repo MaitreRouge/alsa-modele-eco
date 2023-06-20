@@ -43,8 +43,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    private string $password;
-
     public function passwordVerify(string $password)
     {
         return password_verify($password, $this->password);

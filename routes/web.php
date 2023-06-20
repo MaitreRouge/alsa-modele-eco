@@ -22,7 +22,7 @@ Route::get('/', function () {
     return redirect("/dashboard");
 });
 
-Route::get("/dashboard", [EntrepriseController::class, "showDashboard"]);
+Route::get("/dashboard", [EntrepriseController::class, "showDashboard"])->middleware(["auth"]);
 
 Route::get('/new', [EntrepriseController::class, "showCreate"]);
 Route::post('/new', [EntrepriseController::class, "processCreate"]);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserToken;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -44,15 +45,17 @@ class UserController extends BaseController
             return redirect("/login")->withErrors(["Adresse mail ou mot de passe invalide"]);
         }
 
-        if ($user->passwordVerify($request["password"])) {
+        if (!$user->passwordVerify($request["password"])) {
             return redirect("/login")->withErrors(["Adresse mail ou mot de passe invalide"]);
         }
 
         $token = new UserToken();
         $token->token = Str::random(120);
+        $token->uid = $user->id;
+        $token->validUntil = (Carbon::now())->addHours(4);
         $token->save();
 
-        return redirect("/login");
+        return redirect("/dashboard")->withCookie(cookie("token", $token->token, 60*9, "/"));
     }
 
     public function processLogout(Request $request): RedirectResponse
@@ -84,7 +87,7 @@ class UserController extends BaseController
         ]);
 //        dump($request->toArray());
 
-        $user = User::where("email", $request["email"] . "@" . $request["at_mail"] . ".com")->get();
+        $user = User::where("email", $request["email"] . "@" . $request["at_email"] . ".com")->get();
 
         if (count($user) > 0) {
             return back()->withErrors(["Un utilisateur existe déjà avec cette adresse mail."]);
