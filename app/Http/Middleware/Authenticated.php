@@ -20,14 +20,14 @@ class Authenticated
         }
 
         $token = UserToken::find($token);
-        if (empty($token)) {
-            cookie("token", null, -1);
-            return redirect("/login")->withErrors(["La session a expirée et il faut se reconnecter"]);
+        if (empty($token) or empty($token->token)) {
+            return redirect("/login")->withErrors(["La session a expirée et il faut se reconnecter"])
+                ->withCookies([cookie("token", null, -1)]);
         }
 
         if ($token->validUntil < Carbon::now()) {
-            cookie("token", null, -1);
-            return redirect("/login")->withErrors(["La session a expirée et il faut se reconnecter"]);
+            return redirect("/login")->withErrors(["La session a expirée et il faut se reconnecter"])
+                ->withCookies([cookie("token", null, -1)]);
         }
 
         $token->lastSeen = Carbon::now();

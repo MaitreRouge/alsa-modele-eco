@@ -11,14 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('devis', function (Blueprint $table) {
-            $table->id();
-            $table->integer("version");
-            $table->float("quantite")->nullable();
-            $table->integer("clientID");
-            $table->integer("catalogueID");
-            $table->timestamps();
-        });
+        Schema::dropIfExists('personal_access_tokens');
     }
 
     /**
@@ -26,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('devis');
+        //
     }
 };

@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('devis', function (Blueprint $table) {
-            $table->float("prixBrut")->nullable()->after("quantite");
-            $table->float("prixMensuel")->nullable()->after("prixBrut");
-            $table->float("prixFraisInstalation")->nullable()->after("prixMensuel");
+            $table->float("pdvFAS")->nullable()->after("quantite");
+            $table->float("pdvMensuel")->nullable()->after("pdvFAS");
             $table->integer("parent")->nullable()->default(null)->after("catalogueID");
             $table->integer("customName")->nullable()->default(null)->after("parent");
         });

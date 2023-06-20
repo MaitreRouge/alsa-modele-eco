@@ -11,6 +11,7 @@ class Option extends Model
 
     protected $primaryKey = null;
     protected $keyType = null;
+    public $incrementing = false;
 
     private Prestation $prestation;
 

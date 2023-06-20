@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('user_tokens', function (Blueprint $table) {
             $table->string("token", 120)->primary();
             $table->integer("uid");
-            $table->timestamp("validUntil");
-            $table->timestamp("lastSeen");
+            $table->timestamp("validUntil")->nullable()->default(null);
+            $table->timestamp("lastSeen")->nullable()->default(null);
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("RPAP", 100);
             $table->date("dateSignature")->nullable();
             $table->date("datePremiereConnexion")->nullable();
-            $table->string("commercial");
+            $table->integer("commercial");
             $table->integer("agence");
             $table->integer("nbSites");
             $table->integer("engagement");
