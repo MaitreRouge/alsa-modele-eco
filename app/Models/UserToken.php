@@ -12,4 +12,9 @@ class UserToken extends Model
     protected $primaryKey = "token";
     protected $keyType = "string";
     public $incrementing = false;
+
+    public function user(): User
+    {
+        return User::find($this->uid);
+    }
 }

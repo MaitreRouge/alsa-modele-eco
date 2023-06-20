@@ -47,4 +47,13 @@ class User extends Authenticatable
     {
         return password_verify($password, $this->password);
     }
+
+    public static function fromToken(string $token): ?User
+    {
+        $token = UserToken::find($token);
+        if (empty($token)) {
+            return null;
+        }
+        return User::find($token->uid);
+    }
 }

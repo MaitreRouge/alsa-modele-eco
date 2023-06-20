@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Authenticated
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ?string $role = null): Response
     {
 
         $token = $request->cookie("token");
@@ -28,6 +28,10 @@ class Authenticated
         if ($token->validUntil < Carbon::now()) {
             cookie("token", null, -1);
             return redirect("/login")->withErrors(["La session a expirée et il faut se reconnecter"]);
+        }
+
+        if (!empty($role) and $token->user()->role !== $role) {
+            return back()->withErrors(["Vous n'avez pas la permission pour effectuer cette action"]);
         }
 
         return $next($request);
