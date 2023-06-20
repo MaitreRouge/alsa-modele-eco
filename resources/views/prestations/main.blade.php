@@ -1,4 +1,12 @@
-@php use App\Models\Prestation; @endphp
+<?php
+
+use App\Models\Prestation;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Cookie;
+
+$user = User::fromToken(Cookie::get("token"));
+?>
 @extends("layouts.prestations",
 [
     "pageTitle" => "Prestations - ".ucfirst($name),
@@ -29,7 +37,7 @@
                                 class="mt-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Trier
                         </button>
-                        @if (!empty($main->id))
+                        @if (!empty($main->id) and $user->isAdmin())
                             <a type="submit" href="{{ strtolower($name) }}/{{ $main->id }}/new"
                                class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                 Créer
@@ -106,16 +114,21 @@
                                                           clip-rule="evenodd"/>
                                                 </svg>
                                             @endif
+                                            @if($user->isAdmin())
                                             <a href="bulk-edit/{{$parent->id}}"
                                                class="absolute right-0 pr-4 text-indigo-600 hover:text-indigo-900">Modification
                                                 de masse</a>
+                                            @endif
                                         </th>
 
                                     </tr>
                                     @foreach($prestations[$parent->id] as $prestation)
                                         <tr class="border-t border-gray-200">
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                                            <input name="prest-{{$prestation->id}}" type="checkbox" value="" class="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                @if($user->isAdmin())
+                                                <input name="prest-{{$prestation->id}}" type="checkbox" value=""
+                                                       class="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                @endif
                                                 {{ $prestation->label }}
                                                     <?= $prestation->showBadges() ?>
                                             </td>
@@ -124,8 +137,10 @@
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ Prestation::staticFormatPrice($prestation->prixFraisInstalation)??"-" }}</td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ Prestation::staticFormatPrice($prestation->prixMensuel)??"-" }}</td>
                                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                                                @if($user->isAdmin())
                                                 <a href="edit/{{$prestation->id}}"
                                                    class="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -138,7 +153,12 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">Supprimer toutes les prestations selectionnés</button>
+            @if($user->isAdmin())
+            <button type="submit"
+                    class="mt-6 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">
+                Supprimer toutes les prestations selectionnés
+            </button>
+            @endif
         </form>
     @endif
 

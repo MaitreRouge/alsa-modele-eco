@@ -1,4 +1,3 @@
-@php use App\Models\Prestation; @endphp
 @extends("layouts.prestations",
 [
     "pageTitle" => "Prestations - ".ucfirst($name),
@@ -85,7 +84,8 @@
                                         <tr class="border-t border-gray-200">
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                                                 <div>
-                                                    <input type="text" name="presta-{{ $prestation->id }}-label" id="presta-{{ $prestation->id }}-label"
+                                                    <input type="text" name="presta-{{ $prestation->id }}-label"
+                                                           id="presta-{{ $prestation->id }}-label"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                            value="{{ $prestation->label }}"
                                                     >
@@ -95,7 +95,9 @@
                                                 v{{ $prestation->version }}</td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="number" name="presta-{{ $prestation->id }}-prixFraisInstalation" id="presta-{{ $prestation->id }}-prixFraisInstalation"
+                                                    <input type="number"
+                                                           name="presta-{{ $prestation->id }}-prixFraisInstalation"
+                                                           id="presta-{{ $prestation->id }}-prixFraisInstalation"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                            value="{{ $prestation->prixFraisInstalation }}"
                                                     >
@@ -103,7 +105,8 @@
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="number" name="presta-{{ $prestation->id }}-prixMensuel" id="presta-{{ $prestation->id }}-prixMensuel"
+                                                    <input type="number" name="presta-{{ $prestation->id }}-prixMensuel"
+                                                           id="presta-{{ $prestation->id }}-prixMensuel"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                            value="{{ $prestation->prixMensuel }}"
                                                     >
@@ -111,7 +114,8 @@
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="number" name="presta-{{ $prestation->id }}-prixBrut" id="presta-{{ $prestation->id }}-prixBrut"
+                                                    <input type="number" name="presta-{{ $prestation->id }}-prixBrut"
+                                                           id="presta-{{ $prestation->id }}-prixBrut"
                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                            value="{{ $prestation->prixBrut }}"
                                                     >
@@ -119,7 +123,9 @@
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
-                                                    <input type="checkbox" name="presta-{{ $prestation->id }}-needPrixVente" id="presta-{{ $prestation->id }}-needPrixVente"
+                                                    <input type="checkbox"
+                                                           name="presta-{{ $prestation->id }}-needPrixVente"
+                                                           id="presta-{{ $prestation->id }}-needPrixVente"
                                                            class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
                                                         {{ ($prestation->needPrixVente)?"checked":"" }}
                                                     >
@@ -128,7 +134,8 @@
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <div>
                                                     <label for="email" class="sr-only">Email</label>
-                                                    <textarea type="text" name="presta-{{ $prestation->id }}-note" id="presta-{{ $prestation->id }}-note"
+                                                    <textarea type="text" name="presta-{{ $prestation->id }}-note"
+                                                              id="presta-{{ $prestation->id }}-note"
                                                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                               placeholder="you@example.com"> {{ $prestation->note }} </textarea>
                                                 </div>
@@ -147,7 +154,8 @@
         @endif
 
         <div class="mt-6 flex items-center justify-end gap-x-6">
-            <a href="/prestations/{{ strtolower($parent->rootCategory()->label) }}?tri={{ $parent->parentCategory()->id }}" type="button" class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
+            <a href="/prestations/{{ strtolower($parent->rootCategory()->label) }}?tri={{ $parent->parentCategory()->id }}"
+               type="button" class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
             <button type="submit"
                     class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Sauvegarder

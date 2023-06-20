@@ -1,4 +1,12 @@
-@php use App\Models\User;use App\Models\UserToken;use Illuminate\Support\Facades\Cookie; @endphp
+<?php
+
+use App\Models\User;
+use Illuminate\Support\Facades\Cookie;
+
+if (!isset($user)){
+    $user = User::fromToken(Cookie::get("token"));
+}
+?>
 <html class="h-full bg-gray-100" lang="fr">
 <head>
     <link rel="stylesheet" type="text/css" href="/dist/output.css">
@@ -26,8 +34,10 @@
                                        class="{{ ($activate == 2)?"bg-gray-900 text-white":"text-gray-300" }} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Prestations</a>
                                     <a href="/changelog"
                                        class="{{ ($activate == 3)?"bg-gray-900 text-white":"text-gray-300" }} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Changelog</a>
+                                    @if ($user->isAdmin())
                                     <a href="/users"
                                        class="{{ ($activate == 4)?"bg-gray-900 text-white":"text-gray-300" }} hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Utilisateurs</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -52,7 +62,7 @@
                                          role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                          tabindex="-1">
                                         <p class="block px-4 py-2 text-sm text-gray-700 border-b">
-                                            Bonjour {{ User::fromToken(Cookie::get("token"))->prenom }}</p>
+                                            Bonjour {{ $user->prenom }}</p>
                                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                            role="menuitem"
                                            tabindex="-1" id="user-menu-item-1">Paramètres</a>
