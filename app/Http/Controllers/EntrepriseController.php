@@ -38,7 +38,7 @@ class EntrepriseController extends BaseController
             "commercial" => ["required"],
             "agence" => ["required", "numeric", Rule::in([2010, 2020, 2030, 2040, 2050, 2090])],
             "nb-sites" => ["required", "numeric", "min:1"],
-            "engagement" => ["required", Rule::in([12, 18, 24, 30, 36, 48, 60])],
+            "engagement" => ["required", "numeric", "min:1"],
             "upgrade" => ["nullable"],
             "nvSite" => ["nullable"],
             "nvClient" => ["nullable"],
@@ -72,7 +72,7 @@ class EntrepriseController extends BaseController
         }
 
         $notification = new Notification();
-        $notification->title = "Client bien créé !";
+        $notification->title = "Client bien créé/modifié !";
         $notification->save();
 
         return redirect("/edit/" . $client->id . "/fiche");
