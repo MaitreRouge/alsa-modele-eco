@@ -73,39 +73,52 @@ class User extends Authenticatable
     public function lastSeen(): int
     {
         $token = UserToken::where("uid", $this->id)
-            ->orderBy("lastSeen")
+            ->orderBy("lastSeen", "DESC")
             ->limit(1)
             ->get();
 
         if (count($token) === 0) {
             return -1;
         }
+
         $token = $token[0];
-        return (Carbon::now()->diffInMinutes(Carbon::create($token->lastSeen)));
-//        dd($diff);
+        return (Carbon::now()->diffInMinutes($token->lastSeen));
     }
 
     public function lastSeenBadge(): string
     {
         $ls = $this->lastSeen();
 
-        $color = "green";
-        $text = "En ligne";
-        if ($ls === -1) {
-            $color = "gray";
-            $text = "Jamais";
-        } elseif ($ls > 5) {
-            $color = "yellow";
-            $text = "Il y a $ls minutes";
+        switch (true) {
+            case $ls === -1:
+                $color = "gray";
+                $text = "Jamais";
+                break;
+            case $ls <= 5:
+                $color = "green";
+                $text = "En ligne";
+                break;
+            case $ls <= 59:
+                $color = "yellow";
+                $text = "Il y a $ls minute(s)";
+                break;
+            case $ls <= 1439:
+                $color = "yellow";
+                $text = "Il y a " . intdiv($ls, 60) . " heure(s)";
+                break;
+            default:
+                $color = "yellow";
+                $text = "Il y a " . intdiv($ls, 1440) . " jour(s)";
+                break;
         }
 
         return '
-            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-'.$color.'-100 px-2 py-1 text-xs font-medium text-'.$color.'-600">
-                <svg class="h-1.5 w-1.5 fill-'.$color.'-400" viewBox="0 0 6 6" aria-hidden="true">
-                    <circle cx="3" cy="3" r="3"/>
-                </svg>
-                '.$text.'
-            </span>';
+        <span class="inline-flex items-center gap-x-1.5 rounded-md bg-' . $color . '-100 px-2 py-1 text-xs font-medium text-' . $color . '-600">
+            <svg class="h-1.5 w-1.5 fill-' . $color . '-400" viewBox="0 0 6 6" aria-hidden="true">
+                <circle cx="3" cy="3" r="3"/>
+            </svg>
+            ' . $text . '
+        </span>';
 
     }
 
