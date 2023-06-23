@@ -110,5 +110,6 @@ Route::middleware(["auth:admin"])->group(function () {
 
 Route::middleware(["auth"])->prefix("changelog")->group(function () {
     Route::get("/", [ChangelogController::class, "showMain"]);
+    Route::get("/new", [ChangelogController::class, "showNew"]);
 });
 

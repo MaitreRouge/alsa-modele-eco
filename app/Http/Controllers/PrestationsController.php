@@ -8,11 +8,13 @@ use App\Models\Client;
 use App\Models\Devis;
 use App\Models\Historique;
 use App\Models\Prestation;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
@@ -110,6 +112,7 @@ class PrestationsController extends BaseController
         $log = new Historique();
         $log->catalogueID = $prestation->id;
         $log->newVersion = $newPrestation->version;
+        $log->uid = User::fromToken(Cookie::get("token"))->id;
         $log->save();
 
         return redirect("/prestations/");
@@ -153,6 +156,7 @@ class PrestationsController extends BaseController
         $hist = new Historique();
         $hist->catalogueID = $prestation->id;
         $hist->newVersion = 1;
+        $log->uid = User::fromToken(Cookie::get("token"))->id;
         $hist->save();
 //        dd($request->toArray());
         return redirect("prestations/" . $request["category"] . "?tri=" . $request["sub"]);
