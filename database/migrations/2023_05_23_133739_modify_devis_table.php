@@ -15,7 +15,7 @@ return new class extends Migration
             $table->float("pdvFAS")->nullable()->after("quantite");
             $table->float("pdvMensuel")->nullable()->after("pdvFAS");
             $table->integer("parent")->nullable()->default(null)->after("catalogueID");
-            $table->integer("customName")->nullable()->default(null)->after("parent");
+            $table->string("customName", 100)->nullable()->default(null)->after("parent");
         });
     }
 
