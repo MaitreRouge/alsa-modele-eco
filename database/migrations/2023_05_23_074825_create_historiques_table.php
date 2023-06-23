@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer("catalogueID");
             $table->integer("newVersion");
             $table->integer("changelogID")->nullable();
+            $table->integer("uid");
             $table->timestamps();
         });
     }

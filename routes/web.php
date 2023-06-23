@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\PrestationsController;
 use App\Http\Controllers\UserController;
@@ -105,5 +106,9 @@ Route::middleware(["auth:admin"])->group(function () {
     Route::get("/users/list", [UserController::class, "showList"]);
     Route::get("/users/create", [UserController::class, "showCreate"]);
     Route::post("/users/create", [UserController::class, "processCreate"]);
+});
+
+Route::middleware(["auth"])->prefix("changelog")->group(function () {
+    Route::get("/", [ChangelogController::class, "showMain"]);
 });
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("titre", 100);
             $table->text("description");
+            $table->integer("uid");
             $table->timestamps();
         });
     }
