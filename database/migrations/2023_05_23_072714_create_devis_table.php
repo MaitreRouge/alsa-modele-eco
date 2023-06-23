@@ -15,8 +15,14 @@ return new class extends Migration
             $table->id();
             $table->integer("version");
             $table->float("quantite")->nullable();
+            $table->float("pdvFAS")->nullable();
+            $table->float("pdvMensuel")->nullable();
+            $table->integer("optLinked")->nullable()->default(null);
+            $table->integer("parent")->nullable()->default(null);
+            $table->string("customName", 100)->nullable()->default(null);
             $table->integer("clientID");
             $table->integer("catalogueID");
+            $table->boolean("conflict")->default(0);
             $table->timestamps();
         });
     }

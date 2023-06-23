@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer("engagement");
             $table->boolean("upgrade");
             $table->boolean("nvSite");
+            $table->integer("nbNvSites")->default(0);
             $table->boolean("nvClient");
             $table->timestamps();
         });

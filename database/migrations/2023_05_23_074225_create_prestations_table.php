@@ -15,11 +15,12 @@ return new class extends Migration
             $table->increments("id")->index();;
             $table->integer("version");
             $table->string("label", 250);
-//            $table->float("prixBrut")->default(null)->nullable();
             $table->float("prixMensuel")->default(null)->nullable();
             $table->float("prixFAS")->default(null)->nullable();
             $table->text("note")->nullable()->default(null);
-//            $table->boolean("needPrixVente")->default(false);
+            $table->integer("minEngagement")->nullable()->default(null);
+            $table->integer("maxEngagement")->nullable()->default(null);
+            $table->integer("disabled")->nullable()->default(null);
             $table->integer("idCategorie");
             $table->timestamps();
         });
