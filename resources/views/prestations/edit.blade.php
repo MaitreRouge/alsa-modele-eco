@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                        <a href="/prestations/delete/{{ $prestation->id }}" type="button"
+                        <a href="/prestations/delete/{{ $prestation->id??0 }}" type="button"
                            class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer définitivement</a>
                         <button type="button" id="delete-back"
                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
@@ -59,7 +59,7 @@
 
                 <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 
-                    <div class="sm:col-span-6">
+                    <div class="sm:col-span-4">
                         <div class="flex justify-between">
                             <label for="label" class="block text-sm font-medium leading-6 text-gray-900">Label</label>
                             <span id="labellength" class="text-sm leading-6 text-gray-500">0 / 100</span>
@@ -68,6 +68,15 @@
                             <input type="text" name="label" id="label" value="{{ $prestation->label??null }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label for="parent" class="block text-sm font-medium leading-6 text-gray-900">Parent</label>
+                        <select id="parent" name="parent" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            @foreach($parents as $p)
+                                <option value="{{ $p->id }}">{{$p->label}}</option>
+                            @endforeach
+                        </select>
                     </div>
 
 

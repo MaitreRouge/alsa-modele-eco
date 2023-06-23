@@ -68,12 +68,12 @@ class PrestationsController extends BaseController
             ->limit(1)
             ->get();
         $prestation = $prestation[0];
-        $categories = Categorie::where("parentID", $prestation->categorie()->parentID)->get();
-//        dd($categories);
+        $parents = Categorie::where("parentID", $prestation->categorie()->parentID)->get();
 
         return view("prestations.edit", [
             "prestation" => $prestation,
-            "subActive" => $prestation->mainCategory()->id
+            "subActive" => $prestation->mainCategory()->id,
+            "parents" => $parents
         ]);
     }
 
@@ -118,9 +118,13 @@ class PrestationsController extends BaseController
     public function showNew(Request $request)
     {
         $parent = ($this->matchCategory($request["category"])) - 1;
+        $parents = (Categorie::where("parentID", $request["sub"])->get());
+
+//        dd($parents);
 
         return view("prestations.edit", [
-            "subActive" => $parent
+            "subActive" => $parent,
+            "parents" => $parents
         ]);
     }
 
@@ -239,7 +243,9 @@ class PrestationsController extends BaseController
 
     public function processDelete(Request $request)
     {
-        $prestation = Prestation::findOrFail($request->id);
+        $prestation = Prestation::where("id", $request["id"])
+            ->where("version", 1)
+            ->first();
         if (!empty($prestation)) {
             DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $request->id]);
         }

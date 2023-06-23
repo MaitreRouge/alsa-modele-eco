@@ -24,16 +24,21 @@
                             </svg>
                         </div>
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Supprimer toutes les prestations ?</h3>
+                            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Supprimer
+                                toutes les prestations ?</h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Vous êtes sur le point de supprimer <span class="font-bold">toutes les prestations</span> de <span class="font-bold">toutes les catégories</span> (data,téléphonie et services)<br><br>Êtes vous sur de vouloir faire tout supprimer ?</p>
+                                    Vous êtes sur le point de supprimer <span
+                                        class="font-bold">toutes les prestations</span> de <span class="font-bold">toutes les catégories</span>
+                                    (data,téléphonie et services)<br><br>Êtes vous sur de vouloir faire tout supprimer ?
+                                </p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <a href="/delete/{{ $cid }}/devis" type="button"
-                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer définitivement</a>
+                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer
+                            définitivement</a>
                         <button type="button" id="delete-back"
                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
                             Retour en arrière
@@ -100,23 +105,37 @@
                                         ->where("version", $line->version)
                                         ->get())[0];
                                     ?>
-                                <tr class="{{ ($line->conflict)?"bg-red-50 hover:bg-red-100":"hover:bg-gray-50" }} ">
+                                <tr
+                                    @if ($line->conflict)
+                                        class="bg-red-50 hover:bg-red-100"
+                                    @elseif($p->disabled)
+                                        class="bg-orange-100 hover:bg-orange-200"
+                                    @else
+                                        class="hover:bg-gray-50"
+                                    @endif
+                                    >
                                     <td class="whitespace-nowrap py-4 pr-4 text-sm font-medium pl-4 {{ ($line ->conflict)?"text-red-500":"text-gray-900" }}">
                                         @if(!empty($line->optLinked))
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="display: inline" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 style="display: inline" stroke-width="1.5" stroke="currentColor"
+                                                 class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"/>
                                             </svg>
                                         @endif
-                                        {{ $line->customName??$p->label }}</td>
+                                        {{ $line->customName??$p->label }}
+                                    </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ($line->pdvFAS??$p->prixFAS) * $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ (($line->pdvMensuel??$p->prixMensuel) * $line->quantite) }}</td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                         @if(empty($line->optLinked) and (!$line->conflict))
-                                        <a href="{{strtolower($name) }}/edit/{{ $line->id }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit<span
-                                                class="sr-only"></span></a>
+                                            <a href="{{strtolower($name) }}/edit/{{ $line->id }}"
+                                               class="text-indigo-600 hover:text-indigo-900 mr-4">Edit<span
+                                                    class="sr-only"></span></a>
                                         @elseif($line->conflict)
-                                            <a href="{{strtolower($name) }}/delete/{{ $line->id }}" class="text-red-600 hover:text-red-900 mr-4">Supprimer<span
+                                            <a href="{{strtolower($name) }}/delete/{{ $line->id }}"
+                                               class="text-red-600 hover:text-red-900 mr-4">Supprimer<span
                                                     class="sr-only"></span></a>
                                         @endif
                                     </td>
@@ -128,7 +147,10 @@
                     </div>
                 </div>
             </div>
-            <button id="button_ras" type="button" class="mt-6 rounded-md bg-red-50 px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">Remise à zéro</button>
+            <button id="button_ras" type="button"
+                    class="mt-6 rounded-md bg-red-50 px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">
+                Remise à zéro
+            </button>
         </div>
 
         <script>

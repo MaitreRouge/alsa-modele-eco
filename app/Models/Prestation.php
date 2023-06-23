@@ -87,7 +87,7 @@ class Prestation extends Model
         return $html;
     }
 
-    private function createBadge(string $color, string $text): string
+    public function createBadge(string $color, string $text): string
     {
         return '
             <span class="inline-flex items-center gap-x-1.5 rounded-md bg-' . $color . '-100 px-2 py-1 text-xs font-medium text-' . $color . '-700">
