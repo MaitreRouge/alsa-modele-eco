@@ -27,14 +27,17 @@
                                 prestation ?</h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Certes, il est facile et rapide de ré-ajouter cette prestation au devis à nouveau mais il se peut que les offres promotionnelles / commerciales que beneficie cette prestation ne soit plus en vigueur quand il sera réajouté.
+                                    Certes, il est facile et rapide de ré-ajouter cette prestation au devis à nouveau
+                                    mais il se peut que les offres promotionnelles / commerciales que beneficie cette
+                                    prestation ne soit plus en vigueur quand il sera réajouté.
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <a href="../delete/{{ $devis->id??null }}" type="button"
-                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer définitivement</a>
+                           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Supprimer
+                            définitivement</a>
                         <button type="button" id="delete-back"
                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
                             Retour en arrière
@@ -102,7 +105,8 @@
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="pdvfas" class="block text-sm font-medium leading-6 text-gray-900">Prix de vente FAS</label>
+                        <label for="pdvfas" class="block text-sm font-medium leading-6 text-gray-900">Prix de vente
+                            FAS</label>
                         <div class="mt-2">
                             <input type="number" step="0.01" name="pdvfas" id="pdvfas"
                                    placeholder="{{ $prestation->prixFAS??0 }}" value="{{ $devis->pdvFAS??"" }}"
@@ -112,7 +116,8 @@
                     <div class="sm:col-span-1">
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="prixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix mensuel</label>
+                        <label for="prixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix
+                            mensuel</label>
                         <div class="mt-2">
                             <input type="number" step="0.01" name="prixmensuel" id="prixmensuel"
                                    value="{{ $prestation->prixMensuel??0 }}" disabled
@@ -120,10 +125,11 @@
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="pdvmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix de vente mensuel</label>
+                        <label for="pdvmensuel" class="block text-sm font-medium leading-6 text-gray-900">Prix de vente
+                            mensuel</label>
                         <div class="mt-2">
                             <input type="number" step="0.01" name="pdvmensuel" id="pdvmensuel"
-                                   placeholder="{{ $prestation->prixMensuel??0 }}"  value="{{ $devis->pdvMensuel??"" }}"
+                                   placeholder="{{ $prestation->prixMensuel??0 }}" value="{{ $devis->pdvMensuel??"" }}"
                                    class="disabled:bg-slate-100 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -136,7 +142,8 @@
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="totalprixfas" class="block text-sm font-medium leading-6 text-gray-900">Total prix FAS</label>
+                        <label for="totalprixfas" class="block text-sm font-medium leading-6 text-gray-900">Total prix
+                            FAS</label>
                         <div class="mt-2">
                             <input type="number" step="0.01" name="totalprixfas" id="totalprixfas"
                                    value="" disabled
@@ -144,7 +151,8 @@
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="totalpdvfas" class="block text-sm font-medium leading-6 text-gray-900">Total prix de vente FAS </label>
+                        <label for="totalpdvfas" class="block text-sm font-medium leading-6 text-gray-900">Total prix de
+                            vente FAS </label>
                         <div class="mt-2">
                             <input type="number" step="0.01" name="totalpdvfas" id="totalpdvfas"
                                    value="" disabled
@@ -155,7 +163,8 @@
 
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="totalprixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total prix mensuel</label>
+                        <label for="totalprixmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total
+                            prix mensuel</label>
                         <div class="mt-2">
                             <input type="text" name="totalprixmensuel" id="totalprixmensuel"
                                    value="" disabled
@@ -163,7 +172,8 @@
                         </div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label for="totalpdvmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total prix de vente mensuel</label>
+                        <label for="totalpdvmensuel" class="block text-sm font-medium leading-6 text-gray-900">Total
+                            prix de vente mensuel</label>
                         <div class="mt-2">
                             <input type="text" name="totalpdvmensuel" id="totalpdvmensuel"
                                    value="" disabled
@@ -185,13 +195,18 @@
 
                     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 
-                        <fieldset class="sm:col-span-4">
+                        <fieldset class="sm:col-span-5">
                             <div class="space-y-4">
 
                                 @foreach($prestation->getOptions() as $option)
                                     <label id="opt-{{ $option->option_id }}-label"
-                                           class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between">
-                                        <input type="checkbox" name="opt-{{ $option->option_id }}"
+                                       @if ($option->getPrestation()->validEngagement($client->engagement))
+                                           class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between"
+                                       @else
+                                           class="relative block cursor-pointer rounded-lg border px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between border-transparent border-gray-200 ring-2 ring-gray-200 bg-gray-100"
+                                       @endif
+                                    >
+                                        <input type="checkbox" name="opt-{{ $option->option_id }}" disabled
                                                id="opt-{{ $option->option_id }}" value="true" class="sr-only"
                                                aria-labelledby="opt-{{ $option->option_id }}-0-label"
                                                aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1" {{ (!empty($devis) and $devis->isOptionSelected($option->option_id))?"checked":"" }} >
@@ -206,12 +221,12 @@
                                                     </span>
                                                 </span>
                                             </span>
-                                        <div class="space-y-2">
-                                            @if(!empty($option->getPrestation()->prixFraisInstalation))
+                                        <div class="flex-none">
+                                            @if(!empty($option->getPrestation()->prixFAS))
                                                 <span id="opt-{{ $option->option_id }}-size-0-description-1"
                                                       class="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right">
                                                 <span
-                                                    class="font-medium text-gray-900">{{ $option->getPrestation()->formatPrice("prixFraisInstalation") }}</span>
+                                                    class="font-medium text-gray-900">{{ $option->getPrestation()->formatPrice("prixFAS") }}</span>
                                                 <span class="ml-1 text-gray-500 sm:ml-0">une fois</span>
                                             </span>
                                             @endif
@@ -225,35 +240,41 @@
                                             @endif
                                         </div>
                                         <span id="opt-{{ $option->option_id }}-border"
-                                              class="pointer-events-none absolute -inset-px rounded-lg border-2"
+                                              @if ($option->getPrestation()->validEngagement($client->engagement))
+                                                  class="pointer-events-none absolute -inset-px rounded-lg border-2"
+                                              @else
+                                                  class="pointer-events-none absolute -inset-px rounded-lg border"
+                                              @endif
                                               aria-hidden="true"></span>
                                     </label>
 
-                                    <script>
-                                        $(document).ready(function () {
-                                            $('#opt-{{ $option->option_id }}').change(function () {
+                                    @if ($option->getPrestation()->validEngagement($client->engagement))
+                                        <script>
+                                            $(document).ready(function () {
+                                                $('#opt-{{ $option->option_id }}').change(function () {
+                                                    changeColor_{{ $option->option_id }}();
+                                                });
+
                                                 changeColor_{{ $option->option_id }}();
-                                            });
 
-                                            changeColor_{{ $option->option_id }}();
-
-                                            function changeColor_{{ $option->option_id }} () {
-                                                if ($('#opt-{{ $option->option_id }}').is(":checked")) {
-                                                    $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
-                                                        .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
-                                                    $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
-                                                        .addClass("border border-indigo-600")
-                                                    return;
+                                                function changeColor_{{ $option->option_id }} () {
+                                                    if ($('#opt-{{ $option->option_id }}').is(":checked")) {
+                                                        $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
+                                                            .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
+                                                        $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
+                                                            .addClass("border border-indigo-600")
+                                                        return;
+                                                    }
+                                                    $('#opt-{{ $option->option_id }}-label')
+                                                        .removeClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
+                                                        .addClass("border-gray-300")
+                                                    $('#opt-{{ $option->option_id }}-border')
+                                                        .removeClass("border border-indigo-600")
+                                                        .addClass("border-2 border-transparent")
                                                 }
-                                                $('#opt-{{ $option->option_id }}-label')
-                                                    .removeClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
-                                                    .addClass("border-gray-300")
-                                                $('#opt-{{ $option->option_id }}-border')
-                                                    .removeClass("border border-indigo-600")
-                                                    .addClass("border-2 border-transparent")
-                                            }
-                                        });
-                                    </script>
+                                            });
+                                        </script>
+                                    @endif
                                 @endforeach
 
                             </div>
@@ -267,10 +288,10 @@
         <div class="mt-6 flex items-center justify-end gap-x-6">
             <a href="../add" type="button" class="text-sm font-semibold leading-6 text-gray-900">Retour</a>
             @if (!empty($devis))
-            <a type="button" id="delete"
-               class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
-                Supprimer
-            </a>
+                <a type="button" id="delete"
+                   class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                    Supprimer
+                </a>
             @endif
             <button type="submit"
                     class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
