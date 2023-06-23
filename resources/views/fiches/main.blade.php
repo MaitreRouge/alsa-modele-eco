@@ -172,12 +172,22 @@
                                     </span>
                         </div>
                     </div>
+
+
                     <div class="sm:col-span-2 my-auto">
-                        <input type="checkbox" name="nvSite"
+                        <input type="checkbox" name="nvSite" id="nvSite"
                                class="my-auto bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
                                role="switch" aria-checked="false" aria-labelledby="availability-label"
                                {{ ($client->nvSite)?"checked":"" }}
                                aria-describedby="availability-description">
+                    </div>
+
+                    <div class="sm:col-span-3" id="nbNvSitesDiv">
+                        <label for="nbNvSites" class="block text-sm font-medium leading-6 text-gray-900">Nombre de nouveaux sites</label>
+                        <div class="mt-2">
+                            <input type="number" name="nbNvSites" id="nbNvSites" value="{{ $client->nbNvSites }}"
+                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
                     </div>
 
                     <div class="sm:col-span-4">
@@ -225,6 +235,22 @@
                 $("#error-message").hide();
             });
 
+            $('#nvSite').change(function () {
+                showNbNvSitesInput();
+            });
+
+            showNbNvSitesInput();
+
+            function showNbNvSitesInput () {
+                if ($('#nvSite').is(":checked")) {
+                    $('#nbNvSitesDiv').show()
+                    $('#nbNvSites').enable()
+                    return;
+                } else {
+                    $('#nbNvSitesDiv').hide()
+                    $('#nbNvSites').disable()
+                }
+            }
         });
     </script>
 

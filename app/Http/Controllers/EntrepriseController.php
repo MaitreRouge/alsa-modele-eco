@@ -42,8 +42,13 @@ class EntrepriseController extends BaseController
             "upgrade" => ["nullable"],
             "nvSite" => ["nullable"],
             "nvClient" => ["nullable"],
+            "nbNvSites" => ["nullable","numeric","min:1"],
             "name" => ["required"]
         ]);
+
+        if ($request["nbNvSites"] > $request["nb-sites"] and $request["nvSite"]) {
+            return back()->withErrors(["Le nombre de nouveaux sites est supérieur au nombre de sites totaux du clients"]);
+        }
 
         $client = new Client;
         if (!empty($request["id"])) $client = Client::find($request["id"]);
@@ -60,6 +65,8 @@ class EntrepriseController extends BaseController
         $client->upgrade = !empty($request["upgrade"]);
         $client->nvSite = !empty($request["nvSite"]);
         $client->nvClient = !empty($request["nvClient"]);
+        if ($client->nvSite) $client->nbNvSites = $request["nbNvSites"]??0;
+        else $client->nbNvSites = 0;
         $client->save();
 
         // Vérification des prestations liés au client et si l'engagement est toujours respecté
@@ -70,6 +77,24 @@ class EntrepriseController extends BaseController
                 $d->save();
             }
         }
+
+        $oldNvSiteFAS = Devis::where("clientID", $client->id)
+            ->where("catalogueID", 1)
+            ->first();
+
+        if ($client->nvSite) {
+            if ($oldNvSiteFAS) $oldNvSiteFAS->delete();
+
+            $devis = new Devis();
+            $devis->version = 1;
+            $devis->quantite = $client->nbNvSites;
+            $devis->clientID = $client->id;
+            $devis->catalogueID = 1;
+            $devis->parent = 1;
+            $devis->save();
+        }
+
+        if($oldNvSiteFAS and !$client->nvSite) $oldNvSiteFAS->delete();
 
         $notification = new Notification();
         $notification->title = "Client bien créé/modifié !";
@@ -91,12 +116,13 @@ class EntrepriseController extends BaseController
         $prestations = DB::select("
         SELECT DISTINCT d.*
         FROM devis AS d, prestations as p, categories as c
-        WHERE (d.catalogueID = p.id
+        WHERE ((d.catalogueID = p.id
             AND d.version = p.version
             AND p.idCategorie = c.id
             AND c.parentID IN (SELECT c.id FROM categories as c WHERE c.parentID = :cID)
-            AND d.clientID = :clientID)
-            OR d.parent = :parent
+            )
+            OR d.parent = :parent)
+            AND d.clientID = :clientID
         ", ["clientID" => $request["id"], "cID" => $category_number, "parent" => $category_number]);
         return view("fiches.resume-prestations", [
             "name" => ucfirst($category),
