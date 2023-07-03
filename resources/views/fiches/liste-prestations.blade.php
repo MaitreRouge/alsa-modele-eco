@@ -108,12 +108,8 @@
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $prestation->formatPrice("prixMensuel")??"-" }}</td>
                                         {{--                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-1 text-right text-sm font-medium sm:pr-3">--}}
                                         <td class="whitespace-nowrap py-4 text-sm text-gray-500 text-right text-sm font-medium">
-                                            @if($prestation->validEngagement($client->engagement))
-                                                <a href="add/{{ $prestation->id }}"
-                                                   class="text-indigo-600 hover:text-indigo-900">Ajouter</a>
-                                            @else
-                                                <a class="text-red-400 hover:text-red-500">Engagement</a>
-                                            @endif
+                                            <a href="add/{{ $prestation->id }}"
+                                               class="text-indigo-600 hover:text-indigo-900">Ajouter</a>
                                         </td>
                                     </tr>
                                 @endforeach

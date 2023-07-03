@@ -200,11 +200,7 @@
 
                                 @foreach($prestation->getOptions() as $option)
                                     <label id="opt-{{ $option->option_id }}-label"
-                                       @if ($option->getPrestation()->validEngagement($client->engagement))
                                            class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between"
-                                       @else
-                                           class="relative block cursor-pointer rounded-lg border px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between border-transparent border-gray-200 ring-2 ring-gray-200 bg-gray-100"
-                                       @endif
                                     >
                                         <input type="checkbox" name="opt-{{ $option->option_id }}" disabled
                                                id="opt-{{ $option->option_id }}" value="true" class="sr-only"
@@ -240,41 +236,35 @@
                                             @endif
                                         </div>
                                         <span id="opt-{{ $option->option_id }}-border"
-                                              @if ($option->getPrestation()->validEngagement($client->engagement))
                                                   class="pointer-events-none absolute -inset-px rounded-lg border-2"
-                                              @else
-                                                  class="pointer-events-none absolute -inset-px rounded-lg border"
-                                              @endif
                                               aria-hidden="true"></span>
                                     </label>
 
-                                    @if ($option->getPrestation()->validEngagement($client->engagement))
-                                        <script>
-                                            $(document).ready(function () {
-                                                $('#opt-{{ $option->option_id }}').change(function () {
-                                                    changeColor_{{ $option->option_id }}();
-                                                });
-
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#opt-{{ $option->option_id }}').change(function () {
                                                 changeColor_{{ $option->option_id }}();
-
-                                                function changeColor_{{ $option->option_id }} () {
-                                                    if ($('#opt-{{ $option->option_id }}').is(":checked")) {
-                                                        $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
-                                                            .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
-                                                        $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
-                                                            .addClass("border border-indigo-600")
-                                                        return;
-                                                    }
-                                                    $('#opt-{{ $option->option_id }}-label')
-                                                        .removeClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
-                                                        .addClass("border-gray-300")
-                                                    $('#opt-{{ $option->option_id }}-border')
-                                                        .removeClass("border border-indigo-600")
-                                                        .addClass("border-2 border-transparent")
-                                                }
                                             });
-                                        </script>
-                                    @endif
+
+                                            changeColor_{{ $option->option_id }}();
+
+                                            function changeColor_{{ $option->option_id }} () {
+                                                if ($('#opt-{{ $option->option_id }}').is(":checked")) {
+                                                    $('#opt-{{ $option->option_id }}-label').removeClass("border-gray-300")
+                                                        .addClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
+                                                    $('#opt-{{ $option->option_id }}-border').removeClass("border-2 border-transparent")
+                                                        .addClass("border border-indigo-600")
+                                                    return;
+                                                }
+                                                $('#opt-{{ $option->option_id }}-label')
+                                                    .removeClass("border-transparent border-indigo-600 ring-2 ring-indigo-600")
+                                                    .addClass("border-gray-300")
+                                                $('#opt-{{ $option->option_id }}-border')
+                                                    .removeClass("border border-indigo-600")
+                                                    .addClass("border-2 border-transparent")
+                                            }
+                                        });
+                                    </script>
                                 @endforeach
 
                             </div>

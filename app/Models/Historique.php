@@ -9,7 +9,7 @@ class Historique extends Model
 {
     use HasFactory;
 
-    public function getOldPrestation(): Prestation
+    public function getOldPrestation(): ?Prestation
     {
         return Prestation::where("id", $this->catalogueID)->where("version", $this->newVersion - 1)->first();
     }

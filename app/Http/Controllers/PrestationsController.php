@@ -153,10 +153,11 @@ class PrestationsController extends BaseController
         $prestation->maxEngagement = $request["maxEngagement"];
         $prestation->save();
 
+        $uid = (User::fromToken(Cookie::get("token"))->id);
         $hist = new Historique();
         $hist->catalogueID = $prestation->id;
         $hist->newVersion = 1;
-        $log->uid = User::fromToken(Cookie::get("token"))->id;
+        $hist->uid = $uid;
         $hist->save();
 //        dd($request->toArray());
         return redirect("prestations/" . $request["category"] . "?tri=" . $request["sub"]);
@@ -261,7 +262,7 @@ class PrestationsController extends BaseController
         foreach ($request->toArray() as $key => $value) {
             if ($value === null) {
                 $id = explode("-", $key)[1];
-                $p = Prestation::find($id);
+                $p = Prestation::where("id", $id)->first();
                 if (!empty($p)) {
                     DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $id]);
                 }

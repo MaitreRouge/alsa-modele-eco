@@ -106,15 +106,13 @@
                                         ->get())[0];
                                     ?>
                                 <tr
-                                    @if ($line->conflict)
-                                        class="bg-red-50 hover:bg-red-100"
-                                    @elseif($p->disabled)
+                                    @if($p->disabled)
                                         class="bg-orange-100 hover:bg-orange-200"
                                     @else
                                         class="hover:bg-gray-50"
                                     @endif
                                     >
-                                    <td class="whitespace-nowrap py-4 pr-4 text-sm font-medium pl-4 {{ ($line ->conflict)?"text-red-500":"text-gray-900" }}">
+                                    <td class="whitespace-nowrap py-4 pr-4 text-sm font-medium pl-4 text-gray-900">
                                         @if(!empty($line->optLinked))
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                  style="display: inline" stroke-width="1.5" stroke="currentColor"
@@ -129,13 +127,9 @@
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ($line->pdvFAS??$p->prixFAS) * $line->quantite }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ (($line->pdvMensuel??$p->prixMensuel) * $line->quantite) }}</td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                        @if(empty($line->optLinked) and (!$line->conflict))
+                                        @if(empty($line->optLinked))
                                             <a href="{{strtolower($name) }}/edit/{{ $line->id }}"
                                                class="text-indigo-600 hover:text-indigo-900 mr-4">Edit<span
-                                                    class="sr-only"></span></a>
-                                        @elseif($line->conflict)
-                                            <a href="{{strtolower($name) }}/delete/{{ $line->id }}"
-                                               class="text-red-600 hover:text-red-900 mr-4">Supprimer<span
                                                     class="sr-only"></span></a>
                                         @endif
                                     </td>
