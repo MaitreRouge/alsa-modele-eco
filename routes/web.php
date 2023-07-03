@@ -79,9 +79,6 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
         return redirect("prestations/data");
     });
 
-    Route::get("{category}", [PrestationsController::class, "showList"]);
-    Route::post("{category}", [PrestationsController::class, "showList"]);
-
     Route::middleware(["auth:admin"])->group(function () {
         Route::get("{category}/{sub}/new", [PrestationsController::class, "showNew"]);
         Route::post("{category}/{sub}/new", [PrestationsController::class, "processNew"]);
@@ -96,20 +93,24 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
         Route::get("delete/{id}", [PrestationsController::class, "processDelete"]);
     });
 
+    Route::get("{category}", [PrestationsController::class, "showList"]);
+    Route::post("{category}", [PrestationsController::class, "showList"]);
+
 });
 
 //UserController (-> admin)
-Route::middleware(["auth:admin"])->group(function () {
-    Route::get("/users", function () {
+Route::middleware(["auth:admin"])->prefix("/users")->group(function () {
+    Route::get("", function () {
         return redirect("users/list");
     });
-    Route::get("/users/list", [UserController::class, "showList"]);
-    Route::get("/users/create", [UserController::class, "showCreate"]);
-    Route::post("/users/create", [UserController::class, "processCreate"]);
+    Route::get("/list", [UserController::class, "showList"]);
+    Route::get("/create", [UserController::class, "showCreate"]);
+    Route::post("/create", [UserController::class, "processCreate"]);
 });
 
 Route::middleware(["auth"])->prefix("changelog")->group(function () {
     Route::get("/", [ChangelogController::class, "showMain"]);
-    Route::get("/new", [ChangelogController::class, "showNew"]);
+    Route::get("/new", [ChangelogController::class, "showNew"])->middleware("auth:admin");
+    Route::post("/new", [ChangelogController::class, "processNew"])->middleware("auth:admin");
 });
 
