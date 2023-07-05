@@ -91,19 +91,32 @@
                                                type="checkbox"
                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
                                     </td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $history->getNewPrestation()->label }}</td>
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">{{ $history->getSafeLabel() }}</td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">
+                                        @if ($history->type === "edition")
                                         {{ (($history->getNewPrestation()->prixFAS - ($history->getOldPrestation()->prixFAS??0)) > 0)?"+":"" }}
                                         {{ $history->getNewPrestation()->prixFAS - ($history->getOldPrestation()->prixFAS??0) }}
+                                        @elseif ($history->type === "creation")
+                                            {{ $history->getNewPrestation()->prixFAS }}
+                                        @else
+                                            --
+                                        @endif
                                         €
                                     </td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">
-                                        {{ (($history->getNewPrestation()->prixMensuel - ($history->getOldPrestation()->prixMensuel??0)) > 0)?"+":"" }}
-                                        {{ $history->getNewPrestation()->prixMensuel - ($history->getOldPrestation()->prixMensuel??0) }}
-                                        €
+                                        @if ($history->type === "edition")
+                                            {{ (($history->getNewPrestation()->prixMensuel - ($history->getOldPrestation()->prixMensuel??0)) > 0)?"+":"" }}
+                                            {{ $history->getNewPrestation()->prixMensuel - ($history->getOldPrestation()->prixMensuel??0) }}
+
+                                        @elseif ($history->type === "creation")
+                                            {{ $history->getNewPrestation()->prixMensuel }}
+                                        @else
+                                            --
+                                        @endif
+                                            €
                                     </td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ Carbon::parse($history->created_at) }}</td>
-                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500"><?= Badge::create("--", "gray", false) ?></td>
+                                    <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500"><?= Badge::create(ucfirst($history->type), Badge::color($history->type), false) ?></td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{{ User::find($history->uid)->getPublicName() }}</td>
                                     <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500">Annuler</td>
                                 </tr>

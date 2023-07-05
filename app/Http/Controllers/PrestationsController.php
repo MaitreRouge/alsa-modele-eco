@@ -112,6 +112,7 @@ class PrestationsController extends BaseController
         $log = new Historique();
         $log->catalogueID = $prestation->id;
         $log->newVersion = $newPrestation->version;
+        $log->type = "edition";
         $log->uid = User::fromToken(Cookie::get("token"))->id;
         $log->save();
 
@@ -157,6 +158,7 @@ class PrestationsController extends BaseController
         $hist = new Historique();
         $hist->catalogueID = $prestation->id;
         $hist->newVersion = 1;
+        $hist->type = "creation";
         $hist->uid = $uid;
         $hist->save();
 //        dd($request->toArray());
@@ -240,6 +242,13 @@ class PrestationsController extends BaseController
                 $prestation->idCategorie += $old->idCategorie;
                 $prestation->updated_at = Carbon::now();
                 $prestation->save();
+
+                $log = new Historique();
+                $log->catalogueID = $prestation->id;
+                $log->newVersion = $prestation->version;
+                $log->type = "edition";
+                $log->uid = User::fromToken(Cookie::get("token"))->id;
+                $log->save();
             }
         }
 
@@ -253,6 +262,12 @@ class PrestationsController extends BaseController
             ->first();
         if (!empty($prestation)) {
             DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $request->id]);
+            $log = new Historique();
+            $log->catalogueID = $prestation->id;
+            $log->newVersion = null;
+            $log->type = "deletion";
+            $log->uid = User::fromToken(Cookie::get("token"))->id;
+            $log->save();
         }
         return redirect("/prestations/" . strtolower($prestation->mainCategory()->label) . "?tri=" . $prestation->getCategory()->parentCategory()->id);
     }
@@ -265,6 +280,12 @@ class PrestationsController extends BaseController
                 $p = Prestation::where("id", $id)->first();
                 if (!empty($p)) {
                     DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $id]);
+                    $log = new Historique();
+                    $log->catalogueID = $id;
+                    $log->newVersion = null;
+                    $log->type = "deletion";
+                    $log->uid = User::fromToken(Cookie::get("token"))->id;
+                    $log->save();
                 }
             }
         }
