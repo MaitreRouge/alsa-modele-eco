@@ -60,8 +60,7 @@ class UserController extends BaseController
 
     public function processLogout(Request $request): RedirectResponse
     {
-        session(["token" => null]);
-        return redirect("/login");
+        return redirect("/dashboard")->withCookie(cookie("token", null, -1, "/"));
     }
 
     public function showList()
