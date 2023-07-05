@@ -17,7 +17,9 @@ class ChangelogController extends BaseController
 
     public function showMain(Request $request)
     {
-        return view("changelogs.main");
+        return view("changelogs.main", [
+            "changelogs" => Changelog::select("*")->orderby("id", "DESC")->get()
+        ]);
     }
 
     public function showNew(Request $request)
