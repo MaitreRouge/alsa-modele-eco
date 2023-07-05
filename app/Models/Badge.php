@@ -11,6 +11,10 @@ class Badge extends Model
 {
     protected $connection = null;
 
+    public static string $deletion = "red";
+    public static string $edition = "yellow";
+    public static string $creation = "green";
+
     public static function create(string $title, string $color = "red", bool $dot = true): string
     {
         $dotHTML = null;
@@ -24,5 +28,9 @@ class Badge extends Model
                   $dotHTML
                   $title
                 </span>";
+    }
+
+    public static function color(string $keyword){
+        return Badge::$$keyword;
     }
 }
