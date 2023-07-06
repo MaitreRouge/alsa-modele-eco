@@ -179,6 +179,7 @@ class PrestationsController extends BaseController
                 $query->from('prestations')
                     ->select('id', DB::raw('MAX(version) as version_max'))
                     ->where("idCategorie", $parent->id)
+                    ->where("disabled", null)
                     ->groupBy('id');
             }, 't', function ($join) {
                 $join->on('prestations.id', '=', 't.id')
