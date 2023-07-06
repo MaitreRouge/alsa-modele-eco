@@ -168,57 +168,61 @@ class PrestationsController extends BaseController
     public function showBulkEdit(Request $request)
     {
 
-        $parent = Categorie::findOrFail($request["parent"]);
-        $categories = Categorie::where("parentID", $parent->parentID)->get();
+//        $category = $this->matchCategory($request["category"]);
+//        $categories = Categorie::where("parentID", $category - 1)->get();
 
+        $main = Categorie::findOrFail($request["tri"]);
+        $category = $main->rootCategory();
+        $categories = Categorie::where("parentID", $category->id)->get();
 
+        $parents = [];
         $prestations = [];
-
-        $prestationsWithDetails = DB::table('prestations')
-            ->joinSub(function ($query) use ($parent) {
-                $query->from('prestations')
-                    ->select('id', DB::raw('MAX(version) as version_max'))
-                    ->where("idCategorie", $parent->id)
-                    ->where("disabled", null)
-                    ->groupBy('id');
-            }, 't', function ($join) {
-                $join->on('prestations.id', '=', 't.id')
-                    ->on('prestations.version', '=', 't.version_max');
-            })
-            ->get();
-        $prestations[$parent->id] = $prestationsWithDetails;
+        if (!empty($request["tri"])) {
+            $main = Categorie::findOrFail($request["tri"]);
+            $parents = Categorie::where("parentID", $request["tri"])->get();
+//            dd($parents);
+            foreach ($parents as $parent) {
+                $prestationsWithDetails = Prestation::
+                joinSub(function ($query) use ($parent) {
+                    $query->from('prestations')
+                        ->select('id', DB::raw('MAX(version) as version_max'))
+                        ->where("idCategorie", $parent->id)
+                        ->where("disabled", null)
+                        ->groupBy('id');
+                }, 't', function ($join) {
+                    $join->on('prestations.id', '=', 't.id')
+                        ->on('prestations.version', '=', 't.version_max');
+                })
+                    ->get();
+                $prestations[$parent->id] = $prestationsWithDetails;
+            }
+        }
 
         return view("prestations.bulkedit", [
             "name" => ucfirst("bulk edit"), //Nom de la page
             "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
-            "parents" => [$parent], //Liste des parents des prestatons (affichés dans le tableau)
-            "subActive" => ($parent->rootCategory()->id) + 1, //Index du bouton du sous-menu qui doit être actif ()
+            "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
+            "subActive" => $category->id + 1, //Index du bouton du sous-menu qui doit être actif ()
             "categories" => $categories, //Liste de toutes les caregories (pour la liste déroulante),
-            "main" => $parent //Oui mais non
+            "main" => null //Oui mais non
         ]);
 
     }
 
     public function processBulkEdit(Request $request)
     {
-        $parent = Categorie::findOrFail($request["parent"]);
-        $ids = $parent->getPrestationsIdsInsideCategory(); //On récupère tous les ids des prestations que l'utilisateur peut modifier
         $champs = ["prixMensuel", "prixFAS", "label", "note", "minEngagement", "maxEngagement"];
+
+        $category = Categorie::findOrFail($request["tri"]);
 
         foreach ($request->toArray() as $key => $value) {
             if ($key !== "_token") { //On récupère tous les champs sauf le token csrf
                 $pieces = explode("-", $key); //On les sépare car leurs nom est "presta-ID-NOM"
-                if (!in_array($pieces[1], $ids)) { //On regarde si l'utilisateur peut modifier l'id en question
-                    return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une valeur qui ne fait pas partie de la catégorie selectionnée ;)"]);
-                }
                 if (!in_array($pieces[2], $champs)) {
-                    if (!in_array($pieces[1], $ids)) { //On regarde si l'utilisateur peut modifier l'id en question
-                        return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une propriété qui est protégée ;)"]);
-                    }
+                        return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une propriété qui est protégée (:"]);
                 }
 
                 $data[$pieces[1]][$pieces[2]] = $value;
-
             }
         }
 
@@ -253,7 +257,7 @@ class PrestationsController extends BaseController
             }
         }
 
-        return redirect("/prestations/" . strtolower($parent->rootCategory()->label) . "?tri=" . $parent->parentCategory()->id);
+        return redirect("/prestations/" . strtolower($category->rootCategory()->label) . "?tri=" . $category->id);
     }
 
     public function processDelete(Request $request)

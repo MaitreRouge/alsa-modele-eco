@@ -116,8 +116,7 @@ $user = User::fromToken(Cookie::get("token"));
                                             @endif
                                             @if($user->isAdmin())
                                             <a href="bulk-edit/{{$parent->id}}"
-                                               class="absolute right-0 pr-4 text-indigo-600 hover:text-indigo-900">Modification
-                                                de masse</a>
+                                               class="absolute right-0 pr-4 text-indigo-600 hover:text-indigo-900">Modifier</a>
                                             @endif
                                         </th>
 
@@ -155,9 +154,13 @@ $user = User::fromToken(Cookie::get("token"));
             </div>
             @if($user->isAdmin())
             <button type="submit"
-                    class="mt-6 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">
+                    class="mt-6 ml-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">
                 Supprimer toutes les prestations selectionnés
             </button>
+            <a href="bulk-edit/{{$main->id??0}}"
+                    class="mt-6 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
+                Modification de masse
+            </a>
             @endif
         </form>
     @endif

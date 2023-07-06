@@ -26,6 +26,7 @@ Route::get('/', function () {
 Route::get("/login", [UserController::class, "showLogin"])->middleware("guest");
 Route::post("/login", [UserController::class, "processLogin"])->middleware("guest");
 Route::get("/logout", [UserController::class, "processLogout"])->middleware("auth");
+Route::get("/logout", [UserController::class, "processLogout"])->middleware("auth");
 
 //EntrepriseController (devis)
 Route::middleware(["slash", "validClientId", "auth"])->group(function () {
@@ -86,8 +87,8 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
         Route::get("edit/{prestation}", [PrestationsController::class, "showEdit"]);
         Route::post("edit/{prestation}", [PrestationsController::class, "processEdit"]);
 
-        Route::get("bulk-edit/{parent}", [PrestationsController::class, "showBulkEdit"]);
-        Route::post("bulk-edit/{parent}", [PrestationsController::class, "processBulkEdit"]);
+        Route::get("bulk-edit/{tri}", [PrestationsController::class, "showBulkEdit"]);
+        Route::post("bulk-edit/{tri}", [PrestationsController::class, "processBulkEdit"]);
 
         Route::post("massdelete", [PrestationsController::class, "processMassDelete"]);
         Route::get("delete/{id}", [PrestationsController::class, "processDelete"]);

@@ -29,7 +29,7 @@ class Historique extends Model
     public function getChanges()
     {
 //        dump()
-        $properties = ["prixMensuel", "prixFAS", "label", "note", "minEngagement", "maxEngagement"];
+        $properties = ["label", "prixMensuel", "prixFAS", "note", "minEngagement", "maxEngagement"];
         $changes = [];
         foreach ($properties as $property) {
             if ($this->getNewPrestation()->$property !== $this->getOldPrestation()->$property) {
