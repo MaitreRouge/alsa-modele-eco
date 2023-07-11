@@ -119,6 +119,28 @@ class PrestationsController extends BaseController
         return redirect("/prestations/");
     }
 
+    public function showCategoryEdit(Request $request){
+
+        $category = Categorie::findOrFail($request["cid"]);
+        return view("prestations.categoryedit", [
+            "category" => $category,
+            "subActive" => $category->rootCategory()->id,
+            "parents" => Categorie::where("parentID", $category->rootCategory()->id)->get()
+        ]);
+
+    }
+
+    public function processCategoryEdit(Request $request){
+
+        $category = Categorie::findOrFail($request["cid"]);
+        $category->label = $request["label"];
+        $category->parentID = $request["parent"];
+        $category->note = $request["note"];
+        $category->update();
+        return redirect("/prestations");
+
+    }
+
     public function showNew(Request $request)
     {
         $parent = ($this->matchCategory($request["category"])) - 1;

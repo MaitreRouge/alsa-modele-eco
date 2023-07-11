@@ -89,6 +89,9 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
         Route::get("edit/{prestation}", [PrestationsController::class, "showEdit"]);
         Route::post("edit/{prestation}", [PrestationsController::class, "processEdit"]);
 
+        Route::get("edit/category/{cid}", [PrestationsController::class, "showCategoryEdit"]);
+        Route::post("edit/category/{cid}", [PrestationsController::class, "processCategoryEdit"]);
+
         Route::get("bulk-edit/{tri}", [PrestationsController::class, "showBulkEdit"]);
         Route::post("bulk-edit/{tri}", [PrestationsController::class, "processBulkEdit"]);
 
