@@ -97,6 +97,7 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
 
         Route::post("massdelete", [PrestationsController::class, "processMassDelete"]);
         Route::get("delete/{id}", [PrestationsController::class, "processDelete"]);
+        Route::get("delete/category/{id}", [PrestationsController::class, "processCategoryDelete"]);
     });
 
     Route::get("{category}", [PrestationsController::class, "showList"]);

@@ -28,10 +28,9 @@ class Categorie extends Model
         return $main;
     }
 
-    public function getPrestationsInsideCategory()
+    public function getPrestations()
     {
-        //TODO: J'ai pas envie de le faire maintenant
-        return null;
+        return Prestation::where("idCategorie", $this->id)->get();
     }
 
     public function getPrestationsIdsInsideCategory()

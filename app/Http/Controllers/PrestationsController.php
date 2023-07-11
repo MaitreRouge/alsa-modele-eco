@@ -299,6 +299,24 @@ class PrestationsController extends BaseController
         return redirect("/prestations/" . strtolower($prestation->mainCategory()->label) . "?tri=" . $prestation->getCategory()->parentCategory()->id);
     }
 
+    public function processCategoryDelete(Request $request)
+    {
+        $category = Categorie::findOrFail($request["id"]);
+
+        foreach ($category->getPrestations() as $prestation) {
+            DB::update("UPDATE prestations SET disabled = 1 WHERE id = :id", ["id" => $request->id]);
+            $log = new Historique();
+            $log->catalogueID = $prestation->id;
+            $log->newVersion = null;
+            $log->type = "deletion";
+            $log->uid = User::fromToken(Cookie::get("token"))->id;
+            $log->save();
+        }
+
+        $category->delete();
+        return redirect("/prestations/" . strtolower($category->rootCategory()->label));
+    }
+
     public function processMassDelete(Request $request)
     {
         foreach ($request->toArray() as $key => $value) {
