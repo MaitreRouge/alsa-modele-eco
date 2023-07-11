@@ -202,7 +202,7 @@
                                     <label id="opt-{{ $option->option_id }}-label"
                                            class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between"
                                     >
-                                        <input type="checkbox" name="opt-{{ $option->option_id }}" disabled
+                                        <input type="checkbox" name="opt-{{ $option->option_id }}"
                                                id="opt-{{ $option->option_id }}" value="true" class="sr-only"
                                                aria-labelledby="opt-{{ $option->option_id }}-0-label"
                                                aria-describedby="opt-{{ $option->option_id }}-0-description-0 opt-{{ $option->option_id }}-0-description-1" {{ (!empty($devis) and $devis->isOptionSelected($option->option_id))?"checked":"" }} >
