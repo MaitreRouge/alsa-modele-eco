@@ -298,8 +298,8 @@ class PrestationsController extends BaseController
         return back();
     }
 
+    /********** FONCTIONS PRIVÉS **********/
     private function matchCategory(string $c)
-        /********** FONCTIONS PRIVÉS **********/
     {
         return match (strtolower($c)) {
             "data" => 2,

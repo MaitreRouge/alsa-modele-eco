@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PrestationsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,7 @@ Route::middleware(["slash", "validClientId", "auth"])->group(function () {
     Route::post('/new', [EntrepriseController::class, "processCreate"])->withoutMiddleware(["validClientId"]);
     Route::get("/delete/{id}", [EntrepriseController::class, "deleteAll"]);
     Route::get("/delete/{id}/devis", [EntrepriseController::class, "deleteAllDevis"]);
+    Route::get("/export/{id}", [ExportController::class, "export"]);
 
     Route::prefix('/edit/{id}/')->group(function () {
         //localhost/edit/1

@@ -34,8 +34,10 @@ class Prestation extends Model
         return $c;
     }
 
-    public function categorie(): Categorie
+    public function categorie(): ?Categorie
     {
+        // Note importante: Dans le cas ou la prestation est une prestation personnalisée, elle ne possède pas de
+        // categorie et donc on renverra null ici.
         return Categorie::find($this->idCategorie);
     }
 
@@ -75,6 +77,13 @@ class Prestation extends Model
     {
         $option = DB::select("SELECT * FROM options WHERE option_id = :id", ["id" => $this->id]);
         return ($option !== []);
+    }
+
+    public function findSupplier(): ?Categorie
+    {
+        $c = $this->categorie();
+        if (!isset($c) or in_array($c->id, [1,2,3])) return null;
+        return $c;
     }
 
     public function showBadges(): string

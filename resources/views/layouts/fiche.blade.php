@@ -50,7 +50,7 @@ if (!empty($conflicts) and count($conflicts) > 0) {
                     <span><?= (in_array(3, $categoriesWithConflicts)?$alertIcon:"") ?> Services</span>
                     <span aria-hidden="true" class="{{ ($subActive == 4)?$lineActivated:$lineDefault }}"></span>
                 </a>
-                <a href="/edit/{{ $cid??$client->id }}/resume" class="{{ ($subActive == 5)?$activated:$default }}">
+                <a href="/export/{{ $cid??$client->id }}" class="{{ ($subActive == 5)?$activated:$default }}">
                     <span> Résumé</span>
                     <span aria-hidden="true" class="{{ ($subActive == 5)?$lineActivated:$lineDefault }}"></span>
                 </a>
