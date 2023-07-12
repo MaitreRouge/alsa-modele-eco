@@ -1,6 +1,6 @@
 @extends("layouts.prestations",
 [
-    "pageTitle" => "Fiche Entreprise - Edition d'une prestation",
+    "pageTitle" => "Fiche Entreprise - Modification d'une catégorie/parent/fournisseur",
     "subActive" => $subActive + 1
 ])
 @section("fiche")
@@ -71,9 +71,9 @@
 
                     <div class="sm:col-span-2">
                         <label for="parent" class="block text-sm font-medium leading-6 text-gray-900">Parent</label>
-                        <select id="parent" name="parent" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <select id="parent" {{ (count($parents) < 2)?"disabled":"" }} name="parent" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 disabled:bg-gray-300 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             @foreach($parents as $p)
-                                <option value="{{ $p->id }}" {{(($category->parentID??0) === $p->id)?"selected":""}}>{{$p->label}}</option>
+                                <option value="{{ $p->id }}" {{(($category->parentID??$parent)??0 === $p->id)?"selected":""}}>{{$p->label}}</option>
                             @endforeach
                         </select>
                     </div>

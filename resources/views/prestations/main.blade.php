@@ -37,6 +37,12 @@ $user = User::fromToken(Cookie::get("token"));
                                 class="mt-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Trier
                         </button>
+                        @if ($user->isAdmin())
+                            <a href="{{ strtolower($name) }}/newParent"
+                               class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                Créerun nouveau fournisseur
+                            </a>
+                        @endif
 
                     </div>
                 </div>
@@ -75,7 +81,7 @@ $user = User::fromToken(Cookie::get("token"));
                    class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Créer une nouvelle prestation
                 </a>
-                <a href="{{ strtolower($name) }}/newCategory"
+                <a href="{{ strtolower($name) }}/{{ $main->id }}/newCategory"
                    class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Créer une nouvelle catégorie
                 </a>

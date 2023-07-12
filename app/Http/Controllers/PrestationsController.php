@@ -119,7 +119,8 @@ class PrestationsController extends BaseController
         return redirect("/prestations/");
     }
 
-    public function showCategoryEdit(Request $request){
+    public function showCategoryEdit(Request $request)
+    {
 
         $category = Categorie::findOrFail($request["cid"]);
         return view("prestations.categoryedit", [
@@ -130,18 +131,33 @@ class PrestationsController extends BaseController
 
     }
 
-    public function showCategoryNew(Request $request){
+    public function showCategoryNew(Request $request)
+    {
 
         $rootCatID = $this->matchCategory($request["category"]) - 1;
         return view("prestations.categoryedit", [
             "category" => null,
             "subActive" => $rootCatID,
-            "parents" => Categorie::where("parentID", $rootCatID)->get()
+            "parents" => Categorie::where("parentID", $rootCatID)->get(),
+            "parent" => $request["parent"]
         ]);
 
     }
 
-    public function processCategoryEdit(Request $request){
+    public function showParentNew(Request $request)
+    {
+
+        $rootCatID = $this->matchCategory($request["category"]) - 1;
+        return view("prestations.categoryedit", [
+            "category" => null,
+            "subActive" => $rootCatID,
+            "parents" => [Categorie::find($rootCatID)]
+        ]);
+
+    }
+
+    public function processCategoryEdit(Request $request)
+    {
 
         $category = Categorie::findOrFail($request["cid"]);
         $category->label = $request["label"];
@@ -152,14 +168,15 @@ class PrestationsController extends BaseController
 
     }
 
-    public function processCategoryNew(Request $request){
+    public function processCategoryNew(Request $request)
+    {
 
         $category = new Categorie();
         $category->label = $request["label"];
-        $category->parentID = $request["parent"];
+        $category->parentID = $request["parent"]??($this->matchCategory($request["category"])-1);
         $category->note = $request["note"];
         $category->save();
-        return redirect("/prestations/".$request["category"]."?tri=".$request["parent"]);
+        return redirect("/prestations/" . $request["category"] . "?tri=" . $request["parent"]);
 
     }
 
@@ -263,7 +280,7 @@ class PrestationsController extends BaseController
             if ($key !== "_token") { //On récupère tous les champs sauf le token csrf
                 $pieces = explode("-", $key); //On les sépare car leurs nom est "presta-ID-NOM"
                 if (!in_array($pieces[2], $champs)) {
-                        return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une propriété qui est protégée (:"]);
+                    return redirect()->back()->withErrors(["security" => "Vous essayez de modifier une propriété qui est protégée (:"]);
                 }
 
                 $data[$pieces[1]][$pieces[2]] = $value;
