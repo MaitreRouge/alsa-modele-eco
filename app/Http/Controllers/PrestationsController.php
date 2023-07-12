@@ -130,6 +130,17 @@ class PrestationsController extends BaseController
 
     }
 
+    public function showCategoryNew(Request $request){
+
+        $rootCatID = $this->matchCategory($request["category"]) - 1;
+        return view("prestations.categoryedit", [
+            "category" => null,
+            "subActive" => $rootCatID,
+            "parents" => Categorie::where("parentID", $rootCatID)->get()
+        ]);
+
+    }
+
     public function processCategoryEdit(Request $request){
 
         $category = Categorie::findOrFail($request["cid"]);
@@ -138,6 +149,17 @@ class PrestationsController extends BaseController
         $category->note = $request["note"];
         $category->update();
         return redirect("/prestations");
+
+    }
+
+    public function processCategoryNew(Request $request){
+
+        $category = new Categorie();
+        $category->label = $request["label"];
+        $category->parentID = $request["parent"];
+        $category->note = $request["note"];
+        $category->save();
+        return redirect("/prestations/".$request["category"]."?tri=".$request["parent"]);
 
     }
 

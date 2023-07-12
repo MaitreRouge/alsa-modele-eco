@@ -37,12 +37,7 @@ $user = User::fromToken(Cookie::get("token"));
                                 class="mt-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Trier
                         </button>
-                        @if (!empty($main->id) and $user->isAdmin())
-                            <a type="submit" href="{{ strtolower($name) }}/{{ $main->id }}/new"
-                               class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Créer
-                            </a>
-                        @endif
+
                     </div>
                 </div>
             </div>
@@ -70,11 +65,29 @@ $user = User::fromToken(Cookie::get("token"));
         </div>
     @endif
 
+
+
+    <div class="px-4 sm:px-6 lg:px-8 mt-5 sm:flex sm:items-center sm:justify-between">
+        <h3 class="text-base font-semibold leading-6 text-gray-900"></h3>
+        <div class="mt-3 flex sm:ml-4 sm:mt-0">
+            @if (!empty($main->id) and $user->isAdmin())
+                <a href="{{ strtolower($name) }}/{{ $main->id }}/new"
+                   class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Créer une nouvelle prestation
+                </a>
+                <a href="{{ strtolower($name) }}/newCategory"
+                   class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Créer une nouvelle catégorie
+                </a>
+            @endif
+        </div>
+    </div>
+
     @if (count($prestations) > 0)
         <form method="post" action="/prestations/massdelete">
             @csrf
             <div class="px-4 sm:px-6 lg:px-8">
-                <div class="mt-8 flow-root">
+                <div class="mt-2 flow-root">
                     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                             <table class="min-w-full">

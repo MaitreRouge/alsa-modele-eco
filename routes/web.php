@@ -85,6 +85,8 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
     Route::middleware(["auth:admin"])->group(function () {
         Route::get("{category}/{sub}/new", [PrestationsController::class, "showNew"]);
         Route::post("{category}/{sub}/new", [PrestationsController::class, "processNew"]);
+        Route::get("{category}/newCategory", [PrestationsController::class, "showCategoryNew"]);
+        Route::post("{category}/newCategory", [PrestationsController::class, "processCategoryNew"]);
 
         Route::get("edit/{prestation}", [PrestationsController::class, "showEdit"]);
         Route::post("edit/{prestation}", [PrestationsController::class, "processEdit"]);
