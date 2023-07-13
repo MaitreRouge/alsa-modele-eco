@@ -74,6 +74,35 @@ class UserController extends BaseController
         return view("user.create");
     }
 
+    public function showEdit(Request $request)
+    {
+        $user = User::find($request["id"]);
+        return view("user.create", [
+            "user" => $user
+        ]);
+    }
+
+    public function processEdit(Request $request)
+    {
+        $request->validate([
+            "nom" => ["required", "alpha_dash"],
+            "prenom" => ["required", "alpha_dash"],
+            "email" => ["required"],
+            "at_email" => ["required", Rule::in(["alsatis", "ineonet"])],
+            "role" => ["required", Rule::in(["u", "a"])],
+        ]);
+
+        $user = User::findOrFail($request["id"]);
+
+        $user->nom = $request["nom"];
+        $user->prenom = $request["prenom"];
+        $user->email = ($request["email"] . "@" . $request["at_email"] . ".com");
+        $user->role = ($request["role"]==="a")?"admin":"user";
+        $user->update();
+
+        return redirect("/users/list");
+    }
+
     public function processCreate(Request $request)
     {
         $request->validate([

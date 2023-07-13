@@ -5,20 +5,6 @@
 ])
 @section("main")
 
-    <!--
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
     <form method="POST">
         @csrf
         <div class="space-y-12">
@@ -35,7 +21,7 @@
                     <div class="sm:col-span-3">
                         <label for="nom" class="block text-sm font-medium leading-6 text-gray-900">Nom</label>
                         <div class="mt-2">
-                            <input type="text" name="nom" id="nom"
+                            <input type="text" name="nom" id="nom" value="{{ $user->nom??"" }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -43,7 +29,7 @@
                     <div class="sm:col-span-3">
                         <label for="prenom" class="block text-sm font-medium leading-6 text-gray-900">Prénom</label>
                         <div class="mt-2">
-                            <input type="text" name="prenom" id="prenom"
+                            <input type="text" name="prenom" id="prenom" value="{{ $user->prenom??"" }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -52,7 +38,7 @@
                         <div>
                             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                             <div class="relative mt-2 rounded-md shadow-sm">
-                                <input type="text" name="email" id="email"
+                                <input type="text" name="email" id="email" value="{{ explode("@", ($user->email??"@null.null"))[0] }}"
                                        class="block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                        placeholder="prenom.nom">
                                 <div class="absolute inset-y-0 right-0 flex items-center">
@@ -73,20 +59,22 @@
                         <div class="mt-2">
                             <select id="role" name="role"
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                <option value="u">Utilisateur</option>
-                                <option value="a">Administrateur</option>
+                                <option value="u" {{(($user->role??"user") === "user")?"selected":""}}>Utilisateur</option>
+                                <option value="a" {{(($user->role??"user") === "admin")?"selected":""}}>Administrateur</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="sm:col-span-3">
-                        <label for="temppassword" class="block text-sm font-medium leading-6 text-gray-900">Mot de passe
-                            temporaire</label>
-                        <div class="mt-2">
-                            <input type="text" name="temppassword" id="temppassword" value="{{ Str::random(8) }}"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    @if(!isset($user))
+                        <div class="sm:col-span-3">
+                            <label for="temppassword" class="block text-sm font-medium leading-6 text-gray-900">Mot de passe
+                                temporaire</label>
+                            <div class="mt-2">
+                                <input type="{{ isset($user)?"password":"" }}" name="temppassword" id="temppassword" value="{{ isset($user)?"":Str::random(8) }}" {{ isset($user)?"disabled":"" }}
+                                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 disabled:bg-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
 
                 </div>

@@ -120,6 +120,8 @@ Route::middleware(["auth:admin"])->prefix("/users")->group(function () {
     Route::get("/list", [UserController::class, "showList"]);
     Route::get("/create", [UserController::class, "showCreate"]);
     Route::post("/create", [UserController::class, "processCreate"]);
+    Route::get("/edit/{id}", [UserController::class, "showEdit"]);
+    Route::get("/edit/{id}", [UserController::class, "processEdit"]);
 });
 
 Route::middleware(["auth"])->prefix("changelog")->group(function () {

@@ -58,7 +58,7 @@
                                     </span>
                                 </td>
                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                    <a href="edit/id" class="text-indigo-600 hover:text-indigo-900">Éditer</a>
+                                    <a href="edit/{{ $_user->id }}" class="text-indigo-600 hover:text-indigo-900">Éditer</a>
                                 </td>
                             </tr>
                         @endforeach
