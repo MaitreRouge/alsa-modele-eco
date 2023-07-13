@@ -60,6 +60,11 @@ class User extends Authenticatable
         return User::find($token->uid);
     }
 
+    public function deleteAllTokens(): void
+    {
+        UserToken::where("uid", $this->id)->delete();
+    }
+
     public function isAdmin(): bool
     {
         return ($this->role === "admin");

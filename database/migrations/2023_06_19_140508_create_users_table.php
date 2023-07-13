@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->string('password');
+            $table->boolean('tempPwd')->default(true);
             $table->set("role", ["admin", "user"]);
             $table->timestamps();
         });

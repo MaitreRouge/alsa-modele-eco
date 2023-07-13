@@ -63,7 +63,7 @@ if (!isset($user)){
                                          tabindex="-1">
                                         <p class="block px-4 py-2 text-sm text-gray-700 border-b">
                                             Bonjour {{ $user->prenom }}</p>
-                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                        <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                            role="menuitem"
                                            tabindex="-1" id="user-menu-item-1">Paramètres</a>
                                         <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"

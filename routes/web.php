@@ -27,7 +27,8 @@ Route::get('/', function () {
 Route::get("/login", [UserController::class, "showLogin"])->middleware("guest");
 Route::post("/login", [UserController::class, "processLogin"])->middleware("guest");
 Route::get("/logout", [UserController::class, "processLogout"])->middleware("auth");
-Route::get("/logout", [UserController::class, "processLogout"])->middleware("auth");
+Route::get("/settings", [UserController::class, "showSettings"])->middleware("auth");
+Route::post("/settings", [UserController::class, "processSettings"])->middleware("auth");
 
 //EntrepriseController (devis)
 Route::middleware(["slash", "validClientId", "auth"])->group(function () {
@@ -121,7 +122,8 @@ Route::middleware(["auth:admin"])->prefix("/users")->group(function () {
     Route::get("/create", [UserController::class, "showCreate"]);
     Route::post("/create", [UserController::class, "processCreate"]);
     Route::get("/edit/{id}", [UserController::class, "showEdit"]);
-    Route::get("/edit/{id}", [UserController::class, "processEdit"]);
+    Route::post("/edit/{id}", [UserController::class, "processEdit"]);
+    Route::get("/resetPwd/{id}", [UserController::class, "processRstPwd"]);
 });
 
 Route::middleware(["auth"])->prefix("changelog")->group(function () {

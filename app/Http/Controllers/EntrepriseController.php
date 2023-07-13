@@ -8,10 +8,12 @@ use App\Models\Devis;
 use App\Models\Notification;
 use App\Models\Option;
 use App\Models\Prestation;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -22,7 +24,8 @@ class EntrepriseController extends BaseController
     public function showDashboard(Request $request)
     {
         $clients = Client::all();
-        return view("dashboard", ["clients" => $clients]);
+        $user = User::fromToken(Cookie::get("token"));
+        return view("dashboard", ["clients" => $clients, "tempPwd" => $user->tempPwd]);
     }
 
     public function showCreate(Request $request)

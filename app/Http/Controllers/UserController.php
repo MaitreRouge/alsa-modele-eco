@@ -13,6 +13,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -63,10 +64,10 @@ class UserController extends BaseController
         return redirect("/dashboard")->withCookie(cookie("token", null, -1, "/"));
     }
 
-    public function showList()
+    public function showList(Request $request)
     {
         $users = User::all();
-        return view("user.list", ["users" => $users]);
+        return view("user.list", ["users" => $users, "pwd" => $request["tempPwd"]]);
     }
 
     public function showCreate()
@@ -132,5 +133,63 @@ class UserController extends BaseController
         return redirect("/users/list");
 
 //        dd("EOF");
+    }
+
+    public function processRstPwd (Request $request) {
+        $user = User::findOrFail($request["id"]);
+
+        $pwd = Str::random(8);
+        $user->password = password_hash($pwd, PASSWORD_BCRYPT);
+        $user->update();
+
+        $user->deleteAllTokens();
+
+        return redirect("/users/list?tempPwd=". $pwd);
+    }
+
+    public function showSettings(Request $request)
+    {
+        $user = User::fromToken(Cookie::get("token"));
+        return view("user.settings", [
+            "user" => $user
+        ]);
+    }
+    public function processSettings(Request $request) {
+        $request->validate([
+            "nom" => ["nullable","alpha_dash"],
+            "prenom" => ["nullable","alpha_dash"],
+            "password" => ["nullable","min:8"],
+            "confirm_password" => ["nullable","min:8"]
+        ]);
+        $user = User::fromToken(Cookie::get("token"));
+
+        if ($request["password"] !== $request["confirm_password"]) {
+            return redirect()->back()->withErrors(["password" => "Les mots de passes ne correspondent pas"]);
+        }
+
+        if (!empty($request["password"]) and $user->passwordVerify($request["password"])) {
+            return redirect()->back()->withErrors(["password" => "Le mot de passe choisi, n'est pas conforme aux exigences de sécurité"]);
+        }
+
+        if (!empty($request["password"])) {
+            $user->password = password_hash($request["password"], PASSWORD_BCRYPT);
+            $user->tempPwd = false;
+            $user->deleteAllTokens();
+        }
+
+        if (!empty($request["nom"])) {
+            $user->nom = $request["nom"];
+        }
+
+        if (!empty($request["prenom"])) {
+            $user->prenom = $request["prenom"];
+        }
+
+        $user->update();
+
+        if ($request["from"]) return redirect($request["from"]);
+        return redirect("settings");
+
+//        dd($user);
     }
 }
