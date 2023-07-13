@@ -7,6 +7,8 @@ use App\Models\Changelog;
 use App\Models\Client;
 use App\Models\Devis;
 use App\Models\Historique;
+use App\Models\Notification;
+use App\Models\Option;
 use App\Models\Prestation;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -25,6 +27,8 @@ class PrestationsController extends BaseController
 
     public function showList(Request $request)
     {
+
+//        dd("nop");
 
         $category = $this->matchCategory($request["category"]);
         $categories = Categorie::where("parentID", $category - 1)->get();
@@ -65,6 +69,11 @@ class PrestationsController extends BaseController
 
     public function showEdit(Request $request)
     {
+        if ($request["deleteOption"]) {
+            Option::where("option_id", $request["deleteOption"])->where("prestation_id", $request["prestation"])->delete();
+//            $o->delete();
+        }
+
         $prestation = Prestation::where("id", $request["prestation"])
             ->orderby("version", "DESC")
             ->limit(1)
@@ -173,7 +182,7 @@ class PrestationsController extends BaseController
 
         $category = new Categorie();
         $category->label = $request["label"];
-        $category->parentID = $request["parent"]??($this->matchCategory($request["category"])-1);
+        $category->parentID = $request["parent"] ?? ($this->matchCategory($request["category"]) - 1);
         $category->note = $request["note"];
         $category->save();
         return redirect("/prestations/" . $request["category"] . "?tri=" . $request["parent"]);
@@ -375,6 +384,101 @@ class PrestationsController extends BaseController
         }
         if (!empty($p)) return redirect("/prestations/" . strtolower($p->mainCategory()->label) . "?tri=" . $p->getCategory()->parentCategory()->id);
         return back();
+    }
+
+    public function showAddOptions(Request $request)
+    {
+
+        if ($request["singlePrestation"]) {
+            session(["addOptionsPrestations" => [$request["singlePrestation"]]]);
+        }
+
+        $idPres = session("addOptionsPrestations");
+        $prestation = Prestation::where("id", $idPres[0])->orderby("version", "DESC")->first();
+        $main = $prestation->categorie()->parentCategory();
+        $prestations = [];
+        $parents = Categorie::where("parentID", $main->id)->get();
+        foreach ($parents as $parent) {
+            $prestationsWithDetails = Prestation::joinSub(function ($query) use ($parent) {
+                $query->from('prestations')
+                    ->select('id', DB::raw('MAX(version) as version_max'))
+                    ->where('idCategorie', $parent->id)
+                    ->whereNull('disabled')
+                    ->groupBy('id');
+            }, 't', function ($join) {
+                $join->on('prestations.id', '=', 't.id')
+                    ->on('prestations.version', '=', 't.version_max');
+            })
+                ->whereNotIn('prestations.id', function ($query) {
+                    $query->select('prestation_id')
+                        ->from('options');
+                })
+                ->whereNotIn('prestations.id', $idPres)
+                ->get();
+            $prestations[$parent->id] = $prestationsWithDetails;
+        }
+//            dd($prestations);
+
+        return view("prestations.addOptions", [
+            "prestations" => $prestations, //Liste des prestations (affichés dans le tableau)
+            "parents" => $parents, //Liste des parents des prestatons (affichés dans le tableau)
+            "subActive" => $main->rootCategory()->id, //Index du bouton du sous-menu qui doit être actif ()
+        ]);
+    }
+
+    public function processAddOptions(Request $request)
+    {
+        $arr = $request->toArray();
+
+        $idPres = [];
+        $idOpts = [];
+        $containsOptions = false;
+        $containsPrestations = false;
+        foreach ($arr as $key => $value) {
+            if (str_contains($key, "prest")) {
+                $idPres[] = (explode("-", $key))[1];
+            }
+            if (str_contains($key, "opt")) {
+                $idOpts[] = (explode("-", $key))[1];
+            }
+        }
+
+//        dd($idPres, $idOpts);
+
+        if (count($idOpts) >= 1 and count($idPres) === 0) {
+            $idPres = session("addOptionsPrestations");
+            if (count($idPres) < 1) {
+                return redirect("/prestations/");
+            }
+        }
+
+        if (count($idPres) === 0) {
+            return redirect()->back();
+        }
+
+        if (count($idOpts) === 0) {
+            session(["addOptionsPrestations" => $idPres]);
+            return redirect("/prestations/addOptions");
+        }
+
+        foreach ($idOpts as $opt) {
+            foreach ($idPres as $pre) {
+                $newOpt = new Option();
+                $newOpt->option_id = $opt;
+                $newOpt->prestation_id = $pre;
+                $newOpt->obligatoire = 0;
+                $newOpt->save();
+            }
+        }
+
+        session(["addOptionsPrestations" => []]);
+
+        if (count($idPres) === 1) return redirect("/prestations/edit/" . $idPres[0]);
+        return redirect("/prestations");
+
+//        dd("On a des options et des prestations");
+
+
     }
 
     /********** FONCTIONS PRIVÉS **********/

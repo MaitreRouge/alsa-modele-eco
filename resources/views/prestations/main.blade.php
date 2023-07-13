@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Cookie;
 
 $user = User::fromToken(Cookie::get("token"));
+$arrayOptions = [];
 ?>
 @extends("layouts.prestations",
 [
@@ -40,7 +41,7 @@ $user = User::fromToken(Cookie::get("token"));
                         @if ($user->isAdmin())
                             <a href="{{ strtolower($name) }}/newParent"
                                class="mt-2 ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Créerun nouveau fournisseur
+                                Créer un nouveau fournisseur
                             </a>
                         @endif
 
@@ -133,10 +134,13 @@ $user = User::fromToken(Cookie::get("token"));
 
                                     </tr>
                                     @foreach($prestations[$parent->id] as $prestation)
+                                        @if ($prestation->isAnOption())
+                                            @php $arrayOptions[] = (string)$prestation->id @endphp
+                                        @endif
                                         <tr class="border-t border-gray-200">
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                                                 @if($user->isAdmin())
-                                                <input name="prest-{{$prestation->id}}" type="checkbox" value=""
+                                                <input name="prest-{{$prestation->id}}" type="checkbox" id="{{$prestation->id}}"
                                                        class="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 @endif
                                                 {{ $prestation->label }}
@@ -163,17 +167,53 @@ $user = User::fromToken(Cookie::get("token"));
                     </div>
                 </div>
             </div>
+
             @if($user->isAdmin())
             <button type="submit"
                     class="mt-6 ml-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">
                 Supprimer toutes les prestations selectionnés
             </button>
             <a href="bulk-edit/{{$main->id??0}}"
-                    class="mt-6 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
+                    class="mt-6 ml-4 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">
                 Modification de masse
             </a>
+            <button formaction="/prestations/addOptions" id="addOptions"
+                    class="mt-6 ml-4 disabled:bg-white disabled:text-white rounded-md bg-green-100 px-3 py-2 text-sm font-semibold text-green-600 shadow-sm disabled:shadow-none hover:bg-green-200">
+                Ajout d'options aux prestations selectionnés
+            </button>
             @endif
         </form>
     @endif
+
+    <script>
+        //Script qui s'occupe de désactiver le bouton "ajouter des options aux prestations" si jamais une option est selectionnée
+        // Tableau contenant les identifiants des cases cochées qui doivent désactiver le bouton
+        var casesDesactivantes = <?= json_encode($arrayOptions) ?>;
+
+        // Fonction qui vérifie les cases cochées et désactive le bouton si nécessaire
+        function verifierCases() {
+            var bouton = $("#addOptions");
+            var desactiverBouton = false;
+
+            // Vérifier chaque case cochée
+            $('input[type="checkbox"]:checked').each(function() {
+                var caseCochee = $(this);
+
+                // Vérifier si l'identifiant de la case cochée est présent dans le tableau des identifiants désactivants
+                if (casesDesactivantes.includes(caseCochee.attr("id"))) {
+                    desactiverBouton = true;
+                    return false; // Sortir de la boucle each()
+                }
+            });
+
+            console.log(desactiverBouton)
+            // Activer ou désactiver le bouton en fonction du résultat
+            bouton.prop("disabled", desactiverBouton);
+        }
+
+        // Attacher un gestionnaire d'événement pour les cases cochées
+        $(document).on("change", 'input[type="checkbox"]', verifierCases);
+        console.log("Init")
+    </script>
 
 @endsection

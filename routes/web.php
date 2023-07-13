@@ -99,6 +99,9 @@ Route::middleware(["auth"])->prefix("/prestations/")->group(function () {
         Route::get("bulk-edit/{tri}", [PrestationsController::class, "showBulkEdit"]);
         Route::post("bulk-edit/{tri}", [PrestationsController::class, "processBulkEdit"]);
 
+        Route::post("addOptions", [PrestationsController::class, "processAddOptions"]);
+        Route::get("addOptions", [PrestationsController::class, "showAddOptions"]);
+
         Route::post("massdelete", [PrestationsController::class, "processMassDelete"]);
         Route::get("delete/{id}", [PrestationsController::class, "processDelete"]);
         Route::get("delete/category/{id}", [PrestationsController::class, "processCategoryDelete"]);
