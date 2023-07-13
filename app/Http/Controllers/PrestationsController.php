@@ -160,7 +160,8 @@ class PrestationsController extends BaseController
         return view("prestations.categoryedit", [
             "category" => null,
             "subActive" => $rootCatID,
-            "parents" => [Categorie::find($rootCatID)]
+            "parents" => [Categorie::find($rootCatID)],
+            "parent" => 0
         ]);
 
     }
@@ -213,7 +214,7 @@ class PrestationsController extends BaseController
 
 //        dd();
         $prestation = new Prestation();
-        $prestation->id = (Prestation::orderby("id", "DESC")->limit(1)->get("id"))[0]->id + 1;
+        $prestation->id = (((Prestation::orderby("id", "DESC")->limit(1)->get("id"))[0]->id)??0) + 1;
         $prestation->label = $request["label"];
         $prestation->version = 1;
         $prestation->prixFAS = $request["prixFAS"];
@@ -367,8 +368,9 @@ class PrestationsController extends BaseController
 
     public function processMassDelete(Request $request)
     {
+//            dump($request->toArray());
         foreach ($request->toArray() as $key => $value) {
-            if ($value === null) {
+            if ($value === "on") {
                 $id = explode("-", $key)[1];
                 $p = Prestation::where("id", $id)->first();
                 if (!empty($p)) {
@@ -382,6 +384,8 @@ class PrestationsController extends BaseController
                 }
             }
         }
+
+//        dd("end");
         if (!empty($p)) return redirect("/prestations/" . strtolower($p->mainCategory()->label) . "?tri=" . $p->getCategory()->parentCategory()->id);
         return back();
     }
